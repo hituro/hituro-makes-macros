@@ -1,0 +1,27 @@
+.tabs-tabset { 
+  --cols: 1;
+  --button-rounding: 10px;
+  --tab-color: #343434;
+  --tab-selected: #565656;
+}
+.tabs-tabs {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  border-bottom: 1px solid white;
+}
+.tabs-tabs button {
+  border-top-left-radius:var(--button-rounding);
+  border-top-right-radius:var(--button-rounding);
+  background: var(--tab-color);
+  border: none;
+  margin: 0px 5px;
+}
+.tabs-tabs button.selected {
+  background: var(--tab-selected);
+}
+.tabs-contents {
+  padding: 1em;
+}
+.tabs-content.hidden {
+  display: none;
+}
