@@ -55,3 +55,29 @@ Some of the basic styling of the tab group can be controlled with CSS variables,
   --tab-color: #343434;    /* the background color of a tab */
   --tab-selected: #565656; /* the background color of the selected tab */
 ```
+
+### Examples ###
+
+A tab set with the second tab selected by default
+```html
+<<tabs>>
+    <<tab "Potions">>
+    POTIONS!
+    <<tab "Items" true>>
+    ITEMS!
+    <<tab "Keys">>
+    KEYS!
+<</tabs>>
+```
+
+A tab set with a custom id
+```html
+<<tabs "inventory">>
+    <<tab "Potions">>
+    POTIONS!
+    <<tab "Items">>
+    ITEMS!
+    <<tab "Keys">>
+    KEYS!
+<</tabs>>
+```
