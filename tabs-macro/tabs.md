@@ -6,7 +6,7 @@ The `<<tabs>>` macro creates a simple tabbed area, where content is shown and hi
 
 ```html
 <<tabs>>
-	<<tab "Potions">>
+    <<tab "Potions">>
     POTIONS!
     <<tab "Items">>
     ITEMS!
