@@ -45,7 +45,7 @@ The example above would generate the following HTML.
 		<button id="tabs-contents-keys-control" type="button" role="button" tabindex="0">Keys</button>
 	</div>
 	<div class="tabs-contents">
-		<div class="tabs-content" id="tabs-contents-potions">POTIONS! Y</div>
+		<div class="tabs-content" id="tabs-contents-potions">POTIONS!</div>
 		<div class="tabs-content hidden" id="tabs-contents-items">ITEMS!</div>
 		<div class="tabs-content hidden" id="tabs-contents-keys">KEYS!</div>
 	</div>
