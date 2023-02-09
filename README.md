@@ -1,2 +1,6 @@
 # hituro-makes-macros
-Twine Macros
+Just some Twine Sugarcube Macros
+
+## `<<tabs>>`
+
+[A macro for making tabbed content](tabs-macro/tabs.md)
