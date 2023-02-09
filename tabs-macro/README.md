@@ -2,6 +2,8 @@
 
 The `<<tabs>>` macro creates a simple tabbed area, where content is shown and hidden by clicking on the tabs.
 
+<img width="664" alt="Screenshot 2023-02-09 at 18 05 27" src="https://user-images.githubusercontent.com/4206142/217899873-601fe0a8-33e3-4c95-9c7d-d9feee4d86c4.png">
+
 ### Installation ###
 
 Add the contents of [tabs.js](tabs.js) to your story Javascript, and the contents of [tabs.css](tabs.css) to your story Stylesheet.
