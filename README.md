@@ -7,4 +7,4 @@ Just some Twine Sugarcube Macros
 
 ## `<<nospace>>`
 
-[A simpl replacement for <<nobr>>]](tabs-nospace/README.md)
+[A simpl replacement for nobr]](tabs-nospace/README.md)
