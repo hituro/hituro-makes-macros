@@ -3,8 +3,8 @@ Just some Twine Sugarcube Macros
 
 ## `<<tabs>>`
 
-[A macro for making tabbed content](tabs-macro/README.md)
+[A macro for making tabbed content](tabs-macro/)
 
 ## `<<nospace>>`
 
-[A simple replacement for nobr](tabs-nospace/README.md)
+[A simple replacement for nobr](tabs-nospace/)
