@@ -49,7 +49,7 @@
       //set base values
       const base   = options.base ?? this.getDate(this.BASE_TIME + variables()[this.varname]);
       if (datestring == "now") {
-        datestring = this.realDate();
+        datestring = this.getRealDate();
       }
       
       console.log("dateToTime("+datestring,options);
@@ -75,7 +75,6 @@
         }
         if (unit == 'mo') {
           if (options.direction == "forward") {
-            console.log("going forwards");
             for (let i = 0; i < num; i++) {
               const year  = base.Y + Math.floor((base.mo + i) / this.MONTHS.length);
               const month = this.MONTHS[(base.mo - 1 + i) % this.MONTHS.length];
@@ -83,13 +82,11 @@
               time += days * (this.dl);
             }
           } else {
-            console.log("going backwards");
             for (let i = num; i > 0; i--) {
               const year  = base.Y+ Math.floor((base.mo + i) / this.MONTHS.length);
               const month = this.MONTHS[(base.mo - 1 - i) % this.MONTHS.length];
               const days  = this.getMonthLength(month,year);
               time += days * (this.dl);
-              console.log("ADDING MONTH "+i,month,year,days);
             }
           }
         }
@@ -226,7 +223,7 @@
       
       // hours
       out.h = Math.floor(r / (this.hl));
-      out.h12 = out.h % floor(this.DAY_LENGTH / 2);
+      out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
       out.day_half = out.h > 12 ? "pm" : "am";
       out["0h"] = out.h < 10 ? `0${out.h}` : out.h;
       r = r % (this.hl);
@@ -243,7 +240,7 @@
       return out;
     }
     
-    realDate() {
+    getRealDate() {
       const date = new Date(); // use whatever timezone the user is in
       const s    = date.getSeconds();
       const m    = date.getMinutes();
@@ -255,6 +252,7 @@
     }
     
     getYearLength(year) {
+      if (this.equal_years) return this.YEAR_LENGTH;
       let days = 0;
       for (let month of this.MONTHS) {
         days += this.getMonthLength(month,year);
@@ -263,6 +261,7 @@
     }
     
     getMonthLength(month,year=0) {
+      if (this.equal_years) return month.length;
       if (month.leap_century && !(year % 100)) {
         // it's a century, and month has a leap_century rule
         for (const leap_cond of month.leap_century) {
@@ -281,7 +280,7 @@
       return month.length;
     }
     
-    formatDate(format,date) {
+    dateFormat(format,date) {
       const d = this.getDate(date);
       if (!format || format == "short") {
         return `${d.d}-${d.mo}-${d.Y}`;
@@ -359,7 +358,7 @@
     handler: function handler() {
       let dateargs = window.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
-      this.output.append(dateargs.datesystem.formatDate(dateargs.args[0],dateargs.args[1]));
+      this.output.append(dateargs.datesystem.dateFormat(dateargs.args[0],dateargs.args[1]));
     }
   });
   
@@ -432,13 +431,13 @@
       const $ticker = $("<div class='macro-dateticker'>");
       const format  = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
       const ds      = dateargs.datesystem.systemname; // use the key so we survive passage transitions
-      $ticker.html(dateargs.datesystem.formatDate(format));
+      $ticker.html(dateargs.datesystem.dateFormat(format));
       $ticker.appendTo(this.output);
       
       const ticker  = setInterval(function() {
         if (document.contains($ticker[0])) {
           variables()[setup.datesystems[ds].varname] += setup.datesystems[ds].dateToTime("1s");
-          $ticker.html(setup.datesystems[ds].formatDate(format));
+          $ticker.html(setup.datesystems[ds].dateFormat(format));
         } else {
           clearInterval(ticker);
         }

@@ -2,6 +2,16 @@
 
 The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system.
 
+### Installation
+
+Add the contents of date.js to your story Javascript.
+
+Place the `<<datesetup>>` macro in your **StoryInit**.
+
+## Basic Concepts
+
+The Datesystem macros create and access a DATESYSTEM object, which lives in `setup.datesystems`. A datesystem contains the definitions of a system of date and time — months, weeks, day names, leap years, seasons, etc. Dates and times are represented by the number of seconds that have passed since the start of your calender (i.e. day 1 of month 1 of year 1). When you create a new Datesystem, its BASE_TIME (by default, `setup.datesystem.default.BASE_TIME`) represents the date and time at the start of the game, while a story variable (by default, `$time`) holds the time that has passed in the game since it began.
+
 ### Time Format
 
 Dates and times provided to the various macros in the date system use the following notation:
@@ -28,7 +38,7 @@ A call to `<<datesetup>>` with no arguments will create a new Gregorian calendar
 
 You can pass a **base time** as a string, using the time format, in which case that will be the starting date. e.g. `<<datesetup "2000y 5mo 3d">>`. Passing `"now"` as the base time will set the starting date/time to the current real-world date and time in the user's timezone.
 
-Instead of a base time string, you can pass an options object. This can allow you to create an entire custom time system. For more details see [Custom Timesystms](custom_datesystems.md).
+Instead of a base time string, you can pass an options object. This can allow you to create an entire custom time system. For more details see [Custom Datesystems](custom_datesystems.md).
 
 The datesystem object will be stored in `setup.datesystems[systemname]`. If you have not passed a custom name, it will be `setup.datesystems.default`. `setup.datesystem.default.BASE_TIME` is a number of seconds (counting from the start of your date system) representing the base time. `setup.datesystem.default.varname` is the name of the story variable holding your current game time (e.g. `time`).
 
@@ -70,6 +80,19 @@ You can pass a format to the macro to control the output. Formats can be "short"
     e              — Number of seconds since second 0 (same as $time)
     season         — Season, as text
 ```
+
+#### Examples
+```html
+<<dateset "2000y 2mo 12d 15h 5m">>
+
+<<date>>                   // outputs "12/2/2000"
+<<date "long">>            // outputs "Friday 12th February 1000"
+<<date "datetime">>        // outputs "Friday the 12th of February, 2000 15:05:00"
+<<date "time">>            // outputs "15:05:00"
+<<date "the [d][day_ordinal] of [mo] in the [season] season">> // outputs "the 12th of February in the winter season"
+```
+
+If you want to format a date in a way more complex than `<<date>>` allows, you can use the `DATESYSTEM.getDate()` method ([see below](#getdate)).
 
 ---
 ### `<<dateset>>`
@@ -126,4 +149,157 @@ You can optionally pass a separator for the output. The default is ' '. You can 
 
 Syntax: `<<dateticker [format]>>`
 
-The `<<dateticker>>` macro creates a constantly ticking clock on screen. As the clock ticks, it also updates the game time. The clock can be formated using the same format strings as `<<date>>`. The default is "time". 
+The `<<dateticker>>` macro creates a constantly ticking clock on screen. As the clock ticks, it also updates the game time. The clock can be formated using the same format strings as `<<date>>`. The default is "time".
+
+## The DATESYSTEM Object
+
+The DATESYSTEM object represents the date/time system you are using, and provides a set of methods for operating on it. When you use `<<datesetup>>` an instance of DATESYSTEM is created and stored in `setup.datesystems`. If you have just created a single default Datesystem, the object can be found at `setup.datesystems.default`.
+
+As well as the methods described in the next section, the object exposes the following values:
+
+```js
+{
+    systemname:  (string), // the name of the datesystem, which is also the key in setup.datesystems
+    varname:     (string), // the name of the variable holding the timestamp of the system, detaults to 'time'
+    MIN_LENGTH:  (int),    // number of seconds in a minute
+    HOUR_LENGTH: (int),    // number of minutes in an hour
+    DAY_LENGTH:  (int),    // number of hours in a day
+    YEAR_LENGTH: (int),    // number of days in a a (non-leap) year
+    hl:          (int),    // number of seconds in an hour
+    dl:          (int),    // number of seconds in a day
+    yl:          (int),    // number of seconds in a (non-leap) year
+    MONTHS:      (array),  // an array of objects defining the months, see custom datesystems
+    DAYS:        (array),  // an array of the names of days in a week
+    WEEK_START:  (int),    // index of the start day of year 1 in the DAYS list
+    PERIODS:     (obj),    // an object containing the singular and plural names of each time unit
+    equal_years: (bool),   // true if there are no leap years in the system
+    BASE_TIME:   (int),    // the base time of the system in seconds since day 1
+}
+```
+
+## Methods
+
+Instead of using the macros, you can access a datesystem using methods of the appropriate DATESYSTEM object. If you have just created a single default Datesystem, the object can be found at `setup.datesystems.default`.
+
+In the following examples, the datesystem will be represented as **DATESYSTEM**.
+
+### `getDate()`
+
+Syntax: `DATESYSTEM.getDate(timestamp, output = [date|period])`
+
+Returns a date object, representing the timestamp passed. The keys of this object are the same as the formats accepted by `<<date>>` (above), and `dateFormat()` (below).
+
+By default, this is formatted as a date, i.e. the timestamp `0` is represented as `{ mo: 1, d: 1 ...}`. If you pass the string "period" as the second argument, it will format the result as a period (like the ones from `<<dateperiod>>`) instead. i.e. the timestamp `0` is represented as `{ mo: 0, d: 0 ...}`.
+
+---
+### `dateFormat()`
+
+Syntax: `DATESYSTEM.dateFormat("format string",timestamp)`
+
+Given a format string and a timestamp (an int representing a number of seconds since the start of the date system), returns a string in the same format as `<<date>>`.
+
+e.g. `setup.datesystem.default.dateFormat("short",63103763100)` returns "5/9/2000"
+
+---
+### `setToTime()`
+
+Syntax: `DATESYSTEM.setToTime("format string",[base])`
+
+Given an absolute date (in the Datesystem format), returns a timestamp representing that date, in the same way as `<<dateset>>`. The optional second argument provides a date object (as returned by `getDate()`).
+
+If you want to reproduce `<<datereset>>`, do:
+```js
+      variables()[DATESYSTEM.varname] = 0;
+      let new_time = DATESYSTEM.setToTime(dateargs.args[0]);
+      DATESYSTEM.BASE_TIME = new_time;
+```
+
+---
+### `moveToTime()`
+
+Syntax: `DATESYSTEM.moveToTime("format string")`
+
+Given a format string, returns a timestamp representing the current time moved forward to the next instance of that time, in the same way as `<<dateto>>`. Internally, `moveToTime()` constructs a new format string in the form "Xy Xmo Xd Xh Xm Xs" by combining the current date/time with whatever part of that string you supply in the first argument, and then passes it to `setToTime()`.
+
+For example, given
+```js
+variables()[DATESYSTEM.varname] = DATESYSTEM.setToTime("2000y 2mo 5d 10h 9m 0s");
+```
+The following call:
+```js
+DATESYSTEM.moveToTime("5mo");
+```
+Will construct the string "2000y 5mo 5d 10h 9m 0s", pass it to `setToTime()` and return the new timestamp.
+
+---
+### `dateToTime()`
+
+Syntax: `DATESYSTEM.dateToTime("format string", options = {})`
+
+This is the most low-level time changing function. Given a format string representing a date/time it will calculate the representation of that date/time as a number of seconds since the start of the date system (0 seconds) and return that number. If you can use `moveToTime()` or `setToTime()`, you should prefer those over a call to `dateToTime()`, however if you wish to emulate `<<dateadd>>` and `<<datesubtract>>` you will need to use this function.
+
+#### Options
+
+The options object contains the following properties:
+```js
+{
+    type: (string) "set" or "add" // defaults to "set"
+    direction: (string) "forward" or "backward" // defaults to "forward"
+    base: {date object} // as returned by getDate, defauls to the current tim
+}
+```
+When `type` is "set", the format string will be treated as an absolute date. When it is "add", it will be treated as a timespan instead.
+When `direction` is "forward", month lengths will be calcualted going forward. When it is "backward", it will be calculated going backward.
+
+To emulate `<<dateset>>`, call `dateToTime(datestring,{ type: "set", base: getDate(0,"date") })`, and set `$time` to the result - `DATESYSTEM.BASE_TIME`
+To emulate `<<dateadd>>`, call `dateToTime(datestring,{ type: "add" })`, and add the result to `$time`
+To emulate `<<datesubtract>>`, call `dateToTime(datestring,{ type: "add", direction: "backward" })`, and subtract the result from `$time`
+
+Note: You can always add seconds to `$time` directly.
+
+---
+### `dateNext()`
+
+Syntax: `DATESYSTEM.dateNext("timespan",[timestamp])`
+
+Given a format string representing a timespan, returns a timestamp representing the current time moved forward to the next whole instance of that unit, in the same way as `<<datenext>>`. Unlike most of the other date functions, it only accpets a single unit specification. Thus you can call `dateNext("12h")` to move to the next noon, but not `dateNext("12 15m")`.
+
+The optional second argument allows you to pass the timestamp (an int representing a number of seconds since the start of the date system) to move forward from, so you can chain calls to `dateNext()` to use multiple units. e.g. `dateNext("15m",dateNext("12h"))`.
+
+---
+### `datePeriod()`
+
+Syntax: `DATESYSTEM.datePeriod(seconds,[separator],[last_separator])`
+
+Given an int representing a number of seconds, returns a string expressing that number as a human-readable timespan, in the same way as `<<dateperiod>>`. The singular and plural names of each time unit are controlled by `DATESYSTEM.PERIODS`. 
+
+e.g. `datePeriod(3601)` returns "1 hour 1 second"
+
+You can specify a custom separator in the second argument (the default is ' '), and a special case separator for the final value in the third argument.
+
+e.g. `datePeriod(6601,', ',' and ')` returns "1 hour, 50 minutes and 1 second"
+
+## Utility Methods
+### `getYearLength()`
+
+Syntax: `getYearLength(year)`
+
+Given a year, returns the number of days in that year. e.g. `getYearLength(2023)` returns 356 in the default date system.
+
+### `getMonthLength()`
+
+Syntax: `getMonthLength(month,year)`
+
+Given a month object (as in `DATESYSTEM.MONTHS`) and a year, returns the number of days in that month in that year. e.g. `getYearLength({ name: "January", length: 31},2023)` returns 31. If the month has leap-day conditions, those are evaluated to arrive at the number of days.
+
+### `getOrdinal()`
+
+Syntax: `getOrdinal(number)`
+
+Given a number, returns the english ordinal suffix for that number. e.g. `getOrdinal(2)` returns "nd"
+
+### `getRealDate()`
+
+Syntax: `getRealDate()`
+
+Returns a format string representing the current date and time according to the user's real timezone. e.g. on the 1st of May, 2023, at 5:15pm, `getRealDate()` returns "2023y 5mo 1d 17h 15m 0s"
