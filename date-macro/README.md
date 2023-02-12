@@ -71,6 +71,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     season         — Season, as text
 ```
 
+---
 ### `<<dateset>>`
 
 Syntax: `<<dateset "absolute date" [system-id]>>`
@@ -79,6 +80,7 @@ The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "
 
 `<<dateset>>` sets the `$time` variable _relative to your base date_ (as set in `<<datesetup>>`). If you set a time before the base date of your system, the result is undefined. If you wish to move the base date of your system, see `<<datereset>>`. To set a partial date, see `<<dateto>>`.
 
+---
 ### `<<dateto>>`
 
 Syntax: `<<dateto "absolute date" [system-id]>>`
@@ -87,6 +89,7 @@ The `<<dateto>>` macro is similar to `<<dateset>>` but it handles missing date p
 
 As with `<<dateset>>`, setting the time to earlier than the base date of your system is undefind. If you wish to move the base date of your system, see `<<datereset>>`. To set a full date, see `<<dateset>>`.
 
+---
 ### `<<dateadd>> <<datesubtract>>`
 
 Syntax: `<<dateadd/datesubtract "timespan" [system-id]>>`
@@ -95,18 +98,21 @@ The `<<dateadd>>` and `<<datesubtract>>` macros increment or decrement the curre
 
 `<<datesubtract>>` will not move the time below 0 (i.e. the first second of your date/time system), and if it moves the time before the base date of your system, the rsult is undefined. If you wish to move the base date of your system, see `<<datereset>>`.
 
+---
 ### `<<datenext>>`
 
 Syntax: `<<datenext "single date unit" [system-id]>>`
 
 The `<<datenext>>` macro will attempt to move time forward to the next whole unit of whatever type you have provided. e.g. `<<datenext "1d">>` will move the time forward to the first second of the next day. `<<datenext "1mo">>` will move the time forward to the first second of the first day of the next month.
 
+---
 ### `<<datereset>>`
 
 Syntax: `<<datenext "absolute date" [system-id]>>`
 
 The `<<datereset>>` macro acts like `<<dateset>>` but it resets the _base time_ of your system, just like you had passed a value to `<<datesetup>>`. This will reset `$time` to 0 (and set `setup.datesystems[systemnam].BASE_TIME` to your new date/time). If you just want to set a date without changing the base time, see `<<dateset>>`. If you want to move the game time to a date/time _earlier_ than the base time set in `<<datesetup>>`, you must use `<<datereset>>` to do it.
 
+---
 ### `<<dateperiod>>`
 
 Syntax: `<<dateperiod seconds ["separator"] ["final separator]>>`
@@ -115,6 +121,7 @@ The `<<dateperiod>>` macro renders a timespan (in seconds) in a human readable f
 
 You can optionally pass a separator for the output. The default is ' '. You can also pass a final separator, which will be placed before the final value in the output. e.g. `<<dateperiod 6601 ", " " and ">>` will output "1 hour, 50 minutes and 1 second".
 
+---
 ### `<<dateticker>>`
 
 Syntax: `<<dateticker [format]>>`
