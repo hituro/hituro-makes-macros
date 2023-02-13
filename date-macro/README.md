@@ -88,7 +88,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     season         — Season, as text
 ```
 
-#### Examples
+**Example**
 ```html
 <<dateset "2000y 2mo 12d 15h 5m">>
 
@@ -110,6 +110,13 @@ The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "
 
 `<<dateset>>` sets the `$time` variable. If you set a time before the 0 date of your system, the result is undefined. If you wish to move the base date of your syste as well, see `<<datereset>>`. To set a partial date, see `<<dateto>>`.
 
+**Example**
+```html
+<<link "Visit the fox on his birthday">>
+    <<datenext "1112y 5mo 12d 9h 0m 0s">>
+<</link>>
+```
+
 ### `<<dateto>>`
 
 Syntax: `<<dateto "absolute date" [system-id]>>`
@@ -118,6 +125,12 @@ The `<<dateto>>` macro is similar to `<<dateset>>` but it handles missing date p
 
 As with `<<dateset>>`, setting the time to earlier than the 0 date of your system is undefind. If you wish to move the base date of your system, see `<<datereset>>`. To set a full date, see `<<dateset>>`.
 
+**Example**
+```html
+<<link "Wait one hour">>
+    <<dateto "1h">>
+<</link>>
+```
 
 ### `<<dateadd>> <<datesubtract>>`
 
@@ -127,6 +140,12 @@ The `<<dateadd>>` and `<<datesubtract>>` macros increment or decrement the curre
 
 `<<datesubtract>>` will not move the time below 0 (i.e. the first second of your date/time system). If you wish to move the base date of your system, see `<<datereset>>`.
 
+**Example**
+```html
+<<link 'Collect berries - 5 minutes'>>
+  <<dateadd '5m'>>
+<</link>>
+```
 
 ### `<<datenext>>`
 
@@ -134,6 +153,12 @@ Syntax: `<<datenext "single date unit" [system-id]>>`
 
 The `<<datenext>>` macro will attempt to move time forward to the next whole unit of whatever type you have provided. e.g. `<<datenext "1d">>` will move the time forward to the first second of the next day. `<<datenext "1mo">>` will move the time forward to the first second of the first day of the next month.
 
+**Example**
+```html
+<<link "Wait till noon">>
+    <<datenext "12h>>
+<</link>>
+```
 
 ### `<<datereset>>`
 
@@ -141,6 +166,12 @@ Syntax: `<<datenext "absolute date" [system-id]>>`
 
 The `<<datereset>>` macro acts like `<<dateset>>` but it additionally resets the _base time_ of your system, just like you had passed a value to `<<datesetup>>`. This will set `setup.datesystems[systemnam].BASE_TIME` to your new date/time, and `DATESYSTEM.elapsed` to 0. If you just want to set a date without changing the base time, see `<<dateset>>`.
 
+**Example**
+```html
+<<link "On the first day of the new century ...">>
+    <<datereset "2000y 1mo 1d>>
+<</link>>
+```
 
 ### `<<dateperiod>>`
 
@@ -150,6 +181,10 @@ The `<<dateperiod>>` macro renders a timespan (in seconds) in a human readable f
 
 You can optionally pass a separator for the output. The default is ' '. You can also pass a final separator, which will be placed before the final value in the output. e.g. `<<dateperiod 6601 ", " " and ">>` will output "1 hour, 50 minutes and 1 second".
 
+**Example**
+```html
+You spent <<dateperiod ($endTime - $startTime) ", " " and ">> in the forest, looking for mushrooms.
+```
 
 ### `<<dateticker>>`
 
