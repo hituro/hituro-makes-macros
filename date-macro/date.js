@@ -34,8 +34,12 @@
       this.dl = this.hl * this.DAY_LENGTH;
       this.yl = this.dl * this.YEAR_LENGTH;
       this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
-      this.BASE_TIME  = config.base_time ? this.dateToTime(config.base_time) : 0;
+      this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
       this.cache = { };
+    }
+
+    get elapsed() {
+      return variables()[this.varname] - this.BASE_TIME;
     }
     
     setToTime(datestring, base) {
@@ -48,7 +52,7 @@
       options.direction = options.direction ?? "forward";
       
       //set base values
-      const base   = options.base ?? this.getDate(this.BASE_TIME + variables()[this.varname]);
+      const base   = options.base ?? this.getDate(variables()[this.varname]);
       if (datestring == "now") {
         datestring = this.getRealDate();
       }
@@ -94,7 +98,7 @@
     }
     
     moveToTime(datestring) {
-      const base  = this.getDate(this.BASE_TIME + variables()[this.varname]);
+      const base  = this.getDate(variables()[this.varname]);
       const parts = datestring.toLowerCase().split(" ");
       const full  = [["y","Y"], ["mo","mo"], ["d","d"], ["h","h"], ["m","m"], ["s","s"]];
       const user  = {};
@@ -113,7 +117,7 @@
     }
 
     dateNext(interval,time) {
-      let   r     = time ?? this.BASE_TIME + variables()[this.varname];
+      let   r     = time ?? variables()[this.varname];
       const base  = this.getDate(r);
       let [ , num, unit ] = interval.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
 
@@ -150,7 +154,7 @@
     }
     
     getDate(date, output = "date") {
-      let r = (date !== undefined) ? date : this.BASE_TIME + variables()[this.varname];
+      let r = (date !== undefined) ? date : variables()[this.varname];
       const initial = r;
 
       // caching
@@ -305,7 +309,7 @@
       }
       else {
         return format.replaceAll(/\[([A-Z0-9a-z_]+)\]/g, (match, capture) => {
-          return d[capture] ?? '';
+          return d[capture] ?? match;
         });
       }
     }
@@ -342,21 +346,17 @@
       }
       return out.join(separator).trim();
     }
-    
-  }
-  
-  /* --------------------------- */
-  /* UTILITY                     */
-  /* --------------------------- */
 
-  window.dateargs = function(args) {
-    if (setup.datesystems[args[args.length - 1]]) {
-      // last arg is a datesystem
-      let ds = args[args.length -1];
-      return { args: args.slice(0,-1), datesystem: setup.datesystems[ds], varname: setup.datesystems[ds].varname };
-    } else {
-      return { args: args, datesystem: setup.datesystems["default"], varname: setup.datesystems["default"].varname }
+    static dateargs = function(args) {
+      if (setup.datesystems[args[args.length - 1]]) {
+        // last arg is a datesystem
+        let ds = args[args.length -1];
+        return { args: args.slice(0,-1), datesystem: setup.datesystems[ds], varname: setup.datesystems[ds].varname };
+      } else {
+        return { args: args, datesystem: setup.datesystems["default"], varname: setup.datesystems["default"].varname }
+      }
     }
+    
   }
   
   /* --------------------------- */
@@ -365,7 +365,7 @@
   
   Macro.add('date', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
       this.output.append(dateargs.datesystem.dateFormat(dateargs.args[0],dateargs.args[1]));
     }
@@ -373,25 +373,25 @@
   
   Macro.add('dateset', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
       let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
-      variables()[dateargs.datesystem.varname] = new_time - dateargs.datesystem.BASE_TIME;
+      variables()[dateargs.datesystem.varname] = new_time;
     }
   });
   
   Macro.add('dateto', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateto>>");
       let new_time = dateargs.datesystem.moveToTime(dateargs.args[0]);
-      variables()[dateargs.datesystem.varname] = new_time - dateargs.datesystem.BASE_TIME;
+      variables()[dateargs.datesystem.varname] = new_time;
     }
   });
   
   Macro.add('dateadd', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateadd>>");
       variables()[dateargs.datesystem.varname] += dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add" });
     }
@@ -399,7 +399,7 @@
   
   Macro.add('datesubtract', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datesubtract>>");
       let new_time = dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add", direction: "backward" });
       variables()[dateargs.datesystem.varname] = Math.max(0,variables()[dateargs.datesystem.varname] - new_time);
@@ -408,26 +408,26 @@
   
   Macro.add('datenext', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datenext>>");
       let new_time = dateargs.datesystem.dateNext(dateargs.args[0]);
-      variables()[dateargs.datesystem.varname] = new_time - dateargs.datesystem.BASE_TIME;
+      variables()[dateargs.datesystem.varname] = new_time;
     }
   });
   
   Macro.add('datereset', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datereset>>");
       variables()[dateargs.datesystem.varname] = 0;
       let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
-      dateargs.datesystem.BASE_TIME = new_time;
+      variables()[dateargs.datesystem.varname] = this.BASE_TIME = new_time;
     }
   });
   
   Macro.add('dateperiod', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateperiod>>");
       this.output.append(dateargs.datesystem.datePeriod(dateargs.args[0],dateargs.args[1],dateargs.args[2]));
     }
@@ -435,7 +435,7 @@
   
   Macro.add('dateticker', {
     handler: function handler() {
-      let dateargs = window.dateargs(this.args);
+      let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateticker>>");
       const $ticker = $("<div class='macro-dateticker'>");
       const format  = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
