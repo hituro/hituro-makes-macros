@@ -35,6 +35,7 @@
       this.yl = this.dl * this.YEAR_LENGTH;
       this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME  = config.base_time ? this.dateToTime(config.base_time) : 0;
+      this.cache = { };
     }
     
     setToTime(datestring, base) {
@@ -51,8 +52,6 @@
       if (datestring == "now") {
         datestring = this.getRealDate();
       }
-      
-      console.log("dateToTime("+datestring,options);
       
       const parts  = datestring.toLowerCase().split(" ");
       let   time   = 0;
@@ -151,8 +150,14 @@
     }
     
     getDate(date, output = "date") {
-      //console.log("getDate("+date+")");
-      let   r     = (date !== undefined) ? date : this.BASE_TIME + variables()[this.varname];
+      let r = (date !== undefined) ? date : this.BASE_TIME + variables()[this.varname];
+      const initial = r;
+
+      // caching
+      if (this.cache.time === r) { 
+        return this.cache.value; 
+      }
+
       const out   = {
         Y: output == "date" ? 1 : 0,
         y: 0,
@@ -236,6 +241,10 @@
       // seconds
       out.s = r;
       out["0s"] = out.s < 10 ? `0${out.s}` : out.s;
+
+      // caching
+      this.cache.time = initial;
+      this.cache.value = out;
       
       return out;
     }
