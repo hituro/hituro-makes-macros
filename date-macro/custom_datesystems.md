@@ -82,9 +82,9 @@ In the standard calendar, February is 28 days long. In centuries divisible by 40
 
 ## Synchronising Datesystems
 
-Although each Datesystem keeps it's own time variable by default, you can easily change that by setting `DATESYSTEM.varname` to the same value. 
+Although each Datesystem keeps its own time variable by default, you can easily change that by setting `DATESYSTEM.varname` to the same value. 
 
-**Exampl**
+**Example**
 ```html
 <<datesetup `{
     systemname: "solar",
