@@ -74,7 +74,13 @@
           case "m" : time += num * this.MIN_LENGTH;  break;
           case "h" : time += num * this.hl; break;
           case "d" : time += num * this.dl; break;
-          case "y" : num *= this.MONTHS.length; unit = 'mo'; break;
+          case "y" : 
+            if (this.equal_years) {
+              time += num * this.yl;
+            } else {
+              num *= this.MONTHS.length; unit = 'mo'; 
+            } 
+            break;
         }
         if (unit == 'mo') {
           if (options.direction == "forward") {
@@ -191,7 +197,13 @@
         season: ""
       };
       
-      if (!r) { return out; }
+      //if (!r) { return out; }
+
+      if (this.equal_years) {
+        out.Y += Math.floor(r / (this.yl));
+        out.year_short  = out.y = out.Y % 100;
+        time -= num * this.yl;
+      }
       
       // months & years
       let months = 0;
@@ -206,8 +218,10 @@
           if (moy == 0) { out.day_of_year = days } else { out.day_of_year += days; }
           total_days += days;
         } else {
-          out.Y           = year;
-          out.year_short  = out.y = out.Y % 100;
+          if (!this.equal_years) {
+            out.Y           = year;
+            out.year_short  = out.y = out.Y % 100;
+          }
           out.mo          = moy + 1;
           out.month_long  = out.M = month.name;
           out.month_short = month.short ?? month.name.substring(0,3);
