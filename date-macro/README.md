@@ -123,7 +123,7 @@ Syntax: `<<dateto "absolute date" [system-id]>>`
 
 The `<<dateto>>` macro is similar to `<<dateset>>` but it handles missing date parts differently. For `<<dateto>>` any missing part is assumed to be the same as the current date. For example, if the current date/time is "2000y 1mo 1d 15h 0m 0s", `<<dateto "7mo 2d">>` will set the date to "2000y 7mo 2d 15h 0m 0s".
 
-As with `<<dateset>>`, setting the time to earlier than the 0 date of your system is undefind. If you wish to move the base date of your system, see `<<datereset>>`. To set a full date, see `<<dateset>>`.
+As with `<<dateset>>`, setting the time to earlier than the 0 date of your system is undefined. If you wish to move the base date of your system, see `<<datereset>>`. To set a full date, see `<<dateset>>`.
 
 **Example**
 ```html
