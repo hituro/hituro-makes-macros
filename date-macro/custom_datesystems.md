@@ -5,7 +5,7 @@ You may create multiple date systems in the same game with multiple calls to `<<
 ```html
 <<set _datesetup = {
     base_time: "now",
-    systemname: "solar"
+    name: "solar"
 }>>
 <<datesetup _datesetup>>
 ```
