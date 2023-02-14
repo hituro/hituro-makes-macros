@@ -112,7 +112,7 @@ The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "
 
 **Example**
 ```html
-<<link "Visit the fox on his birthday">>
+<<link "Travel in time">>
     <<datenext "1112y 5mo 12d 9h 0m 0s">>
 <</link>>
 ```
@@ -127,8 +127,8 @@ As with `<<dateset>>`, setting the time to earlier than the 0 date of your syste
 
 **Example**
 ```html
-<<link "Wait one hour">>
-    <<dateto "1h">>
+<<link "Visit the fox on his birthday">>
+    <<dateto "5mo 12d">>
 <</link>>
 ```
 
@@ -175,7 +175,7 @@ The `<<datereset>>` macro acts like `<<dateset>>` but it additionally resets the
 
 ### `<<dateperiod>>`
 
-Syntax: `<<dateperiod seconds ["separator"] ["final separator] [system-id]>>`
+Syntax: `<<dateperiod seconds ["separator"] ["final separator"] [system-id]>>`
 
 The `<<dateperiod>>` macro renders a timespan (in seconds) in a human readable format. e.g. `<<dateperiod 3601>>` will output "1 hour 1 second". You can use this to represent the duration between any two events in the date system. `<<dateperiod $time>>` will represent the span of time since the start of the game.
 
