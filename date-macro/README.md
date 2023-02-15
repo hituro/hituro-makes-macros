@@ -193,6 +193,25 @@ Syntax: `<<dateticker [format] [system-id]>>`
 The `<<dateticker>>` macro creates a constantly ticking clock on screen. As the clock ticks, it also updates the game time. The clock can be formatted using the same format strings as `<<date>>`. The default is "time".
 
 ---
+## Events
+
+Every time the time is updated by the use of a Datesystem macro, the `:dateupdated` event is fired (on document). The event passed with this event recieves three special arguments:
+```js
+{
+    system: (string), // the name of the datesystem
+    from:   (int),    // timestamp before the change
+    to:     (int),    // timestamp after the change
+}
+```
+
+**Example**
+```js
+$(document).on(":dateupdated", function(e) {
+  console.log(e.system+ " changed from " + e.from + " to " + e.to); 
+});
+```
+
+---
 ## The DATESYSTEM Object
 
 The DATESYSTEM object represents the date/time system you are using, and provides a set of methods for operating on it. When you use `<<datesetup>>` an instance of DATESYSTEM is created and stored in `setup.datesystems`. If you have just created a single default Datesystem, the object can be found at `setup.datesystems.default`.

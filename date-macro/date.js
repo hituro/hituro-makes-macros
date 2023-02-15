@@ -370,6 +370,10 @@
         return { args: args, datesystem: setup.datesystems["default"], varname: setup.datesystems["default"].varname }
       }
     }
+
+    datetrigger = function(from,to) {
+      $(document).trigger({ type: ":dateupdated", from: from, to: to, system: this.systemname});
+    }
     
   }
   
@@ -390,6 +394,7 @@
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
       let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
       variables()[dateargs.datesystem.varname] = new_time;
     }
   });
@@ -399,6 +404,7 @@
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateto>>");
       let new_time = dateargs.datesystem.moveToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
       variables()[dateargs.datesystem.varname] = new_time;
     }
   });
@@ -407,7 +413,9 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateadd>>");
-      variables()[dateargs.datesystem.varname] += dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add" });
+      let new_time = dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add" });
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], variables()[dateargs.datesystem.varname] + new_time);
+      variables()[dateargs.datesystem.varname] += new_time;
     }
   });
   
@@ -415,8 +423,9 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datesubtract>>");
-      let new_time = dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add", direction: "backward" });
-      variables()[dateargs.datesystem.varname] = Math.max(0,variables()[dateargs.datesystem.varname] - new_time);
+      let new_time = Math.max(0,variables()[dateargs.datesystem.varname] - new_time);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
+      variables()[dateargs.datesystem.varname] = new_time
     }
   });
   
@@ -425,6 +434,7 @@
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datenext>>");
       let new_time = dateargs.datesystem.dateNext(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
       variables()[dateargs.datesystem.varname] = new_time;
     }
   });
@@ -433,8 +443,10 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datereset>>");
+      let old_time = variables()[dateargs.datesystem.varname];
       variables()[dateargs.datesystem.varname] = 0;
       let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(old_time, new_time);
       variables()[dateargs.datesystem.varname] = this.BASE_TIME = new_time;
     }
   });
@@ -451,20 +463,25 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateticker>>");
-      const $ticker = $("<div class='macro-dateticker'>");
-      const format  = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
-      const ds      = dateargs.datesystem.systemname; // use the key so we survive passage transitions
+      const $ticker   = $("<div class='macro-dateticker'>");
+      const format    = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
+      const unit      = dateargs.args[1] ?? "1s";
+      const event     = dateargs.args[1] ?? false;
+      const ds        = dateargs.datesystem.systemname; // use the key so we survive passage transitions
+      const incsecs   = dateargs.datesystem.dateToTime(unit);
+      const frequency = parseInt(incsecs) * 1000;
       $ticker.html(dateargs.datesystem.dateFormat(format));
       $ticker.appendTo(this.output);
       
       const ticker  = setInterval(function() {
         if (document.contains($ticker[0])) {
-          variables()[setup.datesystems[ds].varname] += setup.datesystems[ds].dateToTime("1s");
+          if (event) dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], variables()[dateargs.datesystem.varname] + incsecs);
+          variables()[setup.datesystems[ds].varname] += incsecs;
           $ticker.html(setup.datesystems[ds].dateFormat(format));
         } else {
           clearInterval(ticker);
         }
-      },1000); 
+      },frequency); 
     }
   });
   
@@ -486,3 +503,7 @@
     }
   });
 })();
+
+$(document).on(":dateupdated", function(e) {
+  console.log(e.from + " => " + e.to); 
+});
