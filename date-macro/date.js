@@ -188,6 +188,7 @@
         h: 0,
         h12: 0,
         "0h": "",
+        "0h12": "",
         day_half: "",
         m: 0,
         "0m": "",
@@ -249,6 +250,7 @@
       out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
       out.day_half = out.h > 12 ? "pm" : "am";
       out["0h"] = out.h < 10 ? `0${out.h}` : out.h;
+      out["0h12"] = out.h < 10 ? `0${out.h}` : out.h;
       r = r % (this.hl);
       
       // minutes

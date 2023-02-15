@@ -80,6 +80,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     h              — Hour, in digits
     0h             — Hour, prefixed with 0s if less than 10
     h12            — Hour, counting up to half way through the day length
+    0h12           — Hour, prefixed with 0s if less than 10
     m              — Minute, in digits
     0m             — Minute, prefixed with 0s if less than 10
     s              — Second, in digits
@@ -188,9 +189,19 @@ You spent <<dateperiod ($endTime - $startTime) ", " " and ">> in the forest, loo
 
 ### `<<dateticker>>`
 
-Syntax: `<<dateticker [format] [system-id]>>`
+Syntax: `<<dateticker [format] [interval] [send-events] [system-id]>>`
 
-The `<<dateticker>>` macro creates a constantly ticking clock on screen. As the clock ticks, it also updates the game time. The clock can be formatted using the same format strings as `<<date>>`. The default is "time".
+The `<<dateticker>>` macro creates a constantly ticking clock on screen. As the clock ticks, it also updates the game time. The clock can be formatted using the same format strings as `<<date>>`. The default is `"time"`
+
+You can specify a custom interval in the second argument by passing a time string. The default is `"1s"`. This controls how often the clock ticks *and* how much time is added.
+
+The clock doesn't send `:dateupdated` events (see below) by default. Pass `true` as the third argument to have the clock trigger events.
+
+**Example**
+Make a 12hr clock that ticks once a minute and sends events.
+```html
+<<dateticker "[0h12]:[0m] [day_half]" "1m" true>>
+```
 
 ---
 ## Events
