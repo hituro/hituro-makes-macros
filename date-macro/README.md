@@ -2,6 +2,12 @@
 
 The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system.
 
+```html
+<<datesetup>>         // create a datesystem
+<<dateset "now">>     // set the time to the current time and date
+<<date "datetime">>   // print out the time and date
+```
+
 ### Installation
 
 Add the contents of date.js to your story Javascript.
@@ -261,7 +267,7 @@ In the following examples, the datesystem will be represented as **DATESYSTEM**.
 
 Syntax: `DATESYSTEM.getDate(timestamp, output = [date|period])`
 
-Returns a date object, representing the timestamp passed. The keys of this object are the same as the formats accepted by `<<date>>` (above), and `dateFormat()` (below).
+Returns a date object, representing the timestamp (an int representing a number of seconds since the start of the date system) passed. The keys of this object are the same as the formats accepted by `<<date>>` (above), and `dateFormat()` (below).
 
 By default, this is formatted as a date, i.e. the timestamp `0` is represented as `{ mo: 1, d: 1 ...}`. If you pass the string "period" as the second argument, it will format the result as a period (like the ones from `<<dateperiod>>`) instead. i.e. the timestamp `0` is represented as `{ mo: 0, d: 0 ...}`.
 
