@@ -2,6 +2,7 @@
 
 The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system.
 
+**Basic Example**
 ```html
 <<datesetup>>         // create a datesystem
 <<dateset "now">>     // set the time to the current time and date
