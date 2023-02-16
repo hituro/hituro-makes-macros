@@ -14,7 +14,7 @@ The point of doing this, is to allow you to create your own calendars with diffe
 
 ### Custom Datesystem Arguments
 
-There are many values you can pass to set up your custom calendar. Anything you don't specify as different will take the default Gregorian values. For example, if you only want to change the names of the wweekdays, you only need to pass `days`.
+There are many values you can pass to set up your custom calendar. Anything you don't specify as different will take the default Gregorian values. For example, if you only want to change the names of the weekdays, you only need to pass `days`.
 
 The following block shows the default values for the Gregorian calendar.
 
@@ -47,7 +47,7 @@ The following block shows the default values for the Gregorian calendar.
 ```
 The `name` argument defines the name of the Datesystem. This is the `system-id` argument to use in all of the date system macros, the key in `setup.datesystems` that contains the DATESYSTEM object, and the prefix of the story variable containing the system's time variable. 
 
-e.g. if you pass `solar` as the `name` argument, the DATESYSTEM will be saved in `setup.datsystem.solar` and the time variable will be `$solar-time`.
+e.g. if you pass `solar` as the `name` argument, the DATESYSTEM will be saved in `setup.datesystem.solar` and the time variable will be `$solar-time`.
 
 The other system definition values are as follows:
 
@@ -61,7 +61,7 @@ The other system definition values are as follows:
     periods:     Singular and plural names for each of your time units (as used by <<dateperiod>>)
 ```
 
-For `months`, the `length` value is the number of days in a non-leap year, and the `season` is the name of the season (as returnd by `[season]`).
+For `months`, the `length` value is the number of days in a non-leap year, and the `season` is the name of the season (as returned by `[season]`).
 
 ### Leap Years
 
