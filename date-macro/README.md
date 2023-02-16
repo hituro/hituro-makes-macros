@@ -1,6 +1,6 @@
 ## DATESYSTEM Macros
 
-The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system.
+The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system. It offers a variety of macros, and corresponding JS functions.
 
 **Basic Example**
 ```html
