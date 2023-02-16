@@ -373,7 +373,7 @@ Given a format string and a date (the target date can be a format string, a time
 
 Syntax: `getYearLength(year)`
 
-Given a year, returns the number of days in that year. e.g. `getYearLength(2023)` returns 356 in the default date system.
+Given a year, returns the number of days in that year. e.g. `getYearLength(2023)` returns 365 in the default date system.
 
 ### `getMonthLength()`
 
