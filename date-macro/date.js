@@ -363,6 +363,37 @@
       return out.join(separator).trim();
     }
 
+    dateCompare(datestring,comp) {
+      // make both dates into date objects
+      let date = {};
+      if (typeof datestring == "string") {
+        date = this.getDate(this.dateToTime(datestring));
+      } else {
+        throw new Error("Argument one to dateCompare() must be a date string");
+      }
+      if (typeof comp == "string") {
+        comp = this.getDate(this.dateToTime(comp));
+      } else if (typeof comp == "number") {
+        comp = this.getDate(comp);
+      }
+
+      // work out which elements to compare
+      const parts  = datestring.toLowerCase().split(" ");
+      const elems  = [];
+      for (const part of parts) {
+        let [ , , unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
+        elems.push(unit);
+      }
+
+      // compare
+      for (const dp of elems) {
+        if (comp[dp] != date[dp]) { 
+          return false;
+        }
+      }
+      return true;
+    }
+
     static dateargs = function(args) {
       if (setup.datesystems[args[args.length - 1]]) {
         // last arg is a datesystem

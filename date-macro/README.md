@@ -353,6 +353,19 @@ You can specify a custom separator in the second argument (the default is ' '), 
 
 e.g. `datePeriod(6601,', ',' and ')` returns "1 hour, 50 minutes and 1 second"
 
+### `dateCompare()`
+
+Syntax: `DATESYSTEM.dateCompare("format string",target date)`
+
+Given a format string and a date (the target date can be a format string, a timestamp, or a date object), returns true if they represent the same date, and false if they do not. Only the parts of the date given in the first argument are checked, so if you just pass a month and day, only the month and day of the target date are checked, if you only pass the year, only the year needs to match, and so forth.
+
+**Example**
+```html
+<<if setup.datesystems.default.dateCompare("5mo 12d",$time)>>
+    It's your birthday!
+<</if>>
+```
+
 ---
 ## Utility Methods
 ### `getYearLength()`
