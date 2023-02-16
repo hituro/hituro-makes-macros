@@ -17,7 +17,7 @@ Place the `<<datesetup>>` macro in your **StoryInit**.
 
 ## Basic Concepts
 
-The Datesystem macros create and access a DATESYSTEM object, which lives in `setup.datesystems`. A datesystem contains the definitions of a system of date and time — months, weeks, day names, leap years, seasons, etc. Dates and times are represented by the number of seconds that have passed since the start of your calender (i.e. day 1 of month 1 of year 1). When you create a new Datesystem, its BASE_TIME (by default, `setup.datesystem.default.BASE_TIME`) represents the date and time at the start of the game, while a story variable (by default, `$time`) holds the time that has passed in the game since it began.
+The Datesystem macros create and access a DATESYSTEM object, which lives in `setup.datesystems`. A datesystem contains the definitions of a system of date and time — months, weeks, day names, leap years, seasons, etc. Dates and times are represented by the number of seconds that have passed since the start of your calendar (i.e. day 1 of month 1 of year 1). When you create a new Datesystem, its BASE_TIME (by default, `setup.datesystem.default.BASE_TIME`) represents the date and time at the start of the game, while a story variable (by default, `$time`) holds the time that has passed in the game since it began.
 
 ### Time Format
 
@@ -35,7 +35,7 @@ The date and time associated with a date system are stored as a single numerical
 
 ### Base and Elapsed Time
 
-When you create a datesystem, you can set a base time, which is the starting time of your game. The `DATESYSTEM.elapsed` property tells you how much time has passd since that start time (i.e. base time - $time).
+When you create a datesystem, you can set a base time, which is the starting time of your game. The `DATESYSTEM.elapsed` property tells you how much time has passed since that start time (i.e. base time - $time).
 
 ## Creating a Datesystem
 
@@ -56,7 +56,7 @@ The datesystem object will be stored in `setup.datesystems[systemname]`. If you 
 ---
 ## Macros
 
-For all of the following macros, you may pass an additional argument specifying which datesystem to use. This must be the final argument. e.g. if one of your datesystems is called "lunar", all of the following are legal: `<<date "lunar">>`, `<<date "format" "lunar">>`. The example sytnax shows this argument as `[system-id]`
+For all of the following macros, you may pass an additional argument specifying which datesystem to use. This must be the final argument. e.g. if one of your datesystems is called "lunar", all of the following are legal: `<<date "lunar">>`, `<<date "format" "lunar">>`. The example syntax shows this argument as `[system-id]`
 
 ### `<<date>>`
 
@@ -114,9 +114,9 @@ If you want to format a date in a way more complex than `<<date>>` allows, you c
 
 Syntax: `<<dateset "absolute date" [system-id]>>`
 
-The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "2000y 10mo 3d">>` (3rd day of the 10th month of year 2000). If you ommit the year, month, or day, they will be assumed to be 1. If you ommit the hour, minute or second, they will be assumed to be 0.
+The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "2000y 10mo 3d">>` (3rd day of the 10th month of year 2000). If you omit the year, month, or day, they will be assumed to be 1. If you omit the hour, minute or second, they will be assumed to be 0.
 
-`<<dateset>>` sets the `$time` variable. If you set a time before the 0 date of your system, the result is undefined. If you wish to move the base date of your syste as well, see `<<datereset>>`. To set a partial date, see `<<dateto>>`.
+`<<dateset>>` sets the `$time` variable. If you set a time before the 0 date of your system, the result is undefined. If you wish to move the base date of your system as well, see `<<datereset>>`. To set a partial date, see `<<dateto>>`.
 
 **Example**
 ```html
@@ -172,7 +172,7 @@ The `<<datenext>>` macro will attempt to move time forward to the next whole uni
 
 Syntax: `<<datenext "absolute date" [system-id]>>`
 
-The `<<datereset>>` macro acts like `<<dateset>>` but it additionally resets the _base time_ of your system, just like you had passed a value to `<<datesetup>>`. This will set `setup.datesystems[systemnam].BASE_TIME` to your new date/time, and `DATESYSTEM.elapsed` to 0. If you just want to set a date without changing the base time, see `<<dateset>>`.
+The `<<datereset>>` macro acts like `<<dateset>>` but it additionally resets the _base time_ of your system, just like you had passed a value to `<<datesetup>>`. This will set `setup.datesystems[systemname].BASE_TIME` to your new date/time, and `DATESYSTEM.elapsed` to 0. If you just want to set a date without changing the base time, see `<<dateset>>`.
 
 **Example**
 ```html
@@ -213,7 +213,7 @@ Make a 12hr clock that ticks once a minute and sends events.
 ---
 ## Events
 
-Every time the time is updated by the use of a Datesystem macro, the `:dateupdated` event is fired (on document). The event passed with this event recieves three special arguments:
+Every time the time is updated by the use of a Datesystem macro, the `:dateupdated` event is fired (on document). The event passed with this event receives three special arguments:
 ```js
 {
     system: (string), // the name of the datesystem
@@ -239,7 +239,7 @@ As well as the methods described in the next section, the object exposes the fol
 ```js
 {
     systemname:  (string), // the name of the datesystem, which is also the key in setup.datesystems
-    varname:     (string), // the name of the variable holding the timestamp of the system, detaults to 'time'
+    varname:     (string), // the name of the variable holding the timestamp of the system, defaults to 'time'
     MIN_LENGTH:  (int),    // number of seconds in a minute
     HOUR_LENGTH: (int),    // number of minutes in an hour
     DAY_LENGTH:  (int),    // number of hours in a day
@@ -253,7 +253,7 @@ As well as the methods described in the next section, the object exposes the fol
     PERIODS:     (obj),    // an object containing the singular and plural names of each time unit
     equal_years: (bool),   // true if there are no leap years in the system
     BASE_TIME:   (int),    // the base time of the system in seconds since day 1
-    elapsed:     (int),    // the number of seconds betwen BASE_TIME and the current time
+    elapsed:     (int),    // the number of seconds between BASE_TIME and the current time
 }
 ```
 
@@ -322,11 +322,11 @@ The options object contains the following properties:
 {
     type: (string) "set" or "add" // defaults to "set"
     direction: (string) "forward" or "backward" // defaults to "forward"
-    base: {date object} // as returned by getDate, defauls to the current tim
+    base: {date object} // as returned by getDate, defaults to the current tim
 }
 ```
 When `type` is "set", the format string will be treated as an absolute date. When it is "add", it will be treated as a timespan instead.
-When `direction` is "forward", month lengths will be calcualted going forward. When it is "backward", it will be calculated going backward.
+When `direction` is "forward", month lengths will be calculated going forward. When it is "backward", it will be calculated going backward.
 
 To emulate `<<dateset>>`, call `dateToTime(datestring,{ type: "set", base: getDate(0,"date") })`, and set `$time` to the result
 To emulate `<<dateadd>>`, call `dateToTime(datestring,{ type: "add" })`, and add the result to `$time`
@@ -338,7 +338,7 @@ Note: You can always add seconds to `$time` directly.
 
 Syntax: `DATESYSTEM.dateNext("timespan",[timestamp])`
 
-Given a format string representing a timespan, returns a timestamp representing the current time moved forward to the next whole instance of that unit, in the same way as `<<datenext>>`. Unlike most of the other date functions, it only accpets a single unit specification. Thus you can call `dateNext("12h")` to move to the next noon, but not `dateNext("12 15m")`.
+Given a format string representing a timespan, returns a timestamp representing the current time moved forward to the next whole instance of that unit, in the same way as `<<datenext>>`. Unlike most of the other date functions, it only accepts a single unit specification. Thus you can call `dateNext("12h")` to move to the next noon, but not `dateNext("12 15m")`.
 
 The optional second argument allows you to pass the timestamp (an int representing a number of seconds since the start of the date system) to move forward from, so you can chain calls to `dateNext()` to use multiple units. e.g. `dateNext("15m",dateNext("12h"))`.
 
