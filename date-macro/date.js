@@ -35,6 +35,7 @@
       this.yl = this.dl * this.YEAR_LENGTH;
       this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
+      this.YEAR_OFFSET = config.year_offset ?? 0;
       this.cache = { };
     }
 
@@ -201,7 +202,7 @@
       //if (!r) { return out; }
 
       if (this.equal_years) {
-        out.Y += Math.floor(r / (this.yl));
+        out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
         out.year_short  = out.y = out.Y % 100;
         time -= num * this.yl;
       }
@@ -220,7 +221,7 @@
           total_days += days;
         } else {
           if (!this.equal_years) {
-            out.Y           = year;
+            out.Y           = year + this.YEAR_OFFSET;
             out.year_short  = out.y = out.Y % 100;
           }
           out.mo          = moy + 1;

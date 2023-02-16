@@ -244,6 +244,7 @@ As well as the methods described in the next section, the object exposes the fol
     HOUR_LENGTH: (int),    // number of minutes in an hour
     DAY_LENGTH:  (int),    // number of hours in a day
     YEAR_LENGTH: (int),    // number of days in a a (non-leap) year
+    YEAR_OFFSET: (int),    // value to add to the year (custom datesystems)
     hl:          (int),    // number of seconds in an hour
     dl:          (int),    // number of seconds in a day
     yl:          (int),    // number of seconds in a (non-leap) year

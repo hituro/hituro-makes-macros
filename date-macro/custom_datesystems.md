@@ -52,16 +52,19 @@ e.g. if you pass `solar` as the `name` argument, the DATESYSTEM will be saved in
 The other system definition values are as follows:
 
 ```
-    min_length:  The number of seconds in a minute
-    hour_length: The number of minutes in an hour
-    day_length:  The number of hours in a day
-    days:        The names of each day of the week
-    week_start:  The weekday on which day 1 of your calendar starts
-    months:      An array of month information
-    periods:     Singular and plural names for each of your time units (as used by <<dateperiod>>)
+    min_length:   The number of seconds in a minute
+    hour_length:  The number of minutes in an hour
+    day_length:   The number of hours in a day
+    days:         The names of each day of the week
+    week_start:   The weekday on which day 1 of your calendar starts
+    months:       An array of month information
+    periods:      Singular and plural names for each of your time units (as used by <<dateperiod>>)
+    year_offset:  An int value to add to the returned year (see below)
 ```
 
 For `months`, the `length` value is the number of days in a non-leap year, and the `season` is the name of the season (as returned by `[season]`).
+
+For `year_offset` the value is a fixed number of years to add to the value returned by `getDate()`. Use this when you wish to use some SF date system set far into the future, which also has leap years, to reduce the calculation required. For example, if your game is set in the year 40,000, you might set `year_offset` to 40000, so that your zero-year counts from there. If your system does not have leap years, you probably do not need to do this.
 
 ### Leap Years
 
