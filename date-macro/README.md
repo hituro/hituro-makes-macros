@@ -71,6 +71,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     y              — Year, two digits (e.g. 01)
     year_short     — Same as 'y'
     year_sep       — Year, all digits, with separators (useful for 5-digit years)
+    year_mil       — The millenium part of the year (e.g. 2)
     mo             — Month, in digits (e.g. 12)
     0mo            — Month, prefixed with 0s if less than 10
     M              — Month, full name
@@ -340,7 +341,7 @@ Note: You can always add seconds to `$time` directly.
 
 Syntax: `DATESYSTEM.dateNext("timespan",[timestamp])`
 
-Given a format string representing a timespan, returns a timestamp representing the current time moved forward to the next whole instance of that unit, in the same way as `<<datenext>>`. Unlike most of the other date functions, it only accepts a single unit specification. Thus you can call `dateNext("12h")` to move to the next noon, but not `dateNext("12 15m")`.
+Given a format string representing a timespan, returns a timestamp representing the current time moved forward to the next whole instance of that unit, in the same way as `<<datenext>>`. Smaller units will be set to zero (e.g. if you set the hours, then the minutes and seconds will be set to 0). Unlike most of the other date functions, it only accepts a single unit specification. Thus you can call `dateNext("12h")` to move to the next noon, but not `dateNext("12 15m")`.
 
 The optional second argument allows you to pass the timestamp (an int representing a number of seconds since the start of the date system) to move forward from, so you can chain calls to `dateNext()` to use multiple units. e.g. `dateNext("15m",dateNext("12h"))`.
 

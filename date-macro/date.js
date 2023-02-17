@@ -174,6 +174,7 @@
         y: 0,
         year_short: 0,
         year_sep: 0,
+        year_mil: 0,
         mo: output == "date" ? 1 : 0,
         "0mo": "",
         M: "",
@@ -206,6 +207,7 @@
         out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
         out.year_short  = out.y = out.Y % 100;
         out.year_sep    = out.Y.toLocaleString();
+        out.year_mil    = Math.floor(out.Y / 1000);
         time -= num * this.yl;
       }
       
@@ -226,6 +228,7 @@
             out.Y           = year + this.YEAR_OFFSET;
             out.year_short  = out.y = out.Y % 100;
             out.year_sep    = out.Y.toLocaleString();
+            out.year_mil    = Math.floor(out.Y / 1000);
           }
           out.mo          = moy + 1;
           out.month_long  = out.M = month.name;

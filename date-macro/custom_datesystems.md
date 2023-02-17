@@ -179,3 +179,17 @@ Although each Datesystem keeps its own time variable by default, you can easily 
     ]
 }`>><</nobr>>
 ```
+
+### Warhammer 40k
+
+Warhammer doesn't actually *have* a custom calendar, it uses the Gregorian system, counting from 1AD, but it does have a way of expressing dates that's a bit different.
+```html
+<<nobr>><<datesetup `{
+    year_offset: 40000
+}`>><</nobr>>
+```
+To output a 40k style date/time:
+```html
+<<set _gd = setup.datesystems.default.getDate()>>
+<<= Math.floor(_gd.day_of_year * 24 + _gd.h * 0.11407955)  + '.' + _gd.Y.toString().substring(3).padStart(3,'0') +'.M' +  (_gd.year_mil + 1)>>
+```
