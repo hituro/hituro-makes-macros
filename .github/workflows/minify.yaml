@@ -3,6 +3,8 @@ on: [push]
 jobs:
   Minify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so auto-minify job can access it
       - uses: actions/checkout@v2
