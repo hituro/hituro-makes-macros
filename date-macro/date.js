@@ -173,6 +173,7 @@
         Y: output == "date" ? 1 : 0,
         y: 0,
         year_short: 0,
+        year_sep: 0,
         mo: output == "date" ? 1 : 0,
         "0mo": "",
         M: "",
@@ -204,6 +205,7 @@
       if (this.equal_years) {
         out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
         out.year_short  = out.y = out.Y % 100;
+        out.year_sep    = out.Y.toLocaleString();
         time -= num * this.yl;
       }
       
@@ -223,6 +225,7 @@
           if (!this.equal_years) {
             out.Y           = year + this.YEAR_OFFSET;
             out.year_short  = out.y = out.Y % 100;
+            out.year_sep    = out.Y.toLocaleString();
           }
           out.mo          = moy + 1;
           out.month_long  = out.M = month.name;

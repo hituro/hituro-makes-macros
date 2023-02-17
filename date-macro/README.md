@@ -70,6 +70,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     Y              — Year, all digits (e.g. 2001)
     y              — Year, two digits (e.g. 01)
     year_short     — Same as 'y'
+    year_sep       — Year, all digits, with separators (useful for 5-digit years)
     mo             — Month, in digits (e.g. 12)
     0mo            — Month, prefixed with 0s if less than 10
     M              — Month, full name
