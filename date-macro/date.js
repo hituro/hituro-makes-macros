@@ -1,1 +1,546 @@
-(function(){"use strict";var a=Math.max,b=Math.floor;variables().time=0,window.DATESYSTEM=class{constructor(a={}){this.systemname=a.name??"default",this.varname="default"==this.systemname?"time":this.systemname+"-time",this.MIN_LENGTH=a.min_length??60,this.HOUR_LENGTH=a.hour_length??60,this.DAY_LENGTH=a.day_length??24,this.DAYS=a.days??["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],this.WEEK_START=a.week_start??5,this.MONTHS=a.months??[{name:"January",length:31,season:"winter"},{name:"February",length:28,season:"winter",leap_century:[[400,29]],leap:[[4,29]]},{name:"March",length:31,season:"spring"},{name:"April",length:30,season:"spring"},{name:"May",length:31,season:"spring"},{name:"June",length:30,season:"summer"},{name:"July",length:31,season:"summer"},{name:"August",length:31,season:"summer"},{name:"September",length:30,season:"autumn"},{name:"October",length:31,season:"autumn"},{name:"November",length:30,season:"autumn"},{name:"December",length:31,season:"winter"}],this.YEAR_LENGTH=this.MONTHS.reduce((a,b)=>a+b.length,0),this.PERIODS=a.periods??{y:["year","years"],mo:["month","months"],d:["day","days"],h:["hour","hours"],m:["minute","minutes"],s:["second","seconds"]},this.hl=this.MIN_LENGTH*this.HOUR_LENGTH,this.dl=this.hl*this.DAY_LENGTH,this.yl=this.dl*this.YEAR_LENGTH,this.equal_years=0==this.MONTHS.reduce((a,b)=>{a+=b.leap_century||b.leap?1:0}),this.BASE_TIME=variables()[this.varname]=a.base_time?this.dateToTime(a.base_time):0,this.YEAR_OFFSET=a.year_offset??0,this.cache={}}get elapsed(){return variables()[this.varname]-this.BASE_TIME}setToTime(a,b){return this.dateToTime(a,{type:"set",base:b??this.getDate(0,"date")})}dateToTime(a,c={}){c.type=c.type??"set",c.direction=c.direction??"forward";const d=c.base??this.getDate(variables()[this.varname]);"now"==a&&(a=this.getRealDate());const e=a.toLowerCase().split(" ");let f=0;for(const g of e){let[,a,e]=g.match(/^([0-9]+)(s|m|h|d|mo|y)$/)||[];if(!e||!a)throw new Error("Unrecognised date element in dateToTime(): please use s, m, h, d, mo, or y");if("set"==c.type&&["mo","d","y"].includes(e)&&a--,"s"===e?f+=1*a:"m"===e?f+=a*this.MIN_LENGTH:"h"===e?f+=a*this.hl:"d"===e?f+=a*this.dl:"y"===e?this.equal_years?f+=a*this.yl:(a*=this.MONTHS.length,e="mo"):void 0,"mo"==e)if("forward"==c.direction)for(let c=0;c<a;c++){const a=d.Y+b((d.mo+c)/this.MONTHS.length),e=this.MONTHS[(d.mo-1+c)%this.MONTHS.length],g=this.getMonthLength(e,a);f+=g*this.dl}else for(let c=a;0<c;c--){const a=d.Y+b((d.mo+c)/this.MONTHS.length),e=this.MONTHS[(d.mo-1-c)%this.MONTHS.length],g=this.getMonthLength(e,a);f+=g*this.dl}}return f}moveToTime(a){const b=this.getDate(variables()[this.varname]),c=a.toLowerCase().split(" "),d=[["y","Y"],["mo","mo"],["d","d"],["h","h"],["m","m"],["s","s"]],f={};for(const b of c){let[,a,c]=b.match(/^([0-9]+)(s|m|h|d|mo|y)$/)||[];f[c]=a}const g=[];for(const c of d)g.push((f[c[0]]??b[c[1]])+c[0]);return this.setToTime(g.join(" "))}dateNext(a,c){let d=c??variables()[this.varname];const e=this.getDate(d);let[,f,g]=a.match(/^([0-9]+)(s|m|h|d|mo|y)$/)||[];if(!g||!f)throw new Error("Unrecognised date element in dateToTime(): please use s, m, h, d, mo, or y");if("m"===g?f-=e.m:"h"===g?f-=e.h:"mo"===g?f--:void 0,"s"===g?d+=1:"m"===g?d=b(d/this.MIN_LENGTH)*this.MIN_LENGTH+this.MIN_LENGTH:"h"===g?d=b(d/this.hl)*this.hl+f*this.hl:"d"===g?d=b(d/this.dl)*this.dl+f*this.dl:"y"===g?d=b(d/this.yl)*this.yl+f*this.yl:void 0,"mo"==g){const a=this.MONTHS[e.mo-1],c=this.getMonthLength(a,e.y);d=b(d/this.dl)*this.dl,d+=(c-e.d+1)*this.dl;for(let a=e.mo;a<=f;a++){const c=e.Y+b((e.mo+a)/this.MONTHS.length),f=this.MONTHS[(e.mo-1+a)%this.MONTHS.length],g=this.getMonthLength(f,c);d+=this.dl*g}}return d}getDate(a,c="date"){let d=void 0===a?variables()[this.varname]:a;const e=d;if(this.cache.time===d)return this.cache.value;const f={Y:"date"==c?1:0,y:0,year_short:0,year_sep:0,mo:"date"==c?1:0,"0mo":"",M:"",month_long:"",month_short:"",d:"date"==c?1:0,D:"","0d":"",day_of_year:0,day_long:"",day_short:"",day_ordinal:"th",weekday:"",h:0,h12:0,"0h":"","0h12":"",day_half:"",m:0,"0m":"",s:0,"0s":"",e:d,season:""};this.equal_years&&(f.Y+=b(d/this.yl)+this.YEAR_OFFSET,f.year_short=f.y=f.Y%100,f.year_sep=f.Y.toLocaleString(),time-=num*this.yl);let g=0,h=0;for(;;){const a=f.Y+b(g/this.MONTHS.length),c=g%this.MONTHS.length,e=this.MONTHS[c],i=this.getMonthLength(e,a);if(d>=i*this.dl)d-=i*this.dl,0==c?f.day_of_year=i:f.day_of_year+=i,h+=i;else{this.equal_years||(f.Y=a+this.YEAR_OFFSET,f.year_short=f.y=f.Y%100,f.year_sep=f.Y.toLocaleString()),f.mo=c+1,f.month_long=f.M=e.name,f.month_short=e.short??e.name.substring(0,3),f.season=e.season??"";break}g++}return f["0mo"]=10>f.mo?`0${f.mo}`:f.mo,f.d+=b(d/this.dl),f.day_of_year+=f.d,f.day_ordinal=this.getOrdinal(f.d),f["0d"]=10>f.d?`0${f.d}`:f.d,d%=this.dl,f.weekday=(f.Y*this.YEAR_LENGTH+f.day_of_year+this.WEEK_START)%this.DAYS.length,f.day_long=f.D=this.DAYS[f.weekday],f.day_short=f.day_long.substring(0,2),f.h=b(d/this.hl),f.h12=f.h%b(this.DAY_LENGTH/2),f.day_half=12<f.h?"pm":"am",f["0h"]=10>f.h?`0${f.h}`:f.h,f["0h12"]=10>f.h?`0${f.h}`:f.h,d%=this.hl,f.m=b(d/this.MIN_LENGTH),f["0m"]=10>f.m?`0${f.m}`:f.m,d%=this.MIN_LENGTH,f.s=d,f["0s"]=10>f.s?`0${f.s}`:f.s,this.cache.time=e,this.cache.value=f,f}getRealDate(){const a=new Date,b=a.getSeconds(),c=a.getMinutes(),e=a.getHours(),f=a.getDate(),d=a.getMonth()+1,g=a.getFullYear();return`${g}y ${d}mo ${f}d ${e}h ${c}m ${b}s`}getYearLength(a){if(this.equal_years)return this.YEAR_LENGTH;let b=0;for(let c of this.MONTHS)b+=this.getMonthLength(c,a);return b}getMonthLength(a,b=0){if(this.equal_years)return a.length;if(a.leap_century&&!(b%100)){for(const c of a.leap_century)if(0==b%c[0])return c[1];}else if(a.leap&&(a.leap_century&&b%100||!a.leap_century))for(const c of a.leap)if(0==b%c[0])return c[1];return a.length}dateFormat(a,b){const c=this.getDate(b);return a&&"short"!=a?"long"==a?`${c.day_long} ${c.d}${c.day_ordinal} ${c.month_long} ${c.Y}`:"datetime"==a?`${c.day_long} the ${c.d}${c.day_ordinal} of ${c.month_long}, ${c.Y} ${c["0h"]}:${c["0m"]}:${c["0s"]}`:"time"==a?`${c["0h"]}:${c["0m"]}:${c["0s"]}`:a.replaceAll(/\[([A-Z0-9a-z_]+)\]/g,(a,b)=>c[b]??a):`${c.d}-${c.mo}-${c.Y}`}getOrdinal(a){if(10<a&&20>a)return"th";let b=a.toString().slice(-1);return"1"===b?"st":"2"===b?"nd":"3"===b?"rd":"th"}datePeriod(b,c=" ",d){const e=this.getDate(b,"period");e.mo=a(0,e.mo-1);const f=["y","mo","d","h","m","s"];let g=[];for(const a of f)e[a]&&g.push(e[a]+" "+(1<e[a[0]]?this.PERIODS[a][1]:this.PERIODS[a][0]));if(d&&1<g.length){let a=g.pop();return g.join(c)+d+a}return g.join(c).trim()}dateCompare(a,b){let c={};if("string"==typeof a)c=this.getDate(this.dateToTime(a));else throw new Error("Argument one to dateCompare() must be a date string");"string"==typeof b?b=this.getDate(this.dateToTime(b)):"number"==typeof b&&(b=this.getDate(b));const d=a.toLowerCase().split(" "),e=[];for(const c of d){let[,,a]=c.match(/^([0-9]+)(s|m|h|d|mo|y)$/)||[];e.push(a)}for(const d of e)if(b[d]!=c[d])return!1;return!0}static dateargs=function(a){if(setup.datesystems[a[a.length-1]]){let b=a[a.length-1];return{args:a.slice(0,-1),datesystem:setup.datesystems[b],varname:setup.datesystems[b].varname}}return{args:a,datesystem:setup.datesystems["default"],varname:setup.datesystems["default"].varname}};datetrigger=function(a,b){$(document).trigger({type:":dateupdated",from:a,to:b,system:this.systemname})}},Macro.add("date",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");this.output.append(a.datesystem.dateFormat(a.args[0],a.args[1]))}}),Macro.add("dateset",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");let b=a.datesystem.setToTime(a.args[0]);a.datesystem.datetrigger(variables()[a.datesystem.varname],b),variables()[a.datesystem.varname]=b}}),Macro.add("dateto",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateto>>");let b=a.datesystem.moveToTime(a.args[0]);a.datesystem.datetrigger(variables()[a.datesystem.varname],b),variables()[a.datesystem.varname]=b}}),Macro.add("dateadd",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateadd>>");let b=a.datesystem.dateToTime(a.args[0],{type:"add"});a.datesystem.datetrigger(variables()[a.datesystem.varname],variables()[a.datesystem.varname]+b),variables()[a.datesystem.varname]+=b}}),Macro.add("datesubtract",{handler:function(){let b=DATESYSTEM.dateargs(this.args);if(!b.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<datesubtract>>");let c=a(0,variables()[b.datesystem.varname]-c);b.datesystem.datetrigger(variables()[b.datesystem.varname],c),variables()[b.datesystem.varname]=c}}),Macro.add("datenext",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<datenext>>");let b=a.datesystem.dateNext(a.args[0]);a.datesystem.datetrigger(variables()[a.datesystem.varname],b),variables()[a.datesystem.varname]=b}}),Macro.add("datereset",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<datereset>>");let b=variables()[a.datesystem.varname];variables()[a.datesystem.varname]=0;let c=a.datesystem.setToTime(a.args[0]);a.datesystem.datetrigger(b,c),variables()[a.datesystem.varname]=this.BASE_TIME=c}}),Macro.add("dateperiod",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateperiod>>");this.output.append(a.datesystem.datePeriod(a.args[0],a.args[1],a.args[2]))}}),Macro.add("dateticker",{handler:function(){let a=DATESYSTEM.dateargs(this.args);if(!a.datesystem)throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateticker>>");const b=$("<div class='macro-dateticker'>"),c=a.args[0]??"[0h]:[0m]:[0s]",d=a.args[1]??"1s",e=a.args[1]??!1,f=a.datesystem.systemname,g=a.datesystem.dateToTime(d),h=1e3*parseInt(g);b.html(a.datesystem.dateFormat(c)),b.appendTo(this.output);const i=setInterval(function(){document.contains(b[0])?(e&&a.datesystem.datetrigger(variables()[a.datesystem.varname],variables()[a.datesystem.varname]+g),variables()[setup.datesystems[f].varname]+=g,b.html(setup.datesystems[f].dateFormat(c))):clearInterval(i)},h)}}),Macro.add("datesetup",{handler:function(){let a={};if(this.args[0])if("string"==typeof this.args[0])a.base_time=this.args[0];else if("object"==typeof this.args[0])a=this.args[0];else throw new Error("The first argument to <<datesetup>> must either be a default base_time, or a config object");let b=new DATESYSTEM(a);setup.datesystems=setup.datesystems??{},setup.datesystems[b.systemname]=b}})})(),$(document).on(":dateupdated",function(a){console.log(a.from+" => "+a.to)});
+(function() {
+  "use strict";
+  
+  variables()["time"] = 0;
+  
+  window.DATESYSTEM = class DATESYSTEM {
+    constructor(config = {}) {
+      this.systemname  = config.name ?? "default";
+      this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
+      this.MIN_LENGTH  = config.min_length ?? 60;
+      this.HOUR_LENGTH = config.hour_length ?? 60;
+      this.DAY_LENGTH  = config.day_length ?? 24;
+      this.DAYS        = config.days ?? [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      this.WEEK_START  = config.week_start ?? 5;
+      this.MONTHS      = config.months ?? [
+        { name: "January"  , length: 31, season: "winter" }, 
+        { name: "February" , length: 28, season: "winter", leap_century: [[400,29]], leap: [[4,29]] }, 
+        { name: "March"    , length: 31, season: "spring" }, 
+        { name: "April"    , length: 30, season: "spring" }, 
+        { name: "May"      , length: 31, season: "spring" }, 
+        { name: "June"     , length: 30, season: "summer" }, 
+        { name: "July"     , length: 31, season: "summer" }, 
+        { name: "August"   , length: 31, season: "summer" }, 
+        { name: "September", length: 30, season: "autumn" }, 
+        { name: "October"  , length: 31, season: "autumn" }, 
+        { name: "November" , length: 30, season: "autumn" }, 
+        { name: "December" , length: 31, season: "winter" }
+      ];
+      this.YEAR_LENGTH = this.MONTHS.reduce((total,m) => { return total + m.length},0)
+      this.PERIODS    = config.periods ?? { 
+        y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
+      };
+      this.hl = this.MIN_LENGTH * this.HOUR_LENGTH;
+      this.dl = this.hl * this.DAY_LENGTH;
+      this.yl = this.dl * this.YEAR_LENGTH;
+      this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
+      this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
+      this.YEAR_OFFSET = config.year_offset ?? 0;
+      this.cache = { };
+    }
+
+    get elapsed() {
+      return variables()[this.varname] - this.BASE_TIME;
+    }
+    
+    setToTime(datestring, base) {
+      return this.dateToTime(datestring, { type: "set", base: base ?? this.getDate(0,"date") });
+    }
+    
+    dateToTime(datestring, options = {}) {
+      // set options
+      options.type      = options.type ?? "set";
+      options.direction = options.direction ?? "forward";
+      
+      //set base values
+      const base   = options.base ?? this.getDate(variables()[this.varname]);
+      if (datestring == "now") {
+        datestring = this.getRealDate();
+      }
+      
+      const parts  = datestring.toLowerCase().split(" ");
+      let   time   = 0;
+      
+      for (const part of parts) {
+        let [ , num, unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
+        
+        if (!unit || !num) throw new Error("Unrecognised date element in dateToTime(): please use s, m, h, d, mo, or y");
+        
+        if (options.type == "set" && ["mo","d","y"].includes(unit)) {
+          num --;
+        }
+        
+        switch (unit) {
+          case "s" : time += num * 1; break;
+          case "m" : time += num * this.MIN_LENGTH;  break;
+          case "h" : time += num * this.hl; break;
+          case "d" : time += num * this.dl; break;
+          case "y" : 
+            if (this.equal_years) {
+              time += num * this.yl;
+            } else {
+              num *= this.MONTHS.length; unit = 'mo'; 
+            } 
+            break;
+        }
+        if (unit == 'mo') {
+          if (options.direction == "forward") {
+            for (let i = 0; i < num; i++) {
+              const year  = base.Y + Math.floor((base.mo + i) / this.MONTHS.length);
+              const month = this.MONTHS[(base.mo - 1 + i) % this.MONTHS.length];
+              const days  = this.getMonthLength(month,year);
+              time += days * (this.dl);
+            }
+          } else {
+            for (let i = num; i > 0; i--) {
+              const year  = base.Y+ Math.floor((base.mo + i) / this.MONTHS.length);
+              const month = this.MONTHS[(base.mo - 1 - i) % this.MONTHS.length];
+              const days  = this.getMonthLength(month,year);
+              time += days * (this.dl);
+            }
+          }
+        }
+      }
+      return time;
+    }
+    
+    moveToTime(datestring) {
+      const base  = this.getDate(variables()[this.varname]);
+      const parts = datestring.toLowerCase().split(" ");
+      const full  = [["y","Y"], ["mo","mo"], ["d","d"], ["h","h"], ["m","m"], ["s","s"]];
+      const user  = {};
+      //make an object out of what the user has provided
+      for (const part of parts) {
+        let [ , num, unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
+        user[unit] = num;
+      }
+
+      //make a new time string filling in missing elments from base
+      const out   = [];
+      for (const e of full) {
+        out.push((user[e[0]] ?? base[e[1]]) + e[0]);
+      }
+      return this.setToTime(out.join(' '));
+    }
+
+    dateNext(interval,time) {
+      let   r     = time ?? variables()[this.varname];
+      const base  = this.getDate(r);
+      let [ , num, unit ] = interval.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
+
+      if (!unit || !num) throw new Error("Unrecognised date element in dateToTime(): please use s, m, h, d, mo, or y");
+
+      // find out how far to the next unit asked for
+      switch (unit) {
+        case "m" : num -= base.m; break;
+        case "h" : num -= base.h; break;
+        case "mo": num --; break;
+      }
+      // set the new time
+      switch (unit) {
+        case "s" : r += 1; break;
+        case "m" : r = (Math.floor(r / this.MIN_LENGTH)  * this.MIN_LENGTH) + this.MIN_LENGTH; break;
+        case "h" : r = (Math.floor(r / this.hl) * this.hl) + (num * this.hl); break;
+        case "d" : r = (Math.floor(r / this.dl) * this.dl) + (num * this.dl); break;
+        case "y" : r = (Math.floor(r / this.yl) * this.yl) + (num * this.yl); break;
+      }
+      if (unit == 'mo') {
+        const month = this.MONTHS[base.mo -1];
+        const days  = this.getMonthLength(month,base.y);
+        // reset to end of month
+        r = (Math.floor(r / this.dl) * this.dl) ;
+        r += ((days - base.d) + 1) * this.dl;
+        for (let i = base.mo; i <= num; i++) {
+          const year  = base.Y + Math.floor((base.mo + i) / this.MONTHS.length);
+          const month = this.MONTHS[(base.mo - 1 + i) % this.MONTHS.length];
+          const days  = this.getMonthLength(month,year);
+          r += (this.dl * days)
+        }
+      }
+      return r;
+    }
+    
+    getDate(date, output = "date") {
+      let r = (date !== undefined) ? date : variables()[this.varname];
+      const initial = r;
+
+      // caching
+      if (this.cache.time === r) { 
+        return this.cache.value; 
+      }
+
+      const out   = {
+        Y: output == "date" ? 1 : 0,
+        y: 0,
+        year_short: 0,
+        year_sep: 0,
+        mo: output == "date" ? 1 : 0,
+        "0mo": "",
+        M: "",
+        month_long: "",
+        month_short: "",
+        d: output == "date" ? 1 : 0,
+        D: "",
+        "0d": "",
+        day_of_year: 0,
+        day_long: "",
+        day_short: "",
+        day_ordinal: "th",
+        weekday: "",
+        h: 0,
+        h12: 0,
+        "0h": "",
+        "0h12": "",
+        day_half: "",
+        m: 0,
+        "0m": "",
+        s: 0,
+        "0s": "",
+        e: r,
+        season: ""
+      };
+      
+      //if (!r) { return out; }
+
+      if (this.equal_years) {
+        out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
+        out.year_short  = out.y = out.Y % 100;
+        out.year_sep    = out.Y.toLocaleString();
+        time -= num * this.yl;
+      }
+      
+      // months & years
+      let months = 0;
+      let total_days = 0;
+      while (true) {
+        const year  = out.Y + Math.floor(months / this.MONTHS.length);
+        const moy   = months % this.MONTHS.length;
+        const month = this.MONTHS[moy];
+        const days  = this.getMonthLength(month,year);
+        if (r >= (days * this.dl)) {
+          r -= (days * this.dl);
+          if (moy == 0) { out.day_of_year = days } else { out.day_of_year += days; }
+          total_days += days;
+        } else {
+          if (!this.equal_years) {
+            out.Y           = year + this.YEAR_OFFSET;
+            out.year_short  = out.y = out.Y % 100;
+            out.year_sep    = out.Y.toLocaleString();
+          }
+          out.mo          = moy + 1;
+          out.month_long  = out.M = month.name;
+          out.month_short = month.short ?? month.name.substring(0,3);
+          out.season      = month.season ?? "";
+          break;
+        }
+        months ++;
+      }
+      out["0mo"] = out.mo < 10 ? `0${out.mo}` : out.mo;
+      
+      // days
+      out.d += Math.floor(r / (this.dl));
+      out.day_of_year += out.d;
+      out.day_ordinal = this.getOrdinal(out.d);
+      out["0d"] = out.d < 10 ? `0${out.d}` : out.d;
+      r = r % (this.dl);
+      
+      // day of week
+      out.weekday   = ((out.Y * this.YEAR_LENGTH) + out.day_of_year + this.WEEK_START) % this.DAYS.length;
+      out.day_long  = out.D = this.DAYS[out.weekday];
+      out.day_short = out.day_long.substring(0,2);
+      
+      // hours
+      out.h = Math.floor(r / (this.hl));
+      out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
+      out.day_half = out.h > 12 ? "pm" : "am";
+      out["0h"] = out.h < 10 ? `0${out.h}` : out.h;
+      out["0h12"] = out.h < 10 ? `0${out.h}` : out.h;
+      r = r % (this.hl);
+      
+      // minutes
+      out.m = Math.floor(r / this.MIN_LENGTH);
+      out["0m"] = out.m < 10 ? `0${out.m}` : out.m;
+      r = r % (this.MIN_LENGTH);
+      
+      // seconds
+      out.s = r;
+      out["0s"] = out.s < 10 ? `0${out.s}` : out.s;
+
+      // caching
+      this.cache.time = initial;
+      this.cache.value = out;
+      
+      return out;
+    }
+    
+    getRealDate() {
+      const date = new Date(); // use whatever timezone the user is in
+      const s    = date.getSeconds();
+      const m    = date.getMinutes();
+      const h    = date.getHours();
+      const d    = date.getDate();
+      const mo   = date.getMonth() + 1;
+      const y    = date.getFullYear();
+      return `${y}y ${mo}mo ${d}d ${h}h ${m}m ${s}s`;
+    }
+    
+    getYearLength(year) {
+      if (this.equal_years) return this.YEAR_LENGTH;
+      let days = 0;
+      for (let month of this.MONTHS) {
+        days += this.getMonthLength(month,year);
+      }
+      return days;
+    }
+    
+    getMonthLength(month,year=0) {
+      if (this.equal_years) return month.length;
+      if (month.leap_century && !(year % 100)) {
+        // it's a century, and month has a leap_century rule
+        for (const leap_cond of month.leap_century) {
+          if (year % leap_cond[0] == 0) {
+            return leap_cond[1];
+          }
+        }
+      }
+      else if (month.leap && ((month.leap_century && year % 100) || !month.leap_century)) {
+        for (const leap_cond of month.leap) {
+          if (year % leap_cond[0] == 0) {
+            return leap_cond[1];
+          }
+        }
+      }
+      return month.length;
+    }
+    
+    dateFormat(format,date) {
+      const d = this.getDate(date);
+      if (!format || format == "short") {
+        return `${d.d}-${d.mo}-${d.Y}`;
+      }
+      else if (format == "long") {
+        return `${d.day_long} ${d.d}${d.day_ordinal} ${d.month_long} ${d.Y}`;
+      }
+      else if (format == "datetime") {
+        return `${d.day_long} the ${d.d}${d.day_ordinal} of ${d.month_long}, ${d.Y} ${d['0h']}:${d['0m']}:${d['0s']}`;
+      }
+      else if (format == "time") {
+        return `${d['0h']}:${d['0m']}:${d['0s']}`;
+      }
+      else {
+        return format.replaceAll(/\[([A-Z0-9a-z_]+)\]/g, (match, capture) => {
+          return d[capture] ?? match;
+        });
+      }
+    }
+    
+    getOrdinal(n) {
+      if (n > 10 && n < 20) { return "th" }
+      let c = n.toString().slice(-1);
+      switch (c) {
+        case "1":
+          return "st";
+        case "2":
+          return "nd";
+        case "3":
+          return "rd";
+        default:
+          return "th";
+      }
+    }
+    
+    datePeriod(span, separator = ' ', last_separator) {
+      // given a timespan, format it
+      const s = this.getDate(span, "period");
+            s.mo = Math.max(0,s.mo - 1);
+      const parts = ["y","mo","d","h","m","s"];
+      let out = [];
+      for (const part of parts) {
+        if (s[part]) {
+          out.push(s[part] + ' ' + (s[part[0]] > 1 ? this.PERIODS[part][1] : this.PERIODS[part][0]));
+        }
+      }
+      if (last_separator && out.length > 1) {
+        let last = out.pop();
+        return out.join(separator) + last_separator + last;
+      }
+      return out.join(separator).trim();
+    }
+
+    dateCompare(datestring,comp) {
+      // make both dates into date objects
+      let date = {};
+      if (typeof datestring == "string") {
+        date = this.getDate(this.dateToTime(datestring));
+      } else {
+        throw new Error("Argument one to dateCompare() must be a date string");
+      }
+      if (typeof comp == "string") {
+        comp = this.getDate(this.dateToTime(comp));
+      } else if (typeof comp == "number") {
+        comp = this.getDate(comp);
+      }
+
+      // work out which elements to compare
+      const parts  = datestring.toLowerCase().split(" ");
+      const elems  = [];
+      for (const part of parts) {
+        let [ , , unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
+        elems.push(unit);
+      }
+
+      // compare
+      for (const dp of elems) {
+        if (comp[dp] != date[dp]) { 
+          return false;
+        }
+      }
+      return true;
+    }
+
+    static dateargs = function(args) {
+      if (setup.datesystems[args[args.length - 1]]) {
+        // last arg is a datesystem
+        let ds = args[args.length -1];
+        return { args: args.slice(0,-1), datesystem: setup.datesystems[ds], varname: setup.datesystems[ds].varname };
+      } else {
+        return { args: args, datesystem: setup.datesystems["default"], varname: setup.datesystems["default"].varname }
+      }
+    }
+
+    datetrigger = function(from,to) {
+      $(document).trigger({ type: ":dateupdated", from: from, to: to, system: this.systemname});
+    }
+    
+  }
+  
+  /* --------------------------- */
+  /* MACROS                      */
+  /* --------------------------- */
+  
+  Macro.add('date', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
+      this.output.append(dateargs.datesystem.dateFormat(dateargs.args[0],dateargs.args[1]));
+    }
+  });
+  
+  Macro.add('dateset', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
+      let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
+      variables()[dateargs.datesystem.varname] = new_time;
+    }
+  });
+  
+  Macro.add('dateto', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateto>>");
+      let new_time = dateargs.datesystem.moveToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
+      variables()[dateargs.datesystem.varname] = new_time;
+    }
+  });
+  
+  Macro.add('dateadd', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateadd>>");
+      let new_time = dateargs.datesystem.dateToTime(dateargs.args[0],{ type: "add" });
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], variables()[dateargs.datesystem.varname] + new_time);
+      variables()[dateargs.datesystem.varname] += new_time;
+    }
+  });
+  
+  Macro.add('datesubtract', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datesubtract>>");
+      let new_time = Math.max(0,variables()[dateargs.datesystem.varname] - new_time);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
+      variables()[dateargs.datesystem.varname] = new_time
+    }
+  });
+  
+  Macro.add('datenext', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datenext>>");
+      let new_time = dateargs.datesystem.dateNext(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
+      variables()[dateargs.datesystem.varname] = new_time;
+    }
+  });
+  
+  Macro.add('datereset', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<datereset>>");
+      let old_time = variables()[dateargs.datesystem.varname];
+      variables()[dateargs.datesystem.varname] = 0;
+      let new_time = dateargs.datesystem.setToTime(dateargs.args[0]);
+      dateargs.datesystem.datetrigger(old_time, new_time);
+      variables()[dateargs.datesystem.varname] = this.BASE_TIME = new_time;
+    }
+  });
+  
+  Macro.add('dateperiod', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateperiod>>");
+      this.output.append(dateargs.datesystem.datePeriod(dateargs.args[0],dateargs.args[1],dateargs.args[2]));
+    }
+  });
+  
+  Macro.add('dateticker', {
+    handler: function handler() {
+      let dateargs = DATESYSTEM.dateargs(this.args);
+      if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateticker>>");
+      const $ticker   = $("<div class='macro-dateticker'>");
+      const format    = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
+      const unit      = dateargs.args[1] ?? "1s";
+      const event     = dateargs.args[1] ?? false;
+      const ds        = dateargs.datesystem.systemname; // use the key so we survive passage transitions
+      const incsecs   = dateargs.datesystem.dateToTime(unit);
+      const frequency = parseInt(incsecs) * 1000;
+      $ticker.html(dateargs.datesystem.dateFormat(format));
+      $ticker.appendTo(this.output);
+      
+      const ticker  = setInterval(function() {
+        if (document.contains($ticker[0])) {
+          if (event) dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], variables()[dateargs.datesystem.varname] + incsecs);
+          variables()[setup.datesystems[ds].varname] += incsecs;
+          $ticker.html(setup.datesystems[ds].dateFormat(format));
+        } else {
+          clearInterval(ticker);
+        }
+      },frequency); 
+    }
+  });
+  
+  Macro.add('datesetup', {
+    handler: function handler() {
+      let dateargs = {};
+      if (this.args[0]) {
+        if (typeof this.args[0] == "string") { 
+          dateargs.base_time = this.args[0];
+        } else if (typeof this.args[0] == "object") {
+          dateargs = this.args[0];
+        } else {
+          throw new Error("The first argument to <<datesetup>> must either be a default base_time, or a config object");
+        }
+      }
+      let ds = new DATESYSTEM(dateargs);
+      setup.datesystems = setup.datesystems ?? {};
+      setup.datesystems[ds.systemname] = ds;
+    }
+  });
+})();
+
+$(document).on(":dateupdated", function(e) {
+  console.log(e.from + " => " + e.to); 
+});

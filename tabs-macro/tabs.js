@@ -1,1 +1,44 @@
-Macro.add("tabs",{skipArgs:!1,tags:["tab","/tab"],handler:function(){const a=$("<div class='tabs-tabset'>"),b=$("<div class='tabs-tabs'>"),c=$("<div class='tabs-contents'>"),d=[],e=[];let f=0,g=0,h="";this.args[0]&&(h=this.args[0]+"-",a.attr("id",this.args[0]));for(var j=0,k=this.payload.length;j<k;++j)if("tab"==this.payload[j].name){let b=this.payload[j].args[0],c="tabs-contents-"+b.trim().toLowerCase().replace(/[^a-z0-9]/g,"").replace(/\s+/g,"-"),i=$(`<button id="${c}-control">${b}</button>`).ariaClick(function(){$(a).find(".tabs-tabs button").removeClass("selected"),$(a).find(".tabs-content").addClass("hidden"),$(a).find(`#${h}${c}`).removeClass("hidden"),$(this).addClass("selected")});d.push(i),e.push($(`<div class="tabs-content hidden" id="${h}${c}">`).wiki(this.payload[j].contents.trim())),this.payload[j].args[1]&&(g=f),f++}d[g].addClass("selected"),e[g].removeClass("hidden"),b.append(...d),c.append(...e),a.attr("style",`--cols:${f}`).append(b,c),$(this.output).append(a)}});
+Macro.add('tabs', {
+    skipArgs: false,
+    tags    : ['tab','/tab'],
+    handler : function() {
+      const $wrapper  = $("<div class='tabs-tabset'>");
+      const $tabs     = $("<div class='tabs-tabs'>");
+      const $contents = $("<div class='tabs-contents'>");
+      
+      const tabs      = [];
+      const contents  = [];
+      let   tabCount  = 0;
+      let   selected  = 0;
+      let   prefix    = '';
+      
+      if (this.args[0]) {
+        prefix = this.args[0] + '-';
+        $wrapper.attr("id",this.args[0]);
+      }
+      
+      for (var i = 0, len = this.payload.length; i < len; ++i) {
+        if (this.payload[i].name == 'tab') {
+          let tabname = this.payload[i].args[0];
+          let tabid   = 'tabs-contents-' + tabname.trim().toLowerCase().replace(/[^a-z0-9]/g,'').replace(/\s+/g, '-');
+          let $tab = $(`<button id="${tabid}-control">${tabname}</button>`).ariaClick(function() {
+            $($wrapper).find(".tabs-tabs button").removeClass("selected");
+            $($wrapper).find(".tabs-content").addClass("hidden");
+            $($wrapper).find(`#${prefix}${tabid}`).removeClass("hidden");
+            $(this).addClass("selected");
+          });
+          tabs.push($tab);
+          contents.push($(`<div class="tabs-content hidden" id="${prefix}${tabid}">`).wiki(this.payload[i].contents.trim()));
+          if (this.payload[i].args[1]) { selected = tabCount; }
+          tabCount ++;
+        }
+      }
+      tabs[selected].addClass("selected");
+      contents[selected].removeClass("hidden");
+      $tabs.append(...tabs);
+      $contents.append(...contents);
+      $wrapper.attr("style",`--cols:${tabCount}`).append($tabs, $contents);
+      $(this.output).append($wrapper);
+    }
+  });
+  
