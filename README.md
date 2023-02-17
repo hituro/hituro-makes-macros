@@ -5,6 +5,7 @@ Just some Twine Sugarcube Macros
 
 [A macro for making tabbed content](tabs-macro/)
 
+---
 ## `<<nospace>>`
 
 [A simple replacement for nobr](nospace-macro/)
