@@ -123,7 +123,7 @@ The `<<dateset>>` macro lets you set an absolute date or time. e.g. `<<dateset "
 **Example**
 ```html
 <<link "Travel in time">>
-    <<datenext "1112y 5mo 12d 9h 0m 0s">>
+    <<dateset "1112y 5mo 12d 9h 0m 0s">>
 <</link>>
 ```
 
