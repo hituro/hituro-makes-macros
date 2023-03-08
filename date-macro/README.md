@@ -166,7 +166,7 @@ The `<<datenext>>` macro will attempt to move time forward to the next whole uni
 **Example**
 ```html
 <<link "Wait till noon">>
-    <<datenext "12h>>
+    <<datenext "12h">>
 <</link>>
 ```
 
@@ -179,7 +179,7 @@ The `<<datereset>>` macro acts like `<<dateset>>` but it additionally resets the
 **Example**
 ```html
 <<link "On the first day of the new century ...">>
-    <<datereset "2000y 1mo 1d>>
+    <<datereset "2000y 1mo 1d">>
 <</link>>
 ```
 
