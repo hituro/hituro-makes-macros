@@ -26,11 +26,11 @@ Syntax: `<<tabs [id] [top|left|right|stacked|responsive-left|responsive-right|re
 
 The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed, and the content of the tabs. The content has leading and trailing whitespace trimmed, but is otherwise treated as normal passage content.
 
-You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, `right`, or `stacked` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs. Stacked will stack the tabs at the top, which can fit very narrow spaces. (See [Layouts](#layouts) below)
+You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, `right`, `wrapped` or `stacked` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs. Wrapped will allow the top tabs to collapse and wrap, except for the selected tab, which is full width and below the rest. Stacked will stack the tabs at the top, which can fit very narrow spaces. (See [Layouts](#layouts) below)
 
 e.g. `<<tabs "right">>`
 
-You can also set the direction to `responsive-left`, `responsive-right` or `responsive-stacked`, and supply a width in pixels. Above this width, the tabs display at the top, below this size they display on your chosen side.
+You can also set the direction to `responsive-left`, `responsive-right`, `responsive-wrapped` or `responsive-stacked`, and supply a width in pixels. Above this width, the tabs display at the top, below this size they display on your chosen side.
 
 e.g. `<<tabs "responsive-right" 600>>`
 
@@ -50,17 +50,19 @@ Note: if the optional id argument is passed to `<<tabs>>` the same id will be pr
 
 <table>
 <tr>
-<td>
-	<b>stacked</b>
+<td><b>left</b>
+<img width="275" alt="left" src="https://user-images.githubusercontent.com/4206142/224777524-89c32c6b-e4a1-47ef-8fad-e4e1d34cdf16.png">
+</td>
+<td><b>right</b>
+<img width="323" alt="right" src="https://user-images.githubusercontent.com/4206142/224777536-0559fa19-2bea-4347-b959-08b99ed684d7.png">
+</td>
+<td><b>stacked</b>
 <img width="774" alt="stacked" src="https://user-images.githubusercontent.com/4206142/224777498-d4f5e28c-a7bc-49e5-8c2d-53bfaba20e00.png">
 </td><td>
-	<b>left</b>
-<img width="275" alt="left" src="https://user-images.githubusercontent.com/4206142/224777524-89c32c6b-e4a1-47ef-8fad-e4e1d34cdf16.png">
-</td><td>
-	<b>right</b>
-<img width="323" alt="right" src="https://user-images.githubusercontent.com/4206142/224777536-0559fa19-2bea-4347-b959-08b99ed684d7.png">
+<td><b>wrapped</b>
+<img width="303" alt="wrapped" src="https://user-images.githubusercontent.com/4206142/224789027-987027c0-9b65-48b8-a43e-20c7227b320a.png">
 </td></tr></table>
-	
+
 ### Examples ###
 
 A tab set with the second tab selected by default
