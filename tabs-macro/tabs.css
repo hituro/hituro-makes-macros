@@ -86,10 +86,14 @@
 }
 
 .tabs-tabset.left .tabs-tabs, .tabs-tabset.right .tabs-tabs {
-    writing-mode: vertical-rl;
-	text-orientation: upright;
     border-bottom: none;
     grid-area: tabs;
+    grid-template-columns: 1fr;
+}
+
+.tabs-tabset.left .tabs-tabs button span, .tabs-tabset.right .tabs-tabs button span {
+    writing-mode: vertical-rl;
+	text-orientation: upright;
 }
 
 .tabs-tabset.left .tabs-tabs {
