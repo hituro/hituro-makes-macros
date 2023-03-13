@@ -21,11 +21,21 @@ Add the contents of [tabs.js](tabs.js) to your story Javascript, and the content
 <</tabs>>
 ```
 
-#### `<<tabs>>` ####
+#### `<<tabs [id] [top|left|right|responsive-left|responsive-right] [breakpoint]>>` ####
 
 The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed, and the content of the tabs. The content has leading and trailing whitespace trimmed, but is otherwise treated as normal passage content.
 
-The tabs macro takes an optional string argument, which will generate the id of the tabs wrapper element.
+You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, or `right` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs.
+
+e.g. `<<tabs "right">>`
+
+You can also set the direction to `responsive-left` or `responsive-right`, and supply a width in pixels. Above this width, the tabs display at the top, below this size they display on your chosen side.
+
+e.g. `<<tabs "responsive-right" 600>>`
+
+You can optionally also supply an id (any string that isn't one of the directions), which will set the id of the tabs element.
+
+e.g. `<<tabs "myid">>`
 
 #### `<<tab>>` ####
 
@@ -79,6 +89,30 @@ A tab set with the second tab selected by default
 A tab set with a custom id
 ```html
 <<tabs "inventory">>
+    <<tab "Potions">>
+    POTIONS!
+    <<tab "Items">>
+    ITEMS!
+    <<tab "Keys">>
+    KEYS!
+<</tabs>>
+```
+
+A tab set with the tabs down the left hand side, and a custom id
+```html
+<<tabs "inventory" "left">>
+    <<tab "Potions">>
+    POTIONS!
+    <<tab "Items">>
+    ITEMS!
+    <<tab "Keys">>
+    KEYS!
+<</tabs>>
+```
+
+A tab set with the tabs at the top, but down the left hand side if the width of the tabset is less than 800 px
+```html
+<<tabs "left" 800>>
     <<tab "Potions">>
     POTIONS!
     <<tab "Items">>
