@@ -39,6 +39,10 @@
   flex-wrap: wrap;
 }
 
+.tabs-tabset.wrapped .tabs-tabs button {
+  transition-duration: 0ms;
+}
+
 .tabs-tabset.wrapped .tabs-tabs button.selected {
   order: calc(var(--cols) + 1);
   width: 100%;
