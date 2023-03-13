@@ -22,15 +22,15 @@ Add the contents of [tabs.js](tabs.js) to your story Javascript, and the content
 ```
 
 ### `<<tabs>>` ###
-Syntax: `<<tabs [id] [top|left|right|responsive-left|responsive-right] [breakpoint]>>` 
+Syntax: `<<tabs [id] [top|left|right|stacked|responsive-left|responsive-right|responsive-stacked] [breakpoint]>>` 
 
 The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed, and the content of the tabs. The content has leading and trailing whitespace trimmed, but is otherwise treated as normal passage content.
 
-You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, or `right` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs.
+You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, `right`, or `stacked` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs. Stacked will stack the tabs at the top, which can fit very narrow spaces. (See [Layouts](#layouts) below)
 
 e.g. `<<tabs "right">>`
 
-You can also set the direction to `responsive-left` or `responsive-right`, and supply a width in pixels. Above this width, the tabs display at the top, below this size they display on your chosen side.
+You can also set the direction to `responsive-left`, `responsive-right` or `responsive-stacked`, and supply a width in pixels. Above this width, the tabs display at the top, below this size they display on your chosen side.
 
 e.g. `<<tabs "responsive-right" 600>>`
 
