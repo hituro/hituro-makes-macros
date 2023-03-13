@@ -46,33 +46,21 @@ The tab macro takes an optional second argument. If this evaluates to true, the 
 
 Note: if the optional id argument is passed to `<<tabs>>` the same id will be prepended to the id of any tabs it contains: e.g. `id-tabs-content-NAME`.
 
-### Generated HTML and CSS ###
+### Layouts ###
 
-The example above would generate the following HTML.
-
-```html
-<div class="tabs-tabset" style="--cols:3">
-	<div class="tabs-tabs">
-		<button id="tabs-contents-potions-control" type="button" role="button" tabindex="0" class="selected">Potions</button>
-		<button id="tabs-contents-items-control" type="button" role="button" tabindex="0">Items</button>
-		<button id="tabs-contents-keys-control" type="button" role="button" tabindex="0">Keys</button>
-	</div>
-	<div class="tabs-contents">
-		<div class="tabs-content" id="tabs-contents-potions">POTIONS!</div>
-		<div class="tabs-content hidden" id="tabs-contents-items">ITEMS!</div>
-		<div class="tabs-content hidden" id="tabs-contents-keys">KEYS!</div>
-	</div>
-</div>
-```
-
-Some of the basic styling of the tab group can be controlled with CSS variables, as follows:
-
-```css
-  --button-rounding: 10px; /* the radius of the top-corners of the buttons */
-  --tab-color: #343434;    /* the background color of a tab */
-  --tab-selected: #565656; /* the background color of the selected tab */
-```
-
+<table>
+<tr>
+<td>
+	<b>stacked</b>
+<img width="774" alt="stacked" src="https://user-images.githubusercontent.com/4206142/224777498-d4f5e28c-a7bc-49e5-8c2d-53bfaba20e00.png">
+</td><td>
+	<b>left</b>
+<img width="275" alt="left" src="https://user-images.githubusercontent.com/4206142/224777524-89c32c6b-e4a1-47ef-8fad-e4e1d34cdf16.png">
+</td><td>
+	<b>right</b>
+<img width="323" alt="right" src="https://user-images.githubusercontent.com/4206142/224777536-0559fa19-2bea-4347-b959-08b99ed684d7.png">
+</td></tr></table>
+	
 ### Examples ###
 
 A tab set with the second tab selected by default
@@ -121,4 +109,31 @@ A tab set with the tabs at the top, but down the left hand side if the width of 
     <<tab "Keys">>
     KEYS!
 <</tabs>>
+```
+
+### Generated HTML and CSS ###
+
+The example above would generate the following HTML.
+
+```html
+<div class="tabs-tabset" style="--cols:3">
+	<div class="tabs-tabs">
+		<button id="tabs-contents-potions-control" type="button" role="button" tabindex="0" class="selected">Potions</button>
+		<button id="tabs-contents-items-control" type="button" role="button" tabindex="0">Items</button>
+		<button id="tabs-contents-keys-control" type="button" role="button" tabindex="0">Keys</button>
+	</div>
+	<div class="tabs-contents">
+		<div class="tabs-content" id="tabs-contents-potions">POTIONS!</div>
+		<div class="tabs-content hidden" id="tabs-contents-items">ITEMS!</div>
+		<div class="tabs-content hidden" id="tabs-contents-keys">KEYS!</div>
+	</div>
+</div>
+```
+
+Some of the basic styling of the tab group can be controlled with CSS variables, as follows:
+
+```css
+  --button-rounding: 10px; /* the radius of the top-corners of the buttons */
+  --tab-color: #343434;    /* the background color of a tab */
+  --tab-selected: #565656; /* the background color of the selected tab */
 ```
