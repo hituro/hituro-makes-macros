@@ -16,7 +16,7 @@ Macro.add('tabs', {
     let   responseSide  = 'left';
 
     for (const arg of this.args) {
-      if (["left","right","responsive-left","responsive-right","top"].includes(arg)) {
+      if (["left","right","top","stacked","wrapped","responsive-left","responsive-right","responsive-stacked","responsive-wrapped"].includes(arg)) {
       	console.log("arg "+arg+" is class");
         if (arg.substring(0,10) == "responsive") {
           responsive = true;
