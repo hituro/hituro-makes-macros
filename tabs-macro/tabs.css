@@ -39,7 +39,7 @@
   flex-wrap: wrap;
 }
 
-.tabs-tabst.wrapped .tabs-tabs button.selected {
+.tabs-tabset.wrapped .tabs-tabs button.selected {
   order: calc(var(--cols) + 1);
   width: 100%;
   margin-top: -5px;
