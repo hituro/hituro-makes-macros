@@ -21,7 +21,8 @@ Add the contents of [tabs.js](tabs.js) to your story Javascript, and the content
 <</tabs>>
 ```
 
-#### `<<tabs [id] [top|left|right|responsive-left|responsive-right] [breakpoint]>>` ####
+### `<<tabs>>` ###
+Syntax: `<<tabs [id] [top|left|right|responsive-left|responsive-right] [breakpoint]>>` 
 
 The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed, and the content of the tabs. The content has leading and trailing whitespace trimmed, but is otherwise treated as normal passage content.
 
@@ -37,7 +38,7 @@ You can optionally also supply an id (any string that isn't one of the direction
 
 e.g. `<<tabs "myid">>`
 
-#### `<<tab>>` ####
+### `<<tab>>` ###
 
 The `<<tab>>` macro has a mandatory first argument, which is the name displayed on the tab. The name is also used to generate the id of the content area corresponding to the tab (which is of the form `tabs-content-NAME` where `NAME` is the tab name, converted to lowercase, spaces turned into `-`, and non-alphanumeric characters removed.)
 
