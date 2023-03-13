@@ -36,7 +36,7 @@ Macro.add('tabs', {
       if (this.payload[i].name == 'tab') {
         let tabname = this.payload[i].args[0];
         let tabid   = 'tabs-contents-' + tabname.trim().toLowerCase().replace(/[^a-z0-9]/g,'').replace(/\s+/g, '-');
-        let $tab = $(`<button id="${tabid}-control">${tabname}</button>`).ariaClick(function() {
+        let $tab = $(`<button id="${tabid}-control"><span>${tabname}</span></button>`).ariaClick(function() {
           $($wrapper).find(".tabs-tabs button").removeClass("selected");
           $($wrapper).find(".tabs-content").addClass("hidden");
           $($wrapper).find(`#${prefix}${tabid}`).removeClass("hidden");
@@ -65,7 +65,7 @@ Macro.add('tabs', {
           } else {
               width = entry.contentRect.width;
           }
-          console.log("comparing "+width+" with "+responseWidth+" to set "+responseSide);
+          $("#out").html("comparing "+width+" with "+responseWidth+" to set "+responseSide);
           if (width && width <= responseWidth) {
               $wrapper.addClass(responseSide);
           } else {

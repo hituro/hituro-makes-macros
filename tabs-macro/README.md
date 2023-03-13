@@ -124,9 +124,9 @@ The example above would generate the following HTML.
 ```html
 <div class="tabs-tabset" style="--cols:3">
 	<div class="tabs-tabs">
-		<button id="tabs-contents-potions-control" type="button" role="button" tabindex="0" class="selected">Potions</button>
-		<button id="tabs-contents-items-control" type="button" role="button" tabindex="0">Items</button>
-		<button id="tabs-contents-keys-control" type="button" role="button" tabindex="0">Keys</button>
+		<button id="tabs-contents-potions-control" type="button" role="button" tabindex="0" class="selected"><span>Potions</span></button>
+		<button id="tabs-contents-items-control" type="button" role="button" tabindex="0"><span>Items</span></button>
+		<button id="tabs-contents-keys-control" type="button" role="button" tabindex="0"><span>Keys</span></button>
 	</div>
 	<div class="tabs-contents">
 		<div class="tabs-content" id="tabs-contents-potions">POTIONS!</div>
