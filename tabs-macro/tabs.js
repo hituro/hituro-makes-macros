@@ -56,25 +56,35 @@ Macro.add('tabs', {
     $(this.output).append($wrapper);
     
     if (responsive) {
-      const resizeObserver = new ResizeObserver((entries) => {
-        window.requestAnimationFrame(() => {
-          let entry = entries[0];
-          let width = 0;
-          if (entry.contentBoxSize) {
-              width = entry.contentBoxSize[0].inlineSize;
-          } else {
-              width = entry.contentRect.width;
-          }
-          $("#out").html("comparing "+width+" with "+responseWidth+" to set "+responseSide);
+      if (window.resizeObserver) {
+        const resizeObserver = new ResizeObserver((entries) => {
+          window.requestAnimationFrame(() => {
+            let entry = entries[0];
+            let width = 0;
+            if (entry.contentBoxSize) {
+                width = entry.contentBoxSize[0].inlineSize;
+            } else {
+                width = entry.contentRect.width;
+            }
+            if (width && width <= responseWidth) {
+                $wrapper.addClass(responseSide);
+            } else {
+                $wrapper.removeClass(responseSide);
+            }
+          });
+        });
+
+        resizeObserver.observe($wrapper[0]);
+      } else {
+        $(window).on("resize", function() {
+          let width = $wrapper.width();
           if (width && width <= responseWidth) {
               $wrapper.addClass(responseSide);
           } else {
               $wrapper.removeClass(responseSide);
           }
         });
-      });
-
-      resizeObserver.observe($wrapper[0]);
+      }
     }
   }
 });
