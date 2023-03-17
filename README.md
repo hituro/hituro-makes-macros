@@ -6,6 +6,11 @@ Just some Twine Sugarcube Macros
 [A macro set for custom date/time systems](date-macro/)
 
 ---
+## `<<nospace>>`
+
+[A simple replacement for nobr](nospace-macro/)
+
+---
 ## `<<tabs>>`
 
 [A macro for making tabbed content](tabs-macro/)
@@ -28,8 +33,3 @@ Just some Twine Sugarcube Macros
 <td><b>wrapped</b>
 <img width="303" alt="wrapped" src="https://user-images.githubusercontent.com/4206142/224789027-987027c0-9b65-48b8-a43e-20c7227b320a.png">
 </td></tr></table>
-
----
-## `<<nospace>>`
-
-[A simple replacement for nobr](nospace-macro/)
