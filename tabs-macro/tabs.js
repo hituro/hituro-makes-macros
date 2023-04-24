@@ -36,7 +36,11 @@ Macro.add('tabs', {
       if (this.payload[i].name == 'tab') {
         let tabname = this.payload[i].args[0];
         let tabid   = 'tabs-contents-' + tabname.trim().toLowerCase().replace(/[^a-z0-9]/g,'').replace(/\s+/g, '-');
-        let $tab = $(`<button id="${tabid}-control"><span>${tabname}</span></button>`).ariaClick(function() {
+        let label        = `<span>${tabname}</span>`;
+        if (this.payload[i].args[1] && typeof this.payload[i].args[1] == "string") {
+        	label = `<img src="${this.payload[i].args[1]}">`;
+        }
+        let $tab = $(`<button id="${tabid}-control">${label}</button>`).ariaClick(function() {
           $($wrapper).find(".tabs-tabs button").removeClass("selected");
           $($wrapper).find(".tabs-content").addClass("hidden");
           $($wrapper).find(`#${prefix}${tabid}`).removeClass("hidden");
@@ -44,7 +48,7 @@ Macro.add('tabs', {
         });
         tabs.push($tab);
         contents.push($(`<div class="tabs-content hidden" id="${prefix}${tabid}">`).wiki(this.payload[i].contents.trim()));
-        if (this.payload[i].args[1]) { selected = tabCount; }
+        if (this.payload[i].args.length > 1 && this.payload[i].args[this.payload[i].args.length -1] === true) { selected = tabCount; }
         tabCount ++;
       }
     }
