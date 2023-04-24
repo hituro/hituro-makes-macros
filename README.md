@@ -13,7 +13,9 @@ Just some Twine Sugarcube Macros
 ---
 ## `<<tabs>>`
 
-[A macro for making tabbed content](tabs-macro/)
+[A macro for making tabbed content](tabs-macro-v2/)
+
+(*If you are looking for V1, see [here](tabs-macro/)*)
 
 <table>
 <tr>
