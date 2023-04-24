@@ -115,7 +115,7 @@
         user[unit] = num;
       }
 
-      //make a new time string filling in missing elments from base
+      //make a new time string filling in missing elements from base
       const out   = [];
       for (const e of full) {
         out.push((user[e[0]] ?? base[e[1]]) + e[0]);
