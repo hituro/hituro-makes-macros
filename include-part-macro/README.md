@@ -8,12 +8,12 @@ Add the contents of [include-part.js](include-part.js) to your story Javascript.
 
 ### Syntax ###
 
-''Passage1''
+**Passage1**
 ```html
 <<include-part "passage2" "#target">>
 ```
 
-''Passage2''
+**Passage2**
 ```html
 Some text.
 
