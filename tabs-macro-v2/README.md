@@ -78,7 +78,7 @@ A tab set with the second tab selected by default
     <<tab "Potions">>
         POTIONS!
     <</tab>>
-    <<tab "Items">>
+    <<tab "Items" true>>
         ITEMS!
     <</tab>>
     <<tab "Keys">>
@@ -119,7 +119,7 @@ A tab set with the tabs down the left hand side, and a custom id
 
 A tab set with the tabs at the top, but down the left hand side if the width of the tabset is less than 800 px
 ```html
-<<tabs "left" 800>>
+<<tabs "responsive-left" 800>>
     <<tab "Potions">>
         POTIONS!
     <</tab>>
