@@ -11,6 +11,16 @@ Just some Twine Sugarcube Macros
 [A simple replacement for nobr](nospace-macro/)
 
 ---
+## `<<include-part>>`
+
+[Include part of another passage](include-part-macro/)
+
+---
+## `<<class>> / <<id>> / <<style>> / <<attr>>`
+
+[Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
+
+---
 ## `<<tabs>>`
 
 [A macro for making tabbed content](tabs-macro-v2/)
