@@ -1,4 +1,4 @@
-## The <<include-part>> macro ##
+## The `<<include-part>>` macro ##
 
 The `<<include-part>>` macro is a simple extension of SugarCube's built-in `<<include>>` which includes part of another passage instead of the whole thing.
 
