@@ -5,7 +5,7 @@ Macro.add(['id','style','class','attr'], {
         if (this.args[0]) {
             let parsedContent = $("<div>").wiki(this.payload[0].contents.trim()).children();
             if (this.name == "class") {
-                parsedContent.first().addClass("foo");
+                parsedContent.first().addClass(this.args[0]);
             } else if (this.name == "attr") {
                 if (this.args[1]) {
                     parsedContent.first().attr(this.args[0],this.args[1]);
