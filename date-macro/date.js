@@ -543,7 +543,3 @@
     }
   });
 })();
-
-$(document).on(":dateupdated", function(e) {
-  console.log(e.from + " => " + e.to); 
-});
