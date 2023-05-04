@@ -7,6 +7,7 @@
     constructor(config = {}) {
       this.systemname  = config.name ?? "default";
       this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
+      this.cache       = { };
       this.MIN_LENGTH  = config.min_length ?? 60;
       this.HOUR_LENGTH = config.hour_length ?? 60;
       this.DAY_LENGTH  = config.day_length ?? 24;
@@ -36,7 +37,6 @@
       this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
       this.YEAR_OFFSET = config.year_offset ?? 0;
-      this.cache = { };
     }
 
     get elapsed() {
@@ -53,7 +53,7 @@
       options.direction = options.direction ?? "forward";
       
       //set base values
-      const base   = options.base ?? this.getDate(variables()[this.varname]);
+      const base   = options.base ?? this.getDate(variables()[this.varname],"date",true);
       if (datestring == "now") {
         datestring = this.getRealDate();
       }
@@ -160,7 +160,7 @@
       return r;
     }
     
-    getDate(date, output = "date") {
+    getDate(date, output = "date", base = false) {
       let r = (date !== undefined) ? date : variables()[this.varname];
       const initial = r;
 
@@ -201,7 +201,7 @@
         season: ""
       };
       
-      //if (!r) { return out; }
+      if (base) { return out; }
 
       if (this.equal_years) {
         out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
