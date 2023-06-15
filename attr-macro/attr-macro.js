@@ -7,10 +7,12 @@ Macro.add(['id','style','class','attr'], {
             if (this.name == "class") {
                 parsedContent.first().addClass(this.args[0]);
             } else if (this.name == "attr") {
-                if (this.args[1]) {
-                    parsedContent.first().attr(this.args[0],this.args[1]);
+                if (this.args.length % 2 == 0) {
+                    for (let i = 0; i < this.args.length; i += 2) {
+                        parsedContent.first().attr(this.args[i],this.args[i+1]);
+                    }
                 } else {
-                    return this.error('You must specify the content for the attribute you wish to add');
+                    return this.error('You must specify pairs of attribute names and values you wish to add');
                 }
             } else {
                 parsedContent.first().attr(this.name,this.args[0]);
@@ -20,4 +22,4 @@ Macro.add(['id','style','class','attr'], {
             return this.error('You must specify the content for the attribute you wish to add');
         }
     }
-  });
+});
