@@ -19,7 +19,7 @@ Storylets are a concept first introduced in Fallen London, and made popular in t
 
 MQBN provides an engine for defining and selecting storylets for your game.
 
---
+---
 ### Defining a Storylet
 
 A storylet is defined by an object with at minimum a title and a description:
@@ -43,7 +43,7 @@ By default, a storylet relates to a passage of the same name as the storylet's t
 }
 ```
 
-Note that the specified passage is just the //entry point// for the storylet. You can link to other passages in the normal way as much as you like, and you can have multiple storylets link to the same passage.
+Note that the specified passage is just the _entry point_ for the storylet. You can link to other passages in the normal way as much as you like, and you can have multiple storylets link to the same passage.
 
 #### `id` attribute
 
@@ -86,7 +86,7 @@ By default, all storylets have equal priority. The choice of which one you get o
 
 The `link` attribute is used by the `<<storyletlink>>` macro as link text for a storylet. If not specified, the storylet's title is used instead.
 
-//Note: You can specify other attributes on the storylet if you wish. Attributes other than the ones specified here are ignored.//
+_Note: You can specify other attributes on the storylet if you wish. Attributes other than the ones specified here are ignored._
 
 ### Storylet stores
 
@@ -235,7 +235,7 @@ Many games may want to display storylets as a list of cards to be played. Your c
       </div>
 ```
 
-Note that a storylet is //not// marked as used just by selecting it from the store. The `<<storyletlink>>` and `<<storyletgoto>>` macros do this for you. If you don't use those, then the `<<storyletuse>>` macro will mark a storylet used.
+Note that a storylet is _not_ marked as used just by selecting it from the store. The `<<storyletlink>>` and `<<storyletgoto>>` macros do this for you. If you don't use those, then the `<<storyletuse>>` macro will mark a storylet used.
 
 ### Checking for storylets
 
@@ -262,7 +262,7 @@ $(document).on(":storyletchosen",function(e) {
 
 Syntax: `<<storyletsinit [store name]>>`
 
-The `<<storyletsinit>>` macro sets up the storylet tracking variables for a particular store. If you do not pass a store name as the argument, it will set up the default "storylets" store. You //must// call this macro at least once before using MQBN, normally this will be in the **StoryInit** special passage.
+The `<<storyletsinit>>` macro sets up the storylet tracking variables for a particular store. If you do not pass a store name as the argument, it will set up the default "storylets" store. You _must_ call this macro at least once before using MQBN, normally this will be in the **StoryInit** special passage.
 
 You can also use the name `<<initstorylets>>` for this macro.
 

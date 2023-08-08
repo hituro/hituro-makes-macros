@@ -8,7 +8,7 @@ You can download the complete game in twee form as [farm.twee](farm.twee).
 
 For this story we will set up a simple cyclic sequence of seasons, and tie those to storylets, with different storylets available in different seasons. Two more stories, related to our love affair, will be available regardless of season.
 
---
+---
 ## Setup
 
 To begin, place the following in **StoryInit**
@@ -36,7 +36,7 @@ It's $season, down on the farm, and as ever there's things to do.
       <</for>>
       </ul>
     <<else>>
-    	Although, in fact, there is nothing to do //this// season. <<link [[Advance to next season|Farm]]>>
+    	Although, in fact, there is nothing to do _this_ season. <<link [[Advance to next season|Farm]]>>
         	<<sequenceadvance "$season">>
         <</link>>
     <</if>>
@@ -45,7 +45,7 @@ It's $season, down on the farm, and as ever there's things to do.
 
 This passage is our hub. It gets available storylets using `MQBN.getStorylets()` and then displays them in a list using `<<storyletlink>>`. If no activities are available, it allows you to just advance to the next season. If you test the game now you will be able to move from season to season, watching the season and year counter (which we access with `MQBN.sequenceCount()`) changing.
 
---
+---
 ## Add Storylets
 
 To begin with, we will create some storylets for the seasonal activites we can engage with on the farm. Add the following to **StoryInit**
@@ -91,12 +91,12 @@ You join the women and children harvesting the orchard, shaking the trees to bri
 
 All the passages end with a link back to the farm that advances the season.
 
---
+---
 ## Randomisation
 
 If you refresh the **Farm** passage in Summer you will notice that the order of the activities changes as you reload. This is because storylets are being randomised and picked each time the passage loads. If you follow this model in a real game, you may want to make sure that the player can't just refresh their way to a better list of stories by setting `State.prng.init();` in your story javascript.
 
---
+---
 ## Love
 
 Let's add our love story.
@@ -139,7 +139,7 @@ You join the women and children harvesting the orchard, shaking the trees to bri
 <<link [[Back to the Farm|Farm]]>><<sequenceadvance "$season">><</link>>
 ```
 
---
+---
 ## Further Embelishment
 
 You could easily embellish this game by adding more activities, some `sticky` and some not, to create a series of encounters to play through. Rowan's story could be extended over more episodes, using "played" requirements to order them, or make them exclusive. Similarly other storylets could be locked behind the passing of time as measured by the year counter, with a requirement of `{ type: "sequence", name: "$season", op: "gte", count: 3 }`, or use a `rand` requirement to make more uncommon activities that don't show up every year.
