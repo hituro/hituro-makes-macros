@@ -1,10 +1,10 @@
-## MQBN Example
+# MQBN Example
 
 This document contains an example of setting up a simple story using stoylets with MQBN. For this example, we are heading back to the farm for a simple story of love and routine.
 
-You can download the complete game in twee form as [farm.twee](farm.twee).
+You can download the complete game [in twee form](farm.twee), or as a [playable story](farm.html).
 
-### Basics
+## Basics
 
 For this story we will set up a simple cyclic sequence of seasons, and tie those to storylets, with different storylets available in different seasons. Two more stories, related to our love affair, will be available regardless of season.
 
@@ -28,7 +28,7 @@ Now create **Farm** and put the following in it:
 It's $season, down on the farm, and as ever there's things to do.
 
 <<nobr>>
-	<<set _events = MQBN.getStorylets(3)>>
+    <<set _events = MQBN.getStorylets(3)>>
     <<if _events.length>>
       <ul>
       <<for _event range _events>>
@@ -53,25 +53,25 @@ To begin with, we will create some storylets for the seasonal activites we can e
 ```html
 <<set setup.storylets = [
   {
-  	title: "Planting",
+    title: "Planting",
     desc: "Spring Planting",
     all: [ { type: "sequence", name: "$season", value: "Spring" } ],
     sticky: true
   },
   {
-  	title: "Mowing",
+    title: "Mowing",
     desc: "Grass mowing day",
     all: [ { type: "sequence", name: "$season", value: "Summer" } ],
     sticky: true
   },
   {
-  	title: "Harvest",
+    title: "Harvest",
     desc: "Harvest time",
     all: [ { type: "sequence", name: "$season", value: "Autumn" } ],
     sticky: true
   },
   {
-  	title: "Apple Picking",
+    title: "Apple Picking",
     desc: "Picking apples in the orchard",
     all: [ { type: "sequence", name: "$season", value: "Autumn" } ],
     sticky: true
@@ -105,13 +105,13 @@ Make two new passages, **Assignation** and **Leave**, and then add the following
 
 ```js
   {
-  	title: "Assignation",
+    title: "Assignation",
     desc: "Assignation",
     link: "There's work to do ... but you slip away",
     all: [ { type: "sequence", name: "$season", op: "not", value: "Winter" } ],
   },
   {
-  	title: "Leave",
+    title: "Leave",
     link: "Leave the farm",
     all: [ 
     	{ type: "played", story: "Assignation" },

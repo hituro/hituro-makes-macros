@@ -1,4 +1,4 @@
-## Mouse QBN (MQBN) ##
+# Mouse QBN (MQBN)
 
 MQBN (Mouse QBN) is an implementation of storylet functionality (also called *Quality Based Narrative*, hence QBN) for the SugarCube story format. MQBN allows you to create events/encounters/snippets of story (storylets) and select them dynamically based on the current state of your game. 
 
@@ -47,7 +47,7 @@ Note that the specified passage is just the _entry point_ for the storylet. You 
 
 #### `id` attribute
 
-By default, storylets are tracked by title. and that title needs to be unique, but you may want to have multiple storylets with the same title (e.g. when presenting storylets as cards to be played, as Fallen London did). In this case you can provide an `id` attribute which will be used internally instead of the title. The default id is the storylet title.
+Each storylet in a given store must have a unique id. By default, the id is the same as the title, but you may want to have multiple storylets with the same title (e.g. when presenting storylets as cards to be played, as Fallen London did). In this case you can provide an `id` attribute.
 
 ```js
 {
@@ -60,7 +60,7 @@ By default, storylets are tracked by title. and that title needs to be unique, b
 
 #### `sticky` attribute
 
-By default, storylets can only be chosen once in the course of a game, and then they are *used* and can't come up again. If you want a storylet to be available more than once, make it `sticky`. A sticky storylet can be played more than once. Our farming events can happen year after year, so it makes perfect sense for them to be sticky. The default value of sticky is false.
+By default, storylets can only be chosen once in the course of a game, and then they are *used* and can't come up again. If you want a storylet to be available more than once, make it `sticky`. Our farming events can happen year after year, so it makes perfect sense for them to be sticky. The default value of sticky is false.
 
 ```js
 {
@@ -72,7 +72,7 @@ By default, storylets can only be chosen once in the course of a game, and then 
 
 #### `priority` attribute
 
-By default, all storylets have equal priority. The choice of which one you get out of the eligible pool is random. If some particular storylet should always be the one chosen when it's available, give it a `priority`. Higher priority storylets will be chosen over lower priority ones when both are available. The default priority is 0.
+By default, all storylets have equal priority. The choice of which one you get out of the eligible pool is random. If some particular storylet should always be amongst those chosen when it's available, give it a `priority`. Higher priority storylets will be chosen over lower priority ones when both are available. The default priority is 0.
 
 ```js
 {
@@ -88,9 +88,13 @@ The `link` attribute is used by the `<<storyletlink>>` macro as link text for a 
 
 _Note: You can specify other attributes on the storylet if you wish. Attributes other than the ones specified here are ignored._
 
+#### `any` and `all` attributes
+
+Use these attributes to specify conditions for the storylet to be avaialble. See [storylet conditions](#storylet-conditions) below.
+
 ### Storylet stores
 
-A bank of storylets is referred to as a *store*, and is an array of one or more storylet objects. By default, MQBN expects to see a store called `setup.storylets`, but you can have multiple stores if you want, and store them wherever you like.
+A bank of storylets is referred to as a *store*, and is an array of one or more storylet objects. By default, MQBN expects to see a store called `setup.storylets`, but you can have multiple stores if you want. All stores should be stored on setup.
 
 ```html
 <<set setup.storylets = [
@@ -105,11 +109,11 @@ A bank of storylets is referred to as a *store*, and is an array of one or more 
 ]>>
 ```
 
-You can manually define storylets like shown above, or you can place them in their corresponding passages using the `<<storylet>>` macro, and the `<<storyletscan>>` macros (see below).
+You can manually define storylets like shown above, or you can place them in their corresponding passages using the `<<storylet>>` macro, and the `<<storyletscan>>` macros ([see below](#storyletscan)).
 
 ### Storylet conditions
 
-A storylet without conditions is essentially random. If you pick a story from a store without conditions, you get a random one.
+A storylet without conditions is always available. If you pick a storlet from a store where no storylet has conditions, you get a random one.
 
 To specify conditions, add an `any` or `all` attribute to the storylet, which is an array of conditions. For an `any` condition, any of the conditions must match for the storylet to be picked, for `all` all of them must. A storylet can have both an any and all attribute (which means it is available if all of the `all` conditions match, and any of the `any`).
 
@@ -124,7 +128,7 @@ To specify conditions, add an `any` or `all` attribute to the storylet, which is
 }
 ```
 
-There are many possible types of condition, which are listed below. You can also nest conditions using the `all` and `any` condition typers, e.g.
+There are many possible types of condition, which are listed below. You can also nest conditions using the `all` and `any` condition types, e.g.
 
 ```js
 {
@@ -144,32 +148,40 @@ There are many possible types of condition, which are listed below. You can also
 ### Condition types
 
 #### `collection`
-`{ type: "collection", var: "$varname:, op: "|not", has: "value" }`
+Syntax: `{ type: "collection", var: "$varname:, op: "|not", has: "value" }`
+
 Check the value of a variable (either story, temporary, or setup) to see if it contains a value. The variable must be an array, a Map, a Set, or a generic object (in which case it will be checked to see if it has a matching attribute and that attribute is true). Set `op` to "not" to negate the check.
 
 #### `function`
-`{type: "function", func: function() {condition, store} }`
+Syntax: `{type: "function", func: function() {condition, store} }`
+
 Check the return value of a custom function, which should evaluate to true if the storylet is available. The function is passed the condition object, and the name of the storylet store.
 
 #### `var`
-`{ type: "var", var: "$varname", op: "gt|gte|le|lte|eq|neq|includes|notincludes|has", value: "value" }`
+Syntax: `{ type: "var", var: "$varname", op: "gt|gte|le|lte|eq|neq|includes|notincludes|has", value: "value" }`
+
 Check the value of a variable (either story, temporary, or setup). The `op` (operator) condition controls how the value is compared to the variable. The `includes`, `notincludes`, and `has` operators let you check for array or map values, but see the `collection` condition.
 
 #### `visited`
-`{ type: "visited", op: "|not", passage: "passageName" }`
+Syntax: `{ type: "visited", op: "|not", passage: "passageName" }`
+
 True if a given passage has been visited (or with `op` "not", not visited) in the current play history.
 
 #### `played` 
-`{ type: "played", op: "|not", story: "storyid" }`
+Syntax: `{ type: "played", op: "|not", story: "storyid" }`
+
 True if a given storylet has already been played. Set `op` to "not" to negate the check. Note that the "storyid" will be the title of the given storylet unless you supplied a separate id value.
 
 #### `rand`
-`{ type: "rand", chance: int }`
+Syntax: `{ type: "rand", chance: int }`
+
 True if a random number from 1-100 is less than or equal to the supplied chance. You can use this to make a given storylet less likely than other eligible storylets of the same priority. For example given two storylets, one of which has a chance of 50, that storylet will be picked only half as often as the other.
 
 #### `sequence`
-`{ type: "sequence", name: "$varname", op: "|not", value: "value" }`
-`{ type: "sequence", name: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`
+Syntax: `{ type: "sequence", name: "$varname", op: "|not", value: "value" }`
+
+Syntax: `{ type: "sequence", name: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`
+
 Check the value of a sequence (created with `<<sequence>>`) to see if it equals "value". This is really just a shortcut for a `var` check of the same variable.
 
 You can also check the cycle count of a sequence (see [`<<sequencecreate>>`](#sequence)) using the alternate form where `count` replaces `value`.
@@ -178,7 +190,8 @@ You can also check the cycle count of a sequence (see [`<<sequencecreate>>`](#se
 ## Using Storylets
 
 ### Getting a set of storylets
-`MQBN.getStorylets()`
+
+Syntax: `MQBN.getStorylets()`
 
 You can get a set of available storylets using the `MQBN.getStorylets()` function. With no arguments it will get all available storylets in the `setup.storylets` store and return them as an array. You can specify the number of storylets you want back as the first argument.
 
@@ -211,9 +224,9 @@ If you don't need to know the number of available storylets, you can skip it by 
 You can link to a storylet manually with a normal `<<link>>` macro.
 ```html
 <<set _story = MQBN.getStorylets(1)[0]>>
-<<link _story.ttile `_story.passage ?? _story.title`>><<storyletuse _story>><</link>>
+<<link _story.title `_story.passage ?? _story.title`>><<storyletuse _story>><</link>>
 ```
-The `<<storylet>>` link makes this easier, and also supplies default text if the story isn't available, as well as firing a `:storyletchosen` event when the link is clicked.
+The `<<storyletlink>>` macro makes this easier, and also supplies default text if the story isn't available, as well as firing a `:storyletchosen` event when the link is clicked.
 
 You can automatically go to a storylet with the `<<storyletgoto>>` macro.
 ```html
@@ -223,16 +236,16 @@ You can automatically go to a storylet with the `<<storyletgoto>>` macro.
 
 Many games may want to display storylets as a list of cards to be played. Your code will look something like the following:
 ```html
-	<<set _hand = MQBN.getStorylets($HAND_SIZE)>>
-      <div class="hand">
-        <<for _card range _hand>>
-          <div class="card" @data-drop-passage="_card.passage ? _card.passage :  _card.title" @data-title="_card.title">
-              <div class="title">_card.title</div>
-              <div class="desc">_card.desc</div>
-              <div class="icon play"></div>
-          </div>
-        <</for>>
-      </div>
+<<set _hand = MQBN.getStorylets($HAND_SIZE)>>
+<div class="hand">
+<<for _card range _hand>>
+    <div class="card" @data-drop-passage="_card.passage ? _card.passage :  _card.title" @data-title="_card.title">
+        <div class="title">_card.title</div>
+        <div class="desc">_card.desc</div>
+        <div class="icon play"></div>
+    </div>
+<</for>>
+</div>
 ```
 
 Note that a storylet is _not_ marked as used just by selecting it from the store. The `<<storyletlink>>` and `<<storyletgoto>>` macros do this for you. If you don't use those, then the `<<storyletuse>>` macro will mark a storylet used.
@@ -243,11 +256,11 @@ You can check if a particular story has been played with the utility function `M
 
 You can check if a storylet is currently available with `_storylets_available.find((s) => s.title = "storyname")`.
 
-You can access the current storylet as `_storylets_current`.
+You can access the current storylet as `_storylets_current` (or `_STORENAME_current` if using a different store).
 
 ### `:storyletchosen` event
 
-When a storylet is chosen with `<<storyletlink>>` or `<<storyletgoto>>`, a `:storyletchosen` event is fired, with the chosen storylet as event data.
+When a storylet is chosen with `<<storyletlink>>`, `<<storyletgoto>>`, or `<<storyletuse>>`, a `:storyletchosen` event is fired, with the chosen storylet as event data.
 
 ```js
 $(document).on(":storyletchosen",function(e) {
@@ -271,6 +284,8 @@ You can also use the name `<<initstorylets>>` for this macro.
 Syntax: `<<storyletsprune [store name]>>`
 
 The `<<storyletsprune>>` macro deletes all used storylets from the given store, so that they will no longer be checked when you call `MQBN.getStorylets()`. You do not need to do this, but if your storylet store is very large, you may wish to do so to reduce computation time.
+
+Note that since storylet stores are part of `setup`, reloading the game will undo the pruning. For this eason, you may want to add `<<storyletsprune>>` to the **StoryInit** special passage, after the store is defined.
 
 You can also use the name `<<prunestorylets>>` for this macro.
 
@@ -304,9 +319,9 @@ If you call `<<storyletscan>>` with the optional store name, only `<<storylet>>`
 
 ### `<<storyletgoto>>`
 
-Syntax `<<storyletgoto storyletname-or-object [store "store name"] [open true|false]>>`
+Syntax: `<<storyletgoto storyletname-or-object [store "store name"] [open true|false]>>`
 
-The `<<storyletgoto>>` macro, sends you to the passage corresponding to the storylet given in the first argument, marks that storylet as used, and fires the `:storyletchosen` event.
+The `<<storyletgoto>>` macro sends you to the passage corresponding to the storylet given in the first argument, marks that storylet as used, and fires the `:storyletchosen` event.
 
 You can specify the storylet by passing a valid storylet object (e.g. one returned from `MQBN.getStorylets()`), in which case the storylet is not checked for validity (i.e. it can be already played, not meeting the requirments etc.). Alternatively you can specify the storylet by name or id. In this case the storylet is checked for availability if you specify `open true` in the arguments.
 
