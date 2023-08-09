@@ -1,6 +1,6 @@
-# MQBN Example
+# MQBN Tutorial
 
-This document contains an example of setting up a simple story using stoylets with MQBN. For this example, we are heading back to the farm for a simple story of love and routine.
+In this tutorial we will set up a simple story using stoylets with MQBN. For this example, we are heading back to the farm for a simple story of love and routine.
 
 You can download the complete game [in twee form](farm.twee), or as a [playable story](farm.html).
 
@@ -138,6 +138,8 @@ You join the women and children harvesting the orchard, shaking the trees to bri
 
 <<link [[Back to the Farm|Farm]]>><<sequenceadvance "$season">><</link>>
 ```
+
+Of course, you could as easily test this with a normal `visited("Assignation")` check, or by setting a story variable, but this is meant to be a MQBN tutorial, so we will use an MQBN function.
 
 ---
 ## Further Embelishment

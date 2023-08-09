@@ -401,6 +401,20 @@ Syntax: `<<sequenceadvance|sequencerewind "$sequence" [steps]>>`
 
 The `<<sequenceadvance>>` and `<<sequencerewind>>` macros advance or rewind a given sequence, usually by one step, but you can specify a different number of steps with the optional argument. e.g. `<<sequenceadvance "$season" 2>>`.
 
-Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with the `MQBN.sequenceCount("$varname")` function.
+Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with the `MQBN.sequenceCount("$varname")` function. The same happens in reverse with `<<sequencerewind>>`.
 
 You can access the same function from javascript by calling `MQBN.sequenceChange("$varname",value)` where value is a positive (advance) or negative (rewind) number.
+
+---
+## Extending
+
+You can easily extend MQBN to add new types of condition. For example in **A Mouse Speaks to Death** I had a system of *Qualities*, so I added a `{ type: "quality", quality: "brave" }` condition.
+
+To add new conditions, add a static function to the MQBN class whose name is the condition type plus "Requirement" (e.g. for the quality check above, add `static qualityRequirement()`). This function is passed the condition as the first argument and the store name as the second, and should return a boolean.
+
+e.g.
+```js
+static qualityRequirement(r) {
+    return variables().qualities.includes(r.quality);
+}
+```
