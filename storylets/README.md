@@ -223,9 +223,8 @@ If you want to get storylets from a different store, pass the store name as the 
 
 If you don't need to know the number of available storylets, you can skip it by passing `false` as the third argument. e.g. `MQBN.getStorylets(3,"storylets",false)`.
 
-### Randomisation
-
-`getStorylets()` uses SugarCube's random() function to order and select storylets. This means that you can use the `State.prng.init()` function to make the order of storylet selection resistant to page refreshing and save reloading.
+> [!IMPORTANT]
+> `getStorylets()` uses SugarCube's random() function to order and select storylets. This means that you can use the `State.prng.init()` function to make the order of storylet selection resistant to page refreshing and save reloading.
 
 ### Linking to a storylet
 
