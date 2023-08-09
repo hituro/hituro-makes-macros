@@ -40,7 +40,7 @@ There's a new life, a new home, a new profession, new children, Everything chang
 
 
 :: Farm {"position":"300,200","size":"100,100"}
-! $season (year <<=$season.count>>)
+! $season (year $season.count)
 
 It's $season, down on the farm, and as ever there's things to do.
 
@@ -71,7 +71,7 @@ Time has passed, as it ever does, but you can't shake the memory of that stolen 
 
 There's no future here for you and Rowan — your families are sworn rivals. There's only one option, to steal away together and make a new life, far from here.
 
-The plans are all made. Rowan will be waiting by the Lychgate one more. If you don't go now, you never will. You have to decide
+The plans are all made. Rowan will be waiting by the Lychgate once more. If you don't go now, you never will. You have to decide
 
 * [[Leave|End]]
 * [[Stay|Farm]]
@@ -141,6 +141,8 @@ The spring thaw has softened the dark loam of the fields, so its time to plant t
 
 
 :: StoryScript [script]
+State.prng.init();
+
 window.MQBN = class MQBN {
 
   static getStorylets(limit,store="storylets",needAvailable=true) {

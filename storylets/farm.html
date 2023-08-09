@@ -98,7 +98,9 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="MQBN Farm" startnode="1" creator="Twine" creator-version="2.7.0" format="SugarCube" format-version="2.36.1" ifid="7819D2A5-F2EA-4055-8015-3FBEEC800CE6" options="" tags="Test Demo" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">window.MQBN = class MQBN {
+	<tw-storydata name="MQBN Farm" startnode="1" creator="Twine" creator-version="2.7.0" format="SugarCube" format-version="2.36.1" ifid="7819D2A5-F2EA-4055-8015-3FBEEC800CE6" options="" tags="Test Demo" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">State.prng.init();
+
+window.MQBN = class MQBN {
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -552,7 +554,7 @@ Macro.add(["sequenceadvance","sequencerewind"],{
     if (this.name == "sequencerewind") { inc = -1 * inc; }
     MQBN.sequenceChange(this.args[0],inc);
   }
-});</script><tw-passagedata pid="1" name="Farm" tags="" position="300,200" size="100,100">! $season (year &lt;&lt;=$season.count&gt;&gt;)
+});</script><tw-passagedata pid="1" name="Farm" tags="" position="300,200" size="100,100">! $season (year $season.count)
 
 It&#39;s $season, down on the farm, and as ever there&#39;s things to do.
 
@@ -637,7 +639,7 @@ Afterwards, chastened and punished, you are allowed to return to farm duties, bu
 
 There&#39;s no future here for you and Rowan — your families are sworn rivals. There&#39;s only one option, to steal away together and make a new life, far from here.
 
-The plans are all made. Rowan will be waiting by the Lychgate one more. If you don&#39;t go now, you never will. You have to decide
+The plans are all made. Rowan will be waiting by the Lychgate once more. If you don&#39;t go now, you never will. You have to decide
 
 * [[Leave|End]]
 * [[Stay|Farm]]</tw-passagedata><tw-passagedata pid="9" name="End" tags="" position="850,450" size="100,100">Years pass ... 
