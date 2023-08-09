@@ -4,6 +4,8 @@ MQBN (Mouse QBN) is an implementation of storylet functionality (also called *Qu
 
 For a deeper description of what storylets are (and are not), see below.
 
+Credit is also due to Joshua Gram's [TinyQBN](https://github.com/JoshuaGrams/tiny-qbn) implementation for SugarCube which gave me much inspiration in writing my own.
+
 ### Installation ###
 
 Add the contents of [mqbn.js](mqbn.js) to your story Javascript.
@@ -18,6 +20,8 @@ Storylets are a concept first introduced in Fallen London, and made popular in t
 * Current season is (whatever season)
 
 MQBN provides an engine for defining and selecting storylets for your game.
+
+If you prefer to start with a tutorial, take a trip to [MQBN Farm](TUTORIAL.md).
 
 ---
 ### Defining a Storylet
