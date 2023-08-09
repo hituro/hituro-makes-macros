@@ -17,7 +17,7 @@ window.MQBN = class MQBN {
       }
     };
     temporary()[store+'_available'] = available;
-    return available.slice(0,limit);
+    return available.slice(0,limit).sort(MQBN.weightSort);
   }
 
   static prioritySort(a, b) {
@@ -27,6 +27,16 @@ window.MQBN = class MQBN {
       return a.priority > b.priority ? -1 : 1;
     } else {
       return randomFloat(0,1) - 0.5;
+    }
+  }
+
+  static weightSort(a, b) {
+    if (a.priority && !b.priority) {
+      return 1;
+    } else if (a.weight != b.weight) {
+      return a.weight > b.weight ? 1 : -1;
+    } else {
+      return 0;
     }
   }
   
@@ -63,11 +73,11 @@ window.MQBN = class MQBN {
   
   static sequenceRequirement(r) {
     if (r.count) {
-      return this.operators[r.op ?? "eq"](State.getVar(r.name).count,r.count);
+      return this.operators[r.op ?? "eq"](State.getVar(r.seq).count,r.count);
     } else if (r.value) {
-      return this.operators[r.op ?? "eq"](State.getVar(r.name).value,r.value);
+      return this.operators[r.op ?? "eq"](State.getVar(r.seq).value,r.value);
     } else {
-      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.name).name,r.name);
+      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.seq).name,r.name);
     }
   }
   

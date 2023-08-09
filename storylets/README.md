@@ -86,6 +86,10 @@ By default, all storylets have equal priority. The choice of which one you get o
 }
 ```
 
+#### `weight` attribute
+
+The `weight` attribute controls the order in which storylets selected by [getStorylets()](#getting-a-set-of-storylets) are returned. It has no effect on which storylets are selected, only the order in which they are shown. 
+
 #### `link` attribute
 
 The `link` attribute is used by the `<<storyletlink>>` macro as link text for a storylet. If not specified, the storylet's title is used instead.

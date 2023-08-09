@@ -53,27 +53,27 @@ To begin with, we will create some storylets for the seasonal activites we can e
 ```html
 <<set setup.storylets = [
   {
-    title: "Planting",
+  	title: "Planting",
     desc: "Spring Planting",
-    all: [ { type: "sequence", name: "$season", value: "Spring" } ],
+    all: [ { type: "sequence", seq: "$season", name: "Spring" } ],
     sticky: true
   },
   {
-    title: "Mowing",
+  	title: "Mowing",
     desc: "Grass mowing day",
-    all: [ { type: "sequence", name: "$season", value: "Summer" } ],
+    all: [ { type: "sequence", seq: "$season", name: "Summer" } ],
     sticky: true
   },
   {
-    title: "Harvest",
+  	title: "Harvest",
     desc: "Harvest time",
-    all: [ { type: "sequence", name: "$season", value: "Autumn" } ],
+    all: [ { type: "sequence", seq: "$season", name: "Autumn" } ],
     sticky: true
   },
   {
-    title: "Apple Picking",
+  	title: "Apple Picking",
     desc: "Picking apples in the orchard",
-    all: [ { type: "sequence", name: "$season", value: "Autumn" } ],
+    all: [ { type: "sequence", seq: "$season", name: "Autumn" } ],
     sticky: true
   }
 ]>>
@@ -108,25 +108,29 @@ Make two new passages, **Assignation** and **Leave**, and then add the following
     title: "Assignation",
     desc: "Assignation",
     link: "There's work to do ... but you slip away",
-    all: [ { type: "sequence", name: "$season", op: "not", value: "Winter" } ],
+    all: [ { type: "sequence", seq: "$season", op: "not", name: "Winter" } ],
+    weight: 1
   },
   {
-    title: "Leave",
+  	title: "Leave",
     link: "Leave the farm",
     all: [ 
     	{ type: "played", story: "Assignation" },
         { type: "any", any: [
-        	{ type: "sequence", name: "$season", value: "Summer" },
-            { type: "sequence", name: "$season", value: "Autumn" }
+        	{ type: "sequence", seq: "$season", name: "Summer" },
+          { type: "sequence", seq: "$season", name: "Autumn" }
         ]}
     ],
-    priority: 1
+    priority: 1,
+    weight: 1
   }
 ```
 
 **Assignation** is available in all the seasons that are not "Winter", so now "Spring", "Summer" and "Autumn" will have two choices each until the assignation is chosen. Note that we use the `link` attribute to change the text that's displayed in the `<<storyletlink>>`. In the corresponding passage the player has a brief romantic encounter with Rowan, until it's broken up by their warring parents.
 
 **Leave** is available in "Summer" and "Autumn" (no leaving the farm in Winter or Spring), but only after "Assignation" has been played. It is `priority: 1`, so it will be the first available choice every time it comes up. In the corresponding passage the player can elope with Rowan and end the game. If they don't, they never get another chance, because **Leave** is not `sticky`.
+
+Both these storylets have a `weight` of 1, which means they will appear at the bottom of the list of returned storylets.
 
 To help set up this romance, add a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
 
@@ -144,4 +148,4 @@ Of course, you could as easily test this with a normal `visited("Assignation")` 
 ---
 ## Further Embelishment
 
-You could easily embellish this game by adding more activities, some `sticky` and some not, to create a series of encounters to play through. Rowan's story could be extended over more episodes, using "played" requirements to order them, or make them exclusive. Similarly other storylets could be locked behind the passing of time as measured by the year counter, with a requirement of `{ type: "sequence", name: "$season", op: "gte", count: 3 }`, or use a `rand` requirement to make more uncommon activities that don't show up every year.
+You could easily embellish this game by adding more activities, some `sticky` and some not, to create a series of encounters to play through. Rowan's story could be extended over more episodes, using "played" requirements to order them, or make them exclusive. Similarly other storylets could be locked behind the passing of time as measured by the year counter, with a requirement of `{ type: "sequence", seq: "$season", op: "gte", count: 3 }`, or use a `rand` requirement to make more uncommon activities that don't show up every year.
