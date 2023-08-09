@@ -98,9 +98,7 @@ var LZString={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="MQBN Farm" startnode="1" creator="Twine" creator-version="2.7.0" format="SugarCube" format-version="2.36.1" ifid="7819D2A5-F2EA-4055-8015-3FBEEC800CE6" options="" tags="Test Demo" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">//State.prng.init();
-
-window.MQBN = class MQBN {
+	<tw-storydata name="MQBN Farm" startnode="1" creator="Twine" creator-version="2.7.0" format="SugarCube" format-version="2.36.1" ifid="7819D2A5-F2EA-4055-8015-3FBEEC800CE6" options="" tags="Test Demo" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">window.MQBN = class MQBN {
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -119,7 +117,7 @@ window.MQBN = class MQBN {
       }
     };
     temporary()[store+'_available'] = available;
-    return available.slice(0,limit);
+    return available.slice(0,limit).sort(MQBN.weightSort);
   }
 
   static prioritySort(a, b) {
@@ -129,6 +127,16 @@ window.MQBN = class MQBN {
       return a.priority > b.priority ? -1 : 1;
     } else {
       return randomFloat(0,1) - 0.5;
+    }
+  }
+
+  static weightSort(a, b) {
+    if (a.priority && !b.priority) {
+      return 1;
+    } else if (a.weight != b.weight) {
+      return a.weight > b.weight ? 1 : -1;
+    } else {
+      return 0;
     }
   }
   
@@ -165,9 +173,11 @@ window.MQBN = class MQBN {
   
   static sequenceRequirement(r) {
     if (r.count) {
-      return this.operators[r.op ?? "eq"](this.sequenceCount(r.name),r.count);
+      return this.operators[r.op ?? "eq"](State.getVar(r.seq).count,r.count);
+    } else if (r.value) {
+      return this.operators[r.op ?? "eq"](State.getVar(r.seq).value,r.value);
     } else {
-      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.name),r.value);
+      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.seq).name,r.name);
     }
   }
   
@@ -267,54 +277,69 @@ window.MQBN = class MQBN {
 
   static createSequence(name, values, mode = "linear") {
     setup.MQBNsequences = setup.MQBNsequences || {};
-    setup.MQBNsequences[MQBN.sequenceName(name)] = values;
-    setup.MQBNsequences[MQBN.sequenceName(name)].mode = mode;
-    setup.MQBNsequences[MQBN.sequenceName(name)].loops = 1;
-    State.setVar(name,values[0]);
+    setup.MQBNsequences[name] = { values: values, mode: mode };
+    const seq = new Sequence(name,values[0],0);
+    State.setVar(name,seq);
   }
 
-  static sequenceChange(varname, inc) {
-    const name  = MQBN.sequenceName(varname);
-    const value = State.getVar(varname);
-    const idx   = setup.MQBNsequences[name].indexOf(value);
-    const len   = setup.MQBNsequences[name].length;
+  static sequenceChange(name, inc) {
+    const seq   = State.getVar(name);
+    const idx   = seq.value; 
+    const len   = setup.MQBNsequences[name].values.length;
     let   newidx;
 
     if (setup.MQBNsequences[name].mode == "linear") {
       newidx = Math.max(Math.min(idx + inc,len -1),0);
     } else if (setup.MQBNsequences[name].mode == "cycling") {
       newidx = idx + inc;
-      console.log(`inc ${inc} newidx ${newidx}`);
-      if (inc > 0 && newidx > setup.MQBNsequences[name].length -1) {
-        setup.MQBNsequences[name].loops += Math.floor(newidx / len);
+      if (inc > 0 && newidx > len -1) {
+        seq.count += Math.floor(newidx / len);
       } else if (inc < 0 && newidx < 0) {
-        console.log("rewinding, check loops: ",setup.MQBNsequences[name].loops," -= ",Math.floor(newidx / len));
-        setup.MQBNsequences[name].loops -= Math.abs(Math.floor(newidx / len));
-        console.log("loop now: ",setup.MQBNsequences[name].loops);
+        seq.count -= Math.abs(Math.floor(newidx / len));
       }
-      console.log("raw newindex " + newidx);
-      newidx = (newidx > 0) ? Math.abs(newidx % len) : len - Math.abs(newidx % len);
-      console.log("final newindex " + newidx);
+      newidx = Math.abs(newidx % len);
     }
-    State.setVar(varname,setup.MQBNsequences[name][newidx]);
+    seq.name  = this.sequenceName(name,newidx);
+    seq.value = newidx;
+    State.setVar(name,seq);
   }
 
-  static sequenceName(name) {
-    return name.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
-  }
-
-  static sequenceValue(varname) {
-    const name  = MQBN.sequenceName(varname);
-    const value = State.getVar(varname);
-    const idx   = setup.MQBNsequences[name].indexOf(value);
-    return idx;
-  }
-
-  static sequenceCount(varname) {
-    const name  = MQBN.sequenceName(varname);
-    return setup.MQBNsequences[name].loops;
+  static sequenceName(name,value) {
+    let previous = "";
+    for (let val in setup.MQBNsequences[name].values) {
+      if (val > value) {
+        return previous;
+      }
+      previous = setup.MQBNsequences[name].values[val];
+    }
+    return previous;
   }
   
+};
+
+window.Sequence = class Sequence {
+  constructor(type, name, value, count = 1) {
+    this.type  = type;
+    this.name  = name;
+    this.value = value;
+    this.count = count;
+  }
+
+  toString() {
+    return this.name;
+  }
+  
+  toJSON() { // the custom revive wrapper for SugarCube's state tracking
+      // use `setup` version in case the global version is unavailable
+      return JSON.reviveWrapper(String.format("new Sequence({0},{1},{2},{3})",
+        JSON.stringify(this.type),
+        JSON.stringify(this.name),
+        JSON.stringify(this.value),
+        JSON.stringify(this.count)
+      ));
+  }
+  
+  clone() { return new Sequence(this.type,this.name,this.value,this.count); }
 };
 
 window.macroPairedArgsParser = function(args,start=0) {
@@ -520,15 +545,14 @@ Macro.add(["sequenceadvance","sequencerewind"],{
     if (!setup.MQBNsequences) {
       return this.error("you must create a sequence using <<sequence>> before ${this.name == 'sequenceadvance' ? 'advancing' : 'rewinding'} it");
     }
-    const name = MQBN.sequenceName(this.args[0]);
-    if (!setup.MQBNsequences[name]) {
+    if (!setup.MQBNsequences[this.args[0]]) {
       return this.error(`sequence ${this.args[0]} has not been defined`);
     }
     let   inc   = this.args[1] ?? 1;
     if (this.name == "sequencerewind") { inc = -1 * inc; }
     MQBN.sequenceChange(this.args[0],inc);
   }
-});</script><tw-passagedata pid="1" name="Farm" tags="" position="300,200" size="100,100">! $season (year &lt;&lt;=MQBN.sequenceCount(&quot;$season&quot;)&gt;&gt;)
+});</script><tw-passagedata pid="1" name="Farm" tags="" position="300,200" size="100,100">! $season (year &lt;&lt;=$season.count&gt;&gt;)
 
 It&#39;s $season, down on the farm, and as ever there&#39;s things to do.
 
@@ -549,32 +573,33 @@ It&#39;s $season, down on the farm, and as ever there&#39;s things to do.
   {
   	title: &quot;Planting&quot;,
     desc: &quot;Spring Planting&quot;,
-    all: [ { type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Spring&quot; } ],
+    all: [ { type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Spring&quot; } ],
     sticky: true
   },
   {
   	title: &quot;Mowing&quot;,
     desc: &quot;Grass mowing day&quot;,
-    all: [ { type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Summer&quot; } ],
+    all: [ { type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Summer&quot; } ],
     sticky: true
   },
   {
   	title: &quot;Harvest&quot;,
     desc: &quot;Harvest time&quot;,
-    all: [ { type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Autumn&quot; } ],
+    all: [ { type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Autumn&quot; } ],
     sticky: true
   },
   {
   	title: &quot;Apple Picking&quot;,
     desc: &quot;Picking apples in the orchard&quot;,
-    all: [ { type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Autumn&quot; } ],
+    all: [ { type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Autumn&quot; } ],
     sticky: true
   },
   {
   	title: &quot;Assignation&quot;,
     desc: &quot;Assignation&quot;,
     link: &quot;There&#39;s work to do ... but you slip away&quot;,
-    all: [ { type: &quot;sequence&quot;, name: &quot;$season&quot;, op: &quot;not&quot;, value: &quot;Winter&quot; } ],
+    all: [ { type: &quot;sequence&quot;, seq: &quot;$season&quot;, op: &quot;not&quot;, name: &quot;Winter&quot; } ],
+    weight: 1
   },
   {
   	title: &quot;Leave&quot;,
@@ -582,11 +607,12 @@ It&#39;s $season, down on the farm, and as ever there&#39;s things to do.
     all: [ 
     	{ type: &quot;played&quot;, story: &quot;Assignation&quot; },
         { type: &quot;any&quot;, any: [
-        	{ type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Summer&quot; },
-            { type: &quot;sequence&quot;, name: &quot;$season&quot;, value: &quot;Autumn&quot; }
+        	{ type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Summer&quot; },
+            { type: &quot;sequence&quot;, seq: &quot;$season&quot;, name: &quot;Autumn&quot; }
         ]}
     ],
-    priority: 1
+    priority: 1,
+    weight: 1
   }
 ]&gt;&gt;
 &lt;&lt;storyletsinit&gt;&gt;
@@ -601,9 +627,9 @@ It&#39;s $season, down on the farm, and as ever there&#39;s things to do.
 &lt;&lt;if !MQBN.played(&quot;Leave&quot;)&gt;&gt;As you head home, Rowan catches your eye and smiles shyly.
 &lt;&lt;/if&gt;&gt;\
 
-&lt;&lt;link [[Back to the Farm|Farm]]&gt;&gt;&lt;&lt;sequenceadvance &quot;$season&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Assignation" tags="" position="725,325" size="100,100">There&#39;s work to be done, but you slip away. Rowan left a note tucked under your pillow on the last saint&#39;s day — meet me by the lychgate when our fathers are busy.
+&lt;&lt;link [[Back to the Farm|Farm]]&gt;&gt;&lt;&lt;sequenceadvance &quot;$season&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Assignation" tags="" position="725,325" size="100,100">There&#39;s work to be done, but you slip away. Rowan left a note tucked under your pillow on the last saint&#39;s day — &quot;Meet me by the lychgate when our fathers are busy.&quot;
 
-Stolen kisses, sweet promises, a brief caress under the dropping lychgate roof ... it&#39;s all you have time for before you are discovered and all hell breaks loose.
+Stolen kisses, sweet promises, a brief caress under the drooping lychgate roof ... it&#39;s all you have time for before you are discovered and all hell breaks loose.
 
 Afterwards, chastened and punished, you are allowed to return to farm duties, but you are constantly watched, this won&#39;t happen again.
 
