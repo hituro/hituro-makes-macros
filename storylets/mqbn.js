@@ -63,9 +63,11 @@ window.MQBN = class MQBN {
   
   static sequenceRequirement(r) {
     if (r.count) {
-      return this.operators[r.op ?? "eq"](this.sequenceCount(r.name),r.count);
+      return this.operators[r.op ?? "eq"](State.getVar(r.name).count,r.count);
+    } else if (r.value) {
+      return this.operators[r.op ?? "eq"](State.getVar(r.name).value,r.value);
     } else {
-      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.name),r.value);
+      return this.operators[r.op == "not" ? "neq" : "eq"](State.getVar(r.name).name,r.name);
     }
   }
   
@@ -165,48 +167,69 @@ window.MQBN = class MQBN {
 
   static createSequence(name, values, mode = "linear") {
     setup.MQBNsequences = setup.MQBNsequences || {};
-    setup.MQBNsequences[MQBN.sequenceName(name)] = values;
-    setup.MQBNsequences[MQBN.sequenceName(name)].mode = mode;
-    setup.MQBNsequences[MQBN.sequenceName(name)].loops = 1;
-    State.setVar(name,values[0]);
+    setup.MQBNsequences[name] = { values: values, mode: mode };
+    const seq = new Sequence(name,values[0],0);
+    State.setVar(name,seq);
   }
 
-  static sequenceChange(varname, inc) {
-    const name  = MQBN.sequenceName(varname);
-    const value = State.getVar(varname);
-    const idx   = setup.MQBNsequences[name].indexOf(value);
+  static sequenceChange(name, inc) {
+    const seq   = State.getVar(name);
+    const idx   = seq.value; 
+    const len   = setup.MQBNsequences[name].values.length;
     let   newidx;
 
     if (setup.MQBNsequences[name].mode == "linear") {
-      newidx = Math.max(Math.min(idx + inc,setup.MQBNsequences[name].length -1),0);
+      newidx = Math.max(Math.min(idx + inc,len -1),0);
     } else if (setup.MQBNsequences[name].mode == "cycling") {
       newidx = idx + inc;
-      if (inc > 0 && newidx > setup.MQBNsequences[name].length -1) {
-        setup.MQBNsequences[name].loops += Math.floor(newidx / setup.MQBNsequences[name].length);
+      if (inc > 0 && newidx > len -1) {
+        seq.count += Math.floor(newidx / len);
       } else if (inc < 0 && newidx < 0) {
-        setup.MQBNsequences[name].loops -= Math.floor(Math.abs(newidx) / setup.MQBNsequences[name].length);
+        seq.count -= Math.abs(Math.floor(newidx / len));
       }
-      newidx = Math.abs(newidx % setup.MQBNsequences[name].length);
+      newidx = Math.abs(newidx % len);
     }
-    State.setVar(varname,setup.MQBNsequences[name][newidx]);
+    seq.name  = this.sequenceName(name,newidx);
+    seq.value = newidx;
+    State.setVar(name,seq);
   }
 
-  static sequenceName(name) {
-    return name.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
-  }
-
-  static sequenceValue(varname) {
-    const name  = MQBN.sequenceName(varname);
-    const value = State.getVar(varname);
-    const idx   = setup.MQBNsequences[name].indexOf(value);
-    return idx;
-  }
-
-  static sequenceCount(varname) {
-    const name  = MQBN.sequenceName(varname);
-    return setup.MQBNsequences[name].loops;
+  static sequenceName(name,value) {
+    let previous = "";
+    for (let val in setup.MQBNsequences[name].values) {
+      if (val > value) {
+        return previous;
+      }
+      previous = setup.MQBNsequences[name].values[val];
+    }
+    return previous;
   }
   
+};
+
+window.Sequence = class Sequence {
+  constructor(type, name, value, count = 1) {
+    this.type  = type;
+    this.name  = name;
+    this.value = value;
+    this.count = count;
+  }
+
+  toString() {
+    return this.name;
+  }
+  
+  toJSON() { // the custom revive wrapper for SugarCube's state tracking
+      // use `setup` version in case the global version is unavailable
+      return JSON.reviveWrapper(String.format("new Sequence({0},{1},{2},{3})",
+        JSON.stringify(this.type),
+        JSON.stringify(this.name),
+        JSON.stringify(this.value),
+        JSON.stringify(this.count)
+      ));
+  }
+  
+  clone() { return new Sequence(this.type,this.name,this.value,this.count); }
 };
 
 window.macroPairedArgsParser = function(args,start=0) {
@@ -412,8 +435,7 @@ Macro.add(["sequenceadvance","sequencerewind"],{
     if (!setup.MQBNsequences) {
       return this.error("you must create a sequence using <<sequence>> before ${this.name == 'sequenceadvance' ? 'advancing' : 'rewinding'} it");
     }
-    const name = MQBN.sequenceName(this.args[0]);
-    if (!setup.MQBNsequences[name]) {
+    if (!setup.MQBNsequences[this.args[0]]) {
       return this.error(`sequence ${this.args[0]} has not been defined`);
     }
     let   inc   = this.args[1] ?? 1;

@@ -182,13 +182,13 @@ Syntax: `{ type: "rand", chance: int }`
 True if a random number from 1-100 is less than or equal to the supplied chance. You can use this to make a given storylet less likely than other eligible storylets of the same priority. For example given two storylets, one of which has a chance of 50, that storylet will be picked only half as often as the other.
 
 #### `sequence`
-Syntax: `{ type: "sequence", name: "$varname", op: "|not", value: "value" }`
+Syntax: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`
 
-Syntax: `{ type: "sequence", name: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`
+Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`
 
-Check the value of a sequence (created with `<<sequence>>`) to see if it equals "value". This is really just a shortcut for a `var` check of the same variable.
+Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", value: "value" }`
 
-You can also check the cycle count of a sequence (see [`<<sequencecreate>>`](#sequence)) using the alternate form where `count` replaces `value`.
+Check the value, name, or cycle count (see [`<<sequencecreate>>`](#sequence)) of a sequence (created with `<<sequence>>`) to see if it equals "value". You can do the same check with a `var` condition: `{ type: "var", name: "$varname.name", value: "name" }`.
 
 ---
 ## Using Storylets
@@ -395,7 +395,7 @@ The values supplied to the `<<sequence>>` macro can be supplied as an array:
 <<sequence "$season" _seasons>>
 ```
 
-Note that the variable associated with the sequence contains the name, and not the numerical value. If you want to get the current numerical value associated with a sequence you can use the `MQBN.sequenceValue("$varname")` function to get it.
+If you place the related story variable in a sting context (e.g. `<<=$season>>`) you will get the name. You can access the value with `$season.value`. You can also explicitly get the name with `$season.name`.
 
 You can access the same function from javascript by calling `MQBN.createSequence("$varname", values, mode)` where mode is one of `linear` or `cycling`, and `values` is an array of values.
 
@@ -405,7 +405,7 @@ Syntax: `<<sequenceadvance|sequencerewind "$sequence" [steps]>>`
 
 The `<<sequenceadvance>>` and `<<sequencerewind>>` macros advance or rewind a given sequence, usually by one step, but you can specify a different number of steps with the optional argument. e.g. `<<sequenceadvance "$season" 2>>`.
 
-Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with the `MQBN.sequenceCount("$varname")` function. The same happens in reverse with `<<sequencerewind>>`.
+Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with `$sequencename.count` (e.g. `$season.count`). The same happens in reverse with `<<sequencerewind>>`.
 
 You can access the same function from javascript by calling `MQBN.sequenceChange("$varname",value)` where value is a positive (advance) or negative (rewind) number.
 
