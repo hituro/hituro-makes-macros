@@ -28,6 +28,9 @@ The first line, `<<storyletsinit>>`, sets up the MQBN system. You should always 
 
 The second line, `<<sequence>>`, creates a sequence, a special sort of story variable that can automatically cycle through its values — in this case the seasons. You can access this sequence through the story variable `$season`. You must create sequences (with `<<sequence>>`) before you can use them in your game, so it makes sense to do this in **StoryInit** as well.
 
+> [!WARNING]
+> If you *don't* use `<<storyletsinit>>` before you use any of the other MQBN functionality, you will get an error, so don't forget!
+
 ### Farm
 
 Now create a passage called **Farm** and put the following in it:
@@ -65,7 +68,7 @@ If you test the game now you will be able to move from season to season, watchin
 ---
 ## Add Storylets
 
-Your story currently doesn't have any storylets, so the list of season activities is always blank, so lets create some for the seasonal activites we can engage with on the farm.
+Your story currently doesn't have any storylets, so there's nothing to do on the farm (the list of season activities is always blank), so lets create some for the seasonal activites we can do.
 
 Add the following to the **StoryInit** passage:
 
@@ -107,9 +110,11 @@ The four storylets each have a condition that checks the current season, so that
 ```js
 all: [ { type: "sequence", seq: "$season", name: "Spring" } ]
 ```
-means that "all the following must be true for the story to be available — the sequence $season must be "Spring".
+— means that "all the following must be true for the story to be available — the sequence $season must be "Spring".
 
 Since all the storylets are `sticky`, they will be available even if you have already done them, creating a regular cycle of activities around the farm.
+
+### Storylet Passages
 
 For each storylet, create a corresponding passage (e.g. **Planting**, **Mowing**), and add some text. I won't list all the text here, you can find it in the [game file](farm.twee), but here's an example for **Apple Picking**:
 
@@ -162,7 +167,7 @@ Both these storylets have a `weight` of 1, which means they will appear at the b
 ---
 ## Romance
 
-Right the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's chance this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
+Right noq, the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's chance this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
 
 ```html
 You join the women and children harvesting the orchard, shaking the trees to bring down the apples and then gathering them in broad woven baskets. All this will go to ale, or to feed the pigs.
