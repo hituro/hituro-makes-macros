@@ -6,7 +6,6 @@ window.MQBN = class MQBN {
     let   count     = 0;
     for (let s of setup[store].sort(MQBN.prioritySort)) {
       if (this.meetsRequirements(s,store)) {
-        console.log(s.title + " avaialble");
         count ++;
         if ((s.priority ?? 0) >= priority) {
           available.push(s);
@@ -184,6 +183,8 @@ window.MQBN = class MQBN {
       newidx = idx + inc;
       if (inc > 0 && newidx > setup.MQBNsequences[name].length -1) {
         setup.MQBNsequences[name].loops += Math.floor(newidx / setup.MQBNsequences[name].length);
+      } else if (inc < 0 && newidx < 0) {
+        setup.MQBNsequences[name].loops -= Math.floor(Math.abs(newidx) / setup.MQBNsequences[name].length);
       }
       newidx = Math.abs(newidx % setup.MQBNsequences[name].length);
     }
