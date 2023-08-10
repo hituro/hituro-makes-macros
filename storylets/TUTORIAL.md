@@ -170,7 +170,7 @@ Both these storylets have a `weight` of 1, which means they will appear at the b
 ---
 ## Romance
 
-Right now, the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's chance this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
+Right now, the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's change this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
 
 ```html
 You join the women and children harvesting the orchard, shaking the trees to bring down the apples and then gathering them in broad woven baskets. All this will go to ale, or to feed the pigs.
