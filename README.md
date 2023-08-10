@@ -6,6 +6,11 @@ Just some Twine Sugarcube Macros
 [A macro set for custom date/time systems](date-macro/)
 
 ---
+## MouseQBN
+
+[A system for running stoylet-based games in SugarCube](storylets/)
+
+---
 ## `<<nospace>>`
 
 [A simple replacement for nobr](nospace-macro/)
