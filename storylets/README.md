@@ -55,7 +55,7 @@ Each storylet in a given store must have a unique id. By default, the id is the 
 
 ```js
 {
-    id: "farm-hay",
+    id: "haymaking-1",
     title: "Haymaking",
     passage: "cutting-hay",
     desc: "It's haymaking time at the farm"
@@ -94,11 +94,12 @@ The `weight` attribute controls the order in which storylets selected by [getSto
 
 The `link` attribute is used by the `<<storyletlink>>` macro as link text for a storylet. If not specified, the storylet's title is used instead.
 
-_Note: You can specify other attributes on the storylet if you wish. Attributes other than the ones specified here are ignored._
-
 #### `any` and `all` attributes
 
 Use these attributes to specify conditions for the storylet to be avaialble. See [storylet conditions](#storylet-conditions) below.
+
+> [!NOTE]
+> You can specify other attributes on the storylet if you wish. Attributes other than the ones specified here are ignored.
 
 ### Storylet stores
 
@@ -121,7 +122,7 @@ You can manually define storylets like shown above, or you can place them in the
 
 ### Storylet conditions
 
-A storylet without conditions is always available. If you pick a storlet from a store where no storylet has conditions, you get a random one.
+A storylet without conditions is always available. If you pick a storylet from a store where no storylet has conditions, you get a random one.
 
 To specify conditions, add an `any` or `all` attribute to the storylet, which is an array of conditions. For an `any` condition, any of the conditions must match for the storylet to be picked, for `all` all of them must. A storylet can have both an any and all attribute (which means it is available if all of the `all` conditions match, and any of the `any`).
 
@@ -186,13 +187,17 @@ Syntax: `{ type: "rand", chance: int }`
 True if a random number from 1-100 is less than or equal to the supplied chance. You can use this to make a given storylet less likely than other eligible storylets of the same priority. For example given two storylets, one of which has a chance of 50, that storylet will be picked only half as often as the other.
 
 #### `sequence`
-Syntax: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`
-
-Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`
-
+Syntax: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`  
+Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`  
 Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", value: "value" }`
 
 Check the value, name, or cycle count (see [`<<sequencecreate>>`](#sequence)) of a sequence (created with `<<sequence>>`) to see if it equals "value". You can do the same check with a `var` condition: `{ type: "var", name: "$varname.name", value: "name" }`.
+
+#### `all` and `any`
+Syntax: `{ type: "all", all: [ array of conditions ]}`  
+Syntax: `{ type: "any", any: [ array of conditions ]}`
+
+These conditions allow you to nest other conditions inside them. An `all` condition is true if all of the nested conditions are true, an `any` is true if any of them are.
 
 ---
 ## Using Storylets
