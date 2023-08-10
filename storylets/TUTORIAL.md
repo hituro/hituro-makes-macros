@@ -61,14 +61,14 @@ This passage is our hub, and you should set it as the starting point for the sto
 1. Displays the current season as a title (using `!` to make a heading), with the current year in parenthesis. `$season` on its own shows the current name of the season, while `$season.count` shows how many times around the sequence the game has gone, i.e. how many years have passed.
 2. Calls the javascript function `MQBN.getStorylets()` to get a list of available storylets, and assigns them to the temporary variable `_events`. Calling `MQBN.getStorylets()` with no arguments gets as many storylets as are currently available.
 3. Uses a `<<for>>` macro to display a list of the available storylets, using a `<<storyletlink>>` macro to make a clickable link to each one.
-4. If no storylets are available (`_events.length` equals 0), it tells you that no activities are available, and gives you a link to advance to the next season. That link uses `<<sequenceadvance>>` to move `$season` on to its necxt value.
+4. If no storylets are available (`_events.length` equals 0), it tells you that no activities are available, and gives you a link to advance to the next season. That link uses `<<sequenceadvance>>` to move `$season` on to its next value.
 
 If you test the game now you will be able to move from season to season, watching the season and year counter changing, but no actual activities are available yet (because we have not added any storylets).
 
 ---
 ## Add Storylets
 
-Your story currently doesn't have any storylets, so there's nothing to do on the farm (the list of season activities is always blank), so lets create some for the seasonal activites we can do.
+Your story currently doesn't have any storylets, so there's nothing to do on the farm (the list of season activities is always blank), so let's create some for the seasonal activites we can do.
 
 Add the following to the **StoryInit** passage:
 

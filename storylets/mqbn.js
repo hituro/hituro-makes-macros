@@ -228,6 +228,14 @@ window.Sequence = class Sequence {
   toString() {
     return this.name;
   }
+
+  [Symbol.toPrimitive](hint) {
+    if (hint == "string") {
+    	return this.name;
+    } else {
+    	return this.value;
+    }
+  }
   
   toJSON() { // the custom revive wrapper for SugarCube's state tracking
       // use `setup` version in case the global version is unavailable
