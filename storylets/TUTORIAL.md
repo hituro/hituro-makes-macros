@@ -163,14 +163,14 @@ Make two new passages, **Assignation** and **Leave**, and then add the following
 
 **Assignation** is available in all the seasons that are not "Winter", so now "Spring", "Summer" and "Autumn" will have two choices each until the assignation is chosen. We use the `link` attribute to change the text that's displayed in the `<<storyletlink>>` — otherwise it would just show the title, "Assignation". In the corresponding passage the player has a brief romantic encounter with Rowan, until it's broken up by their warring parents.
 
-**Leave** is available in "Summer" and "Autumn" (no leaving the farm in Winter or Spring), but only after "Assignation" has been played. It is `priority: 1`, so it will be the first available choice every time it comes up. In the corresponding passage the player can elope with Rowan and end the game. If they don't, they never get another chance, because **Leave** is not `sticky`.
+**Leave** is available in "Summer" and "Autumn" (no leaving the farm in Winter or Spring), but only after "Assignation" has been played. It is `priority: 1`, so it will always be chosen, even if there were more than three storylets available. In the corresponding passage the player can elope with Rowan and end the game. If they don't, they never get another chance, because **Leave** is not `sticky`.
 
 Both these storylets have a `weight` of 1, which means they will appear at the bottom of the list of returned storylets.
 
 ---
 ## Romance
 
-Right noq, the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's chance this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
+Right now, the text of each individual storylet is fixed, not depending on whether you've played one one of the other storylets. Let's chance this, by adding a significant glance between the player and Rowan while apple picking, but only if Rowan has not left (i.e. if **Leave** has not been played).
 
 ```html
 You join the women and children harvesting the orchard, shaking the trees to bring down the apples and then gathering them in broad woven baskets. All this will go to ale, or to feed the pigs.
