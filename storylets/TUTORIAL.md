@@ -65,6 +65,9 @@ This passage is our hub, and you should set it as the starting point for the sto
 
 If you test the game now you will be able to move from season to season, watching the season and year counter changing, but no actual activities are available yet (because we have not added any storylets).
 
+> [!NOTE]
+> You could also use a normal `<<set>>` macro to change the season, e.g. `<<set $season ++>>`. Changing it in this way will update the associated name and count just like using `<<sequenceadvance>>`
+
 ---
 ## Add Storylets
 

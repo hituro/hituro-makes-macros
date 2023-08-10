@@ -398,9 +398,17 @@ The values supplied to the `<<sequence>>` macro can be supplied as an array:
 <<sequence "$season" _seasons>>
 ```
 
+You can supply an explcit numerical value for each name by passing an object instead of an array:
+```html
+<<set _levels = { 1: "level 1", 100: "level 2", 300: "level 3", 1000: "level 4" }>>
+<<sequence "$level" _levels_>>
+```
+
+In this way you could track XP (`$level.value`) and the corresponding level (`$level`).
+
 If you place the related story variable in a sting context (e.g. `<<=$season>>`) you will get the name. You can access the value with `$season.value`. You can also explicitly get the name with `$season.name`.
 
-You can access the same function from javascript by calling `MQBN.createSequence("$varname", values, mode)` where mode is one of `linear` or `cycling`, and `values` is an array of values.
+You can create a sequence from javascript by calling `MQBN.createSequence("$varname", values, mode)` where mode is one of `linear` or `cycling`, and `values` is an array or object of values as described above.
 
 ### `<<sequenceadvance>> <<sequencerewind>>`
 
@@ -411,6 +419,8 @@ The `<<sequenceadvance>>` and `<<sequencerewind>>` macros advance or rewind a gi
 Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with `$sequencename.count` (e.g. `$season.count`). The same happens in reverse with `<<sequencerewind>>`.
 
 You can access the same function from javascript by calling `MQBN.sequenceChange("$varname",value)` where value is a positive (advance) or negative (rewind) number.
+
+You can also update the value of a sequence directly with `$sequence.value += 1` or other similar arithmetic.
 
 ---
 ## Extending

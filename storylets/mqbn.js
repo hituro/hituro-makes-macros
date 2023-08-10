@@ -177,14 +177,24 @@ window.MQBN = class MQBN {
 
   static createSequence(name, values, mode = "linear") {
     setup.MQBNsequences = setup.MQBNsequences || {};
+    let initial = 0;
+    if (Util.toStringTag(values) == "Object") {
+      let va = [];
+      let setinitial = false;
+      for (let val in values) {
+        if (!setinitial) { initial = val; setinitial = true; }
+        va[val] = values[val];
+      }
+      values = va;
+    }
     setup.MQBNsequences[name] = { values: values, mode: mode };
-    const seq = new Sequence(name,values[0],0);
+    const seq = new Sequence(name,values[initial],initial);
     State.setVar(name,seq);
   }
 
   static sequenceChange(name, inc) {
     const seq   = State.getVar(name);
-    const idx   = seq.value; 
+    const idx   = seq.value;
     const len   = setup.MQBNsequences[name].values.length;
     let   newidx;
 
@@ -200,7 +210,7 @@ window.MQBN = class MQBN {
       newidx = Math.abs(newidx % len);
     }
     seq.name  = this.sequenceName(name,newidx);
-    seq.value = newidx;
+    seq.val   = newidx;
     State.setVar(name,seq);
   }
 
@@ -221,7 +231,7 @@ window.Sequence = class Sequence {
   constructor(type, name, value, count = 1) {
     this.type  = type;
     this.name  = name;
-    this.value = value;
+    this.val   = value;
     this.count = count;
   }
 
@@ -237,17 +247,22 @@ window.Sequence = class Sequence {
     }
   }
   
+  set value(newval) {
+    MQBN.sequenceChange(this.type, newval - this.value);
+  }
+  get value() { return this.val }
+  
   toJSON() { // the custom revive wrapper for SugarCube's state tracking
       // use `setup` version in case the global version is unavailable
       return JSON.reviveWrapper(String.format("new Sequence({0},{1},{2},{3})",
         JSON.stringify(this.type),
         JSON.stringify(this.name),
-        JSON.stringify(this.value),
+        JSON.stringify(this.val),
         JSON.stringify(this.count)
       ));
   }
   
-  clone() { return new Sequence(this.type,this.name,this.value,this.count); }
+  clone() { return new Sequence(this.type,this.name,this.val,this.count); }
 };
 
 window.macroPairedArgsParser = function(args,start=0) {
@@ -437,7 +452,7 @@ Macro.add("sequence",{
     if (this.args.length < 3) {
       return this.error("no sequence values specified");
     }
-    if (Array.isArray(this.args[1])) {
+    if (Array.isArray(this.args[1]) || Util.toStringTag(this.args[1]) == "Object") {
       MQBN.createSequence(this.args[0],this.args[2],this.args[1]);
     } else {
       MQBN.createSequence(this.args[0],this.args.slice(2),this.args[1]);
