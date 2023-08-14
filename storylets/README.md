@@ -157,45 +157,45 @@ There are many possible types of condition, which are listed below. You can also
 ### Condition types
 
 #### `collection`
-Syntax: `{ type: "collection", var: "$varname:, op: "|not", has: "value" }`
+_Syntax_: `{ type: "collection", var: "$varname:, op: "|not", has: "value" }`
 
 Check the value of a variable (either story, temporary, or setup) to see if it contains a value. The variable must be an array, a Map, a Set, or a generic object (in which case it will be checked to see if it has a matching attribute and that attribute is true). Set `op` to "not" to negate the check.
 
 #### `function`
-Syntax: `{type: "function", func: function() {condition, store} }`
+_Syntax_: `{type: "function", func: function() {condition, store} }`
 
 Check the return value of a custom function, which should evaluate to true if the storylet is available. The function is passed the condition object, and the name of the storylet store.
 
 #### `var`
-Syntax: `{ type: "var", var: "$varname", op: "gt|gte|le|lte|eq|neq|includes|notincludes|has", value: "value" }`
+_Syntax_: `{ type: "var", var: "$varname", op: "gt|gte|le|lte|eq|neq|includes|notincludes|has", value: "value" }`
 
 Check the value of a variable (either story, temporary, or setup). The `op` (operator) condition controls how the value is compared to the variable. The `includes`, `notincludes`, and `has` operators let you check for array or map values, but see the `collection` condition.
 
 #### `visited`
-Syntax: `{ type: "visited", op: "|not", passage: "passageName" }`
+_Syntax_: `{ type: "visited", op: "|not", passage: "passageName" }`
 
 True if a given passage has been visited (or with `op` "not", not visited) in the current play history.
 
 #### `played` 
-Syntax: `{ type: "played", op: "|not", story: "storyid" }`
+_Syntax_: `{ type: "played", op: "|not", story: "storyid" }`
 
 True if a given storylet has already been played. Set `op` to "not" to negate the check. Note that the "storyid" will be the title of the given storylet unless you supplied a separate id value.
 
 #### `rand`
-Syntax: `{ type: "rand", chance: int }`
+_Syntax_: `{ type: "rand", chance: int }`
 
 True if a random number from 1-100 is less than or equal to the supplied chance. You can use this to make a given storylet less likely than other eligible storylets of the same priority. For example given two storylets, one of which has a chance of 50, that storylet will be picked only half as often as the other.
 
 #### `sequence`
-Syntax: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`  
-Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`  
-Syntax: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", value: "value" }`
+_Syntax_: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`  
+_Syntax_: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", count: "value" }`  
+_Syntax_: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", value: "value" }`
 
 Check the value, name, or cycle count (see [`<<sequencecreate>>`](#sequence)) of a sequence (created with `<<sequence>>`) to see if it equals "value". You can do the same check with a `var` condition: `{ type: "var", name: "$varname.name", value: "name" }`.
 
 #### `all` and `any`
-Syntax: `{ type: "all", all: [ array of conditions ]}`  
-Syntax: `{ type: "any", any: [ array of conditions ]}`
+_Syntax_: `{ type: "all", all: [ array of conditions ]}`  
+_Syntax_: `{ type: "any", any: [ array of conditions ]}`
 
 These conditions allow you to nest other conditions inside them. An `all` condition is true if all of the nested conditions are true, an `any` is true if any of them are.
 
@@ -285,7 +285,7 @@ $(document).on(":storyletchosen",function(e) {
 
 ### `<<storyletsinit>>`
 
-Syntax: `<<storyletsinit [store name]>>`
+_Syntax_: `<<storyletsinit [store name]>>`
 
 The `<<storyletsinit>>` macro sets up the storylet tracking variables for a particular store. If you do not pass a store name as the argument, it will set up the default "storylets" store. You _must_ call this macro at least once before using MQBN, normally this will be in the **StoryInit** special passage.
 
@@ -293,7 +293,7 @@ You can also use the name `<<initstorylets>>` for this macro.
 
 ### `<<storyletsprune>>`
 
-Syntax: `<<storyletsprune [store name]>>`
+_Syntax_: `<<storyletsprune [store name]>>`
 
 The `<<storyletsprune>>` macro deletes all used storylets from the given store, so that they will no longer be checked when you call `MQBN.getStorylets()`. You do not need to do this, but if your storylet store is very large, you may wish to do so to reduce computation time.
 
@@ -303,7 +303,7 @@ You can also use the name `<<prunestorylets>>` for this macro.
 
 ### `<<storyletscan>>`
 
-Syntax: `<<storyletscan [store name]>>`
+_Syntax_: `<<storyletscan [store name]>>`
 
 The `<<storyletscan>>` macro scans the game's passages for `<<storylet>>` macros and turns their contents into storylets, which it then adds to the specified store. If you don't specify a store, they will be added to the default "storylets" store. You can use this macro to associate storylets with the passages they reference, which you may find easier to track than a separate list created elsewhere.
 
@@ -311,7 +311,7 @@ You should almost certainly only call this macro in the **StoryInit** special pa
 
 ### `<<storylet>>`
 
-Syntax: `<<storylet [store name]>>`
+_Syntax_: `<<storylet [store name]>>`
 
 The `<<storylet>>` macro allows you to define a storylet in the passage it corresponds to, rather than in your story javascript, or StoryInit. Use the `<<storyletscan>>` macro to scan for such storylets.
 
@@ -331,7 +331,7 @@ If you call `<<storyletscan>>` with the optional store name, only `<<storylet>>`
 
 ### `<<storyletgoto>>`
 
-Syntax: `<<storyletgoto storyletname-or-object [store "store name"] [open true|false]>>`
+_Syntax_: `<<storyletgoto storyletname-or-object [store "store name"] [open true|false]>>`
 
 The `<<storyletgoto>>` macro sends you to the passage corresponding to the storylet given in the first argument, marks that storylet as used, and fires the `:storyletchosen` event.
 
@@ -352,7 +352,7 @@ e.g.
 
 ### `<<storyletlink>`
 
-Syntax: `<<storyletlink storyletname-or-object [store "store name"] [behaviour disabled|hidden] [text "link text"] [disabled-text "link text"]>><</storyletlink>>`
+_Syntax_: `<<storyletlink storyletname-or-object [store "store name"] [behaviour disabled|hidden] [text "link text"] [disabled-text "link text"]>><</storyletlink>>`
 
 The `<<storyletlink>>` macro creates a link to a storylet passage. When clicked it runs its contents (like `<<link>>` does), navigates to the passage corresponding to the storylet given in the first argument, marks that storylet as used, and fires the `:storyletchosen` event.
 
@@ -373,7 +373,7 @@ e.g.
 
 ### `<<storyletuse>>`
 
-Syntax: `<<storyletuse storyletname-or-object [store "store name"]>>`
+_Syntax_: `<<storyletuse storyletname-or-object [store "store name"]>>`
 
 The `<<storyletuse>>` macro marks a storylet as used, which means it will no-longer be returned by `MQBN.getStorylets()` (unless it is `sticky`), and fires the `:storyletchosen` event. You can use `<<storyletuse>>` where you don't want to use `<<storyletgoto>>` or `<<storyletlink>>` to do this automatically.
 
@@ -386,7 +386,7 @@ MQBN provides the same functionality through `sequences`, which are just story v
 
 ### `<<sequence>>`
 
-Syntax: `<<sequence "$varname" "cycling|linear" [values]>>`
+_Syntax_: `<<sequence "$varname" "cycling|linear" [values]>>`
 
 The `<<sequence>>` macro sets up a sequence. You must set up each sequence before you use it, so its normal to place them in the **StoryInit** special passage. Each sequence has a name, which is the name of the variable that holds it, and a set of values, which are what you can advance through.
 
@@ -417,7 +417,7 @@ You can create a sequence from javascript by calling `MQBN.createSequence("$varn
 
 ### `<<sequenceadvance>> <<sequencerewind>>`
 
-Syntax: `<<sequenceadvance|sequencerewind "$sequence" [steps]>>`
+_Syntax_: `<<sequenceadvance|sequencerewind "$sequence" [steps]>>`
 
 The `<<sequenceadvance>>` and `<<sequencerewind>>` macros advance or rewind a given sequence, usually by one step, but you can specify a different number of steps with the optional argument. e.g. `<<sequenceadvance "$season" 2>>`.
 
