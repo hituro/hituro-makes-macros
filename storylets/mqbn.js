@@ -419,7 +419,7 @@ Macro.add("storyletuse",{
     }
 
     if (storylet) {
-      variables()[store+'_used'].set(storylet.id ?? storylet_title);
+      variables()[store+'_used'].set(storylet.id ?? storylet.title);
       variables()[store+'_current'] = storylet;
     }
   }
