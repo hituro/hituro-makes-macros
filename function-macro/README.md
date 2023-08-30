@@ -2,6 +2,10 @@
 
 The `<<function>>` macro provides an easy mechanism for making functions with standard SugarCube macros, in the same way that `<<widget>>` allows you to make macros using TwineScript. Each `<<function>>` macro makes a function that returns whatever is in the `_return` temporary variable, in the same way that `<<widget>>` puts its output into the passage.
 
+### Installation ###
+
+Add the contents of [function.js](function.js) to your story Javascript.
+
 ### Basic Usage
 
 The `<<function>>` macro defines a javascript function. `<<function>>` allows you to create functions by using the standard macros and markup that you use normally within your story.
@@ -20,6 +24,9 @@ The `<<function>>` macro defines a javascript function. `<<function>>` allows yo
 The first argument to `<<function>>` is used as the function name. It must not contain spaces, and must begin with a letter, `$` or `_`. My default, all functions created by `<<function>>` get a prefix added, `tw`, to make sure they don't overwrite any pre-existing function. So if you call `<<function "what">>` the function created is `tw.what()`.
 
 You can change the prefix by setting `setup.function_macro.prefix`, e.g. `setup.function_macro = { prefix: "myprefix" }`. If you set the prefix to a falsy value, the functions are created directly on the window object, and won't have any prefix.
+
+> [!WARNING]
+> Be sure to set your prefix *before* calling `<<function>>`. In practice do it before any of the functions.js code
 
 ### Special variables, `_args` & `_return`
 
