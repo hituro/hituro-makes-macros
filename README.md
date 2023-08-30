@@ -11,9 +11,14 @@ Just some Twine Sugarcube Macros
 [A system for running stoylet-based games in SugarCube](storylets/)
 
 ---
-## `<<nospace>>`
+## `<<class>> / <<id>> / <<style>> / <<attr>>`
 
-[A simple replacement for nobr](nospace-macro/)
+[Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
+
+---
+## `<<function>>`
+
+[Write Javascript functions in normal twine macros, just like `<<widget>>`](function-macro/)
 
 ---
 ## `<<include-part>>`
@@ -21,9 +26,9 @@ Just some Twine Sugarcube Macros
 [Include part of another passage](include-part-macro/)
 
 ---
-## `<<class>> / <<id>> / <<style>> / <<attr>>`
+## `<<nospace>>`
 
-[Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
+[A simple replacement for nobr](nospace-macro/)
 
 ---
 ## `<<tabs>>`
