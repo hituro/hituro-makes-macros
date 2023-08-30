@@ -33,7 +33,7 @@ You can change the prefix by setting `setup.function_macro.prefix`, e.g. `setup.
 Arguments passed to your function appear in the `_args` temporary variable as as zero-based indices; i.e., `_args[0]` is the first parsed argument, `_args[1]` is the second, etc. e.g.
 ```html
 <<function "hello">>
-    <<set _return to "Hello " . _args[0]>>
+    <<set _return to "Hello " + _args[0]>>
 <</function>>
 
 <<print tw.hello("Hituro")>>
