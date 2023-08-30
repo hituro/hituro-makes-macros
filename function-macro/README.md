@@ -12,7 +12,7 @@ The `<<function>>` macro defines a javascript function. `<<function>>` allows yo
     <<set _return to "whatever you are returning">>
 <</function>>
 
-<<set _var to My.functionName()>>
+<<set _var to tw.functionName()>>
 ```
 
 ### Function Name
@@ -29,7 +29,7 @@ Arguments passed to your function appear in the `_args` temporary variable as as
     <<set _return to "Hello " . _args[0]>>
 <</function>>
 
-<<print My.hello("Hituro")>>
+<<print tw.hello("Hituro")>>
 ```
 
 Your function can return information by setting the `_return` temporary variable.
