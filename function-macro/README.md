@@ -43,4 +43,4 @@ Your function can return information by setting the `_return` temporary variable
 
 ### `function` tagged passages
 
-Functions should be defined only in a `function`-tagged passage. *Do not* add a widget tag to any of the [specially named passages](https://www.motoslave.net/sugarcube/2/docs/#special-passages) and attempt to define your widgets there. 
+Functions should be defined only in a `function`-tagged passage. *Do not* add a widget tag to any of the [specially named passages](https://www.motoslave.net/sugarcube/2/docs/#special-passages) and attempt to define your functions there. 
