@@ -85,8 +85,8 @@ Macro.add('tabs', {
         label = `<img src="${this.args[1]}">`;
       }
       let $tab = $(`<button id="${tabid}-control">${label}</button>`).ariaClick(function() {
-        $(parent.context.wrapper).find(".tabs-tabs button").removeClass("selected");
-        $(parent.context.wrapper).find(".tabs-content").addClass("hidden");
+        $(parent.context.wrapper).children(".tabs-tabs").children("button").removeClass("selected");
+        $(parent.context.wrapper).children(".tabs-contents").children(".tabs-content").addClass("hidden");
         $(parent.context.wrapper).find(`#${parent.context.prefix}${tabid}`).removeClass("hidden");
         $(this).addClass("selected");
       });
