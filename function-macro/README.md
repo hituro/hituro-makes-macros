@@ -21,7 +21,7 @@ The `<<function>>` macro defines a javascript function. `<<function>>` allows yo
 
 ### Function Name
 
-The first argument to `<<function>>` is used as the function name. It must not contain spaces, and must begin with a letter, `$` or `_`. My default, all functions created by `<<function>>` get a prefix added, `tw`, to make sure they don't overwrite any pre-existing function. So if you call `<<function "what">>` the function created is `tw.what()`.
+The first argument to `<<function>>` is used as the function name. It must not contain spaces, and must begin with a letter, `$` or `_`. By default, all functions created by `<<function>>` get a prefix added, `tw`, to make sure they don't overwrite any pre-existing function. So if you call `<<function "what">>` the function created is `tw.what()`.
 
 You can change the prefix by setting `setup.function_macro.prefix`, e.g. `setup.function_macro = { prefix: "myprefix" }`. If you set the prefix to a falsy value, the functions are created directly on the window object, and won't have any prefix.
 
