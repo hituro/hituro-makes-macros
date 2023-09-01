@@ -86,6 +86,6 @@ Macro.add('function', {
 	}
 });
 
-Story.lookup("tags", "functions").forEach(p => {
+Story.lookup("tags", "function").forEach(p => {
     $.wiki(p.text);
 });

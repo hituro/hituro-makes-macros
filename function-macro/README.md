@@ -41,6 +41,52 @@ Arguments passed to your function appear in the `_args` temporary variable as as
 
 Your function can return information by setting the `_return` temporary variable.
 
-### `function` tagged passages
+### Where to define `<<function>>`s
 
-Functions should be defined only in a `function`-tagged passage. *Do not* add a widget tag to any of the [specially named passages](https://www.motoslave.net/sugarcube/2/docs/#special-passages) and attempt to define your functions there. 
+Functions defined in a normal passage may be lost if you navigate to another passage and then reload the page. To guarentee that functions are not lost, you should define them only in a `function`-tagged passage, or a `widget`-tagged passage. *Do not* add a `function` tag to any of the [specially named passages](https://www.motoslave.net/sugarcube/2/docs/#special-passages) and attempt to define your functions there. 
+
+### D&D Skill Check Example
+
+With thanks to @SleepyFool on the Twine Discord.
+
+```html
+:: StoryInit
+<!-- create person, define skill bonuses -->
+<<set $Geralt = {
+  athletics    :  5,
+  arcana       :  1,
+  performance  : -2,
+  intimidation :  5,
+}>>
+
+:: SomeBridge
+<!-- story event -->
+DC: 16
+Roll: <span id='roll'></span>
+Pass? <span id='result'></span>
+
+<<button 'Leap!'>>
+  <!-- call function -->
+  <<set _check = tw.skill_check($Geralt, 'athletics', 16)>>
+  <!-- update results -->
+  <<replace '#roll'>><<print _check.roll>><</replace>>
+  <<replace '#result'>><<print _check.pass>><</replace>>
+<</button>>
+
+
+:: functions [function]
+<!-- create function -->
+<<function 'skill_check'>>
+  <!-- grab values -->
+  <<set _person =  _args[0]>>
+  <<set _skill  =  _args[1]>>
+  <<set _bonus  =  _person[_skill]>>
+  <<set _DC     =  _args[2]>>
+  <!-- run check -->
+  <<set _dice   =  random(1,20)>>
+  <<set _roll   =  String(_dice) + ' + ' + String(_bonus)>>
+  <<set _pass   =  (_dice + _bonus) gte _DC>>
+  <!-- define output -->
+  <<set _return =  {dice: _dice, roll: _roll, pass: _pass}>>
+<</function>>
+```
