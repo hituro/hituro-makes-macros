@@ -39,10 +39,11 @@ The following block shows the default values for the Gregorian calendar.
         { name: "October"  , length: 31, season: "autumn" }, 
         { name: "November" , length: 30, season: "autumn" }, 
         { name: "December" , length: 31, season: "winter" }
-      ],
-      periods: { 
+    ],
+    periods: { 
         y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
-      }
+    }
+    year_starts: { 1: 3, 325: 6, 1752: 5 }
 }
 ```
 The `name` argument defines the name of the Datesystem. This is the `system-id` argument to use in all of the date system macros, the key in `setup.datesystems` that contains the DATESYSTEM object, and the prefix of the story variable containing the system's time variable. 
@@ -65,6 +66,8 @@ The other system definition values are as follows:
 For `months`, the `length` value is the number of days in a non-leap year, and the `season` is the name of the season (as returned by `[season]`).
 
 For `year_offset` the value is a fixed number of years to add to the value returned by `getDate()`. Use this when you wish to use some SF date system set far into the future, which also has leap years, to reduce the calculation required. For example, if your game is set in the year 40,000, you might set `year_offset` to 40000, so that your zero-year counts from there. If your system does not have leap years, you probably do not need to do this.
+
+`year_starts` is a magic value to cope with the fact that at different periods, different calendars were in use to determine the day of the week. It's only needed for the Gregorian calendar, for a custom datesystem, set it to `{}`
 
 ### Leap Years
 
@@ -123,7 +126,8 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: 'Thermidor', length: 30, season: 'summer'}, 
         { name: 'Fructidor', length: 30, season: 'summer'}, 
         { name: 'Sansculottides', length: 5, season: 'none', leap_century: [[400,6]], leap: [[4,6]]}
-    ]
+    ],
+    year_starts: {}
 }`>><</nobr>>
 ```
 ### Approximate Lunar Calendar
@@ -154,7 +158,8 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: "Hollow", length: 29, },
         { name: "Full", length: 30, },
         { name: "Hollow", length: 29, },
-    ]
+    ],
+    year_starts: {}
 }`>><</nobr>>
 ```
 ### Discworld
@@ -176,7 +181,8 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: "Sektober", length: 32, },
         { name: "Ember",    length: 32, },
         { name: "December", length: 32, },
-    ]
+    ],
+    year_starts: {}
 }`>><</nobr>>
 ```
 

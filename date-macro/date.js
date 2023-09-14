@@ -27,6 +27,11 @@
         { name: "November" , length: 30, season: "autumn" }, 
         { name: "December" , length: 31, season: "winter" }
       ];
+      this.YEAR_STARTS = config.year_starts ?? {
+           1: 3,
+         325: 6,
+        1752: 5
+      };
       this.YEAR_LENGTH = this.MONTHS.reduce((total,m) => { return total + m.length},0)
       this.PERIODS    = config.periods ?? { 
         y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
@@ -202,23 +207,27 @@
       };
       
       if (base) { return out; }
+      
+      // months & years
+      let months = 0;
+      let total_days = 0;
 
       if (this.equal_years) {
         out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
         out.year_short  = out.y = out.Y % 100;
         out.year_sep    = out.Y.toLocaleString();
         out.year_mil    = Math.floor(out.Y / 1000);
-        time -= num * this.yl;
+        total_days      = out.Y * this.yl;
       }
       
-      // months & years
-      let months = 0;
-      let total_days = 0;
+      let yl = 0;
+      
       while (true) {
         const year  = out.Y + Math.floor(months / this.MONTHS.length);
         const moy   = months % this.MONTHS.length;
         const month = this.MONTHS[moy];
         const days  = this.getMonthLength(month,year);
+        
         if (r >= (days * this.dl)) {
           r -= (days * this.dl);
           if (moy == 0) { out.day_of_year = days } else { out.day_of_year += days; }
@@ -234,6 +243,9 @@
           out.month_long  = out.M = month.name;
           out.month_short = month.short ?? month.name.substring(0,3);
           out.season      = month.season ?? "";
+          if (out.mo == 1 && r <= this.dl) {
+            out.day_of_year = 0;
+          }
           break;
         }
         months ++;
@@ -245,10 +257,12 @@
       out.day_of_year += out.d;
       out.day_ordinal = this.getOrdinal(out.d);
       out["0d"] = out.d < 10 ? `0${out.d}` : out.d;
+      total_days += out.d;
       r = r % (this.dl);
       
       // day of week
-      out.weekday   = ((out.Y * this.YEAR_LENGTH) + out.day_of_year + this.WEEK_START) % this.DAYS.length;
+      const year_start_day = this.getYearStartDay(out.Y);
+      out.weekday   = (total_days + year_start_day + 1) % this.DAYS.length;
       out.day_long  = out.D = this.DAYS[out.weekday];
       out.day_short = out.day_long.substring(0,2);
       
@@ -294,6 +308,14 @@
         days += this.getMonthLength(month,year);
       }
       return days;
+    }
+    
+    getYearStartDay(year) {
+      let startDay = this.WEEK_START;
+      for (const y in this.YEAR_STARTS) {
+        if (year >= y) { startDay = this.YEAR_STARTS[y]; }
+      }
+      return startDay;
     }
     
     getMonthLength(month,year=0) {
