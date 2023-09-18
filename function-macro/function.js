@@ -9,10 +9,10 @@ Macro.add('function', {
 		}
 
 		const functionName = this.args[0];
-        const MacroContext = this;
-        const prefix       = setup?.functions_macro?.prefix ?? "tw";
-        if (prefix && typeof window[prefix] == "undefined") { window[prefix] = { } }
-        const target       = prefix ? window[prefix] : window;
+		const MacroContext = this;
+		const prefix       = setup?.functions_macro?.prefix ?? "tw";
+		if (prefix && typeof window[prefix] == "undefined") { window[prefix] = { } }
+		const target       = prefix ? window[prefix] : window;
 
 		if (target[functionName]) {
 			return this.error(`cannot clobber existing function "${functionName}"`);
