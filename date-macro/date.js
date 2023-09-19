@@ -39,7 +39,7 @@
       this.hl = this.MIN_LENGTH * this.HOUR_LENGTH;
       this.dl = this.hl * this.DAY_LENGTH;
       this.yl = this.dl * this.YEAR_LENGTH;
-      this.equal_years = this.MONTHS.reduce((total,m) => { total += (m.leap_century || m.leap) ? 1 : 0; }) == 0;
+      this.equal_years = this.MONTHS.reduce((total,m) => { return total + (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
       this.YEAR_OFFSET = config.year_offset ?? 0;
     }
@@ -58,7 +58,7 @@
       options.direction = options.direction ?? "forward";
       
       //set base values
-      const base   = options.base ?? this.getDate(variables()[this.varname],"date",true);
+      const base   = options.base ? options.base : this.getDate(variables()[this.varname],"date",true);
       if (datestring == "now") {
         datestring = this.getRealDate();
       }
@@ -170,7 +170,7 @@
       const initial = r;
 
       // caching
-      if (this.cache.time === r) { 
+      if (this.cache.time && this.cache.time === r) { 
         return this.cache.value; 
       }
 
@@ -218,8 +218,9 @@
         out.year_sep    = out.Y.toLocaleString();
         out.year_mil    = Math.floor(out.Y / 1000);
         total_days      = out.Y * this.YEAR_LENGTH;
-        r = r % (this.yl * out.Y);
+        r = r % (this.yl * (out.Y - (output == "date" ? 1 : 0)));
       }
+      
       
       let yl = 0;
       
@@ -573,7 +574,7 @@
       const payload  = this.payload[0].contents;
       
       if (this.args[0] && payload) {
-        const timestamp = Number.isInteger(this.args[0]) ? this.args[0] : dateargs.datesystem.setToTime(this.args[0]);
+        const timestamp = dateargs.datesystem.setToTime(this.args[0]);
         const id        = 'at-'+timestamp;
         
         $(document).on(`:dateupdated.${id}`, this.createShadowWrapper(
@@ -588,5 +589,5 @@
       }
     }
   });
-
+  
 })();
