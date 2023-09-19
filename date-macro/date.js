@@ -217,7 +217,8 @@
         out.year_short  = out.y = out.Y % 100;
         out.year_sep    = out.Y.toLocaleString();
         out.year_mil    = Math.floor(out.Y / 1000);
-        total_days      = out.Y * this.yl;
+        total_days      = out.Y * this.YEAR_LENGTH;
+        r = r % (this.yl * out.Y);
       }
       
       let yl = 0;
