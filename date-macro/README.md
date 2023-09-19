@@ -212,6 +212,41 @@ Make a 12hr clock that ticks once a minute and sends events.
 <<dateticker "[0h12]:[0m] [day_half]" "1m" true>>
 ```
 
+### `<<at>>`
+
+Syntax `<<at "date string or number" [system-id]>>[code to run]<</at>>`
+
+The `<<at>>` macro allows you to run code dynamically when the game time reaches a certain value. You could use this to put a notification on screen, trigger an event, or interrupt gameplay to go to a new passage. The event is triggered by the `:dateupdated` event (see below), which means that any of the date changing macros (including the clock created by `<<dateticker>>`) can trigger it.
+
+The first argument to the macro should either be a date string (like "2000y 10mo 1d") or a number representing the time (like you might get from `$time + 60`). As soon as the current `$time` reaches or passes that value, the code inside the `<<at>>` will be run.
+
+**Example**
+```html
+<<at "2000y 1mo 1d 4h">>
+    <<run alert("Time up!")>>
+<</at>>
+```
+
+The code inside the `<<at>>` will use the value of story and temporary variables at the time it *runs*, rather than at the time it was created. If you want it to use the values when it was created, wrap it in a `<<capture>>` macro, as you would do for a `<<link>>`.
+
+**Example**
+```html
+:: PassageOne
+<<dateset "2000y 1mo 1d">>
+<<set _name = "Hituro">>
+<<capture _name>>
+    <<at "2000y 1mo 1d 4h">>
+        <<run alert(`Hello ${_name}`)>>
+    <</at>>
+<</capture>>
+<<link [[Go to 4am|PassageTwo]]>><<dateadd "3h">><</link>>
+
+:: PassageTwo
+<<set _name = "Bob">>
+```
+
+When you go to **PassageTwo** the alert will show "Hello Hituro" because `_name` was captured when the `<<at>>` was run. Without the `<<capture>>` it would show "Hello Bob" instead.
+
 ---
 ## Events
 

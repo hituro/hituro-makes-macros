@@ -564,4 +564,28 @@
       setup.datesystems[ds.systemname] = ds;
     }
   });
+  
+  Macro.add('at', {
+    tags: null,
+    handler: function handler() {
+      const dateargs = DATESYSTEM.dateargs(this.args);
+      const payload  = this.payload[0].contents;
+      
+      if (this.args[0] && payload) {
+        const timestamp = Number.isInteger(this.args[0]) ? this.args[0] : dateargs.datesystem.setToTime(this.args[0]);
+        const id        = 'at-'+timestamp;
+        
+        $(document).on(`:dateupdated.${id}`, this.createShadowWrapper(
+          function (e) {
+            if (e.to >= timestamp) {
+              const resFrag = document.createDocumentFragment();
+              new Wikifier(resFrag,payload);
+              $(document).off(`:dateupdated.${id}`);
+            }
+          }
+        ));
+      }
+    }
+  });
+
 })();
