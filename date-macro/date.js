@@ -218,9 +218,8 @@
         out.year_sep    = out.Y.toLocaleString();
         out.year_mil    = Math.floor(out.Y / 1000);
         total_days      = out.Y * this.YEAR_LENGTH;
-        r = r % (this.yl * (out.Y - (output == "date" ? 1 : 0)));
+        r = (r % (this.yl * (out.Y - (output == "date" ? 1 : 0))) || 0);
       }
-      
       
       let yl = 0;
       
