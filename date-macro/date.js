@@ -218,7 +218,8 @@
         out.year_sep    = out.Y.toLocaleString();
         out.year_mil    = Math.floor(out.Y / 1000);
         total_days      = out.Y * this.YEAR_LENGTH;
-        r = (r % (this.yl * (out.Y - (output == "date" ? 1 : 0))) || 0);
+        let year_secs   = (this.yl * (out.Y - (output == "date" ? 1 : 0)));
+        r = year_secs ? r % year_secs : r;
       }
       
       let yl = 0;
@@ -529,7 +530,7 @@
       const $ticker   = $("<div class='macro-dateticker'>");
       const format    = dateargs.args[0] ?? "[0h]:[0m]:[0s]";
       const unit      = dateargs.args[1] ?? "1s";
-      const event     = dateargs.args[1] ?? false;
+      const event     = dateargs.args[2] ?? false;
       const ds        = dateargs.datesystem.systemname; // use the key so we survive passage transitions
       const incsecs   = dateargs.datesystem.dateToTime(unit);
       const frequency = parseInt(incsecs) * 1000;
