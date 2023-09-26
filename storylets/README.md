@@ -388,7 +388,7 @@ MQBN provides the same functionality through `sequences`, which are just story v
 
 _Syntax_: `<<sequence "$varname" "cycling|linear" [values]>>`
 
-The `<<sequence>>` macro sets up a sequence. You must set up each sequence before you use it, so its normal to place them in the **StoryInit** special passage. Each sequence has a name, which is the name of the variable that holds it, and a set of values, which are what you can advance through.
+The `<<sequence>>` macro sets up a sequence. You must set up each sequence before you use it, so its normal to place `<<sequence>>` in the **StoryInit** special passage. Each sequence has a name, which is the name of the variable that holds it, and a set of values, which are what you can advance through.
 
 e.g.
 ```html
@@ -406,7 +406,7 @@ The values supplied to the `<<sequence>>` macro can be supplied as an array:
 You can supply an explcit numerical value for each name by passing an object instead of an array:
 ```html
 <<set _levels = { 1: "level 1", 100: "level 2", 300: "level 3", 1000: "level 4" }>>
-<<sequence "$level" _levels_>>
+<<sequence "$level" _levels>>
 ```
 
 In this way you could track XP (`$level.value`) and the corresponding level (`$level`).
