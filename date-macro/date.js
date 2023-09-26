@@ -12,6 +12,13 @@
       this.HOUR_LENGTH = config.hour_length ?? 60;
       this.DAY_LENGTH  = config.day_length ?? 24;
       this.DAYS        = config.days ?? [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      this.DAY_PARTS   = config.day_parts ?? [
+        { name: "night"    , start:  0 },
+        { name: "morning"  , start:  7 },
+        { name: "afternoon", start: 12 },
+        { name: "evening"  , start: 17 },
+        { name: "night"    , start: 21 }
+      ];
       this.WEEK_START  = config.week_start ?? 5;
       this.MONTHS      = config.months ?? [
         { name: "January"  , length: 31, season: "winter" }, 
@@ -198,6 +205,7 @@
         "0h": "",
         "0h12": "",
         day_half: "",
+        day_part: "",
         m: 0,
         "0m": "",
         s: 0,
@@ -275,6 +283,11 @@
       out["0h"] = out.h < 10 ? `0${out.h}` : out.h;
       out["0h12"] = out.h < 10 ? `0${out.h}` : out.h;
       r = r % (this.hl);
+      
+      // day part
+      for (let part of this.DAY_PARTS) {
+        if (out.h <= part.start) { out.day_part = part.name; break; }
+      }
       
       // minutes
       out.m = Math.floor(r / this.MIN_LENGTH);
