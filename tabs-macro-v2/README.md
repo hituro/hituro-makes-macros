@@ -42,10 +42,13 @@ You can optionally also supply an id (any string that isn't one of the direction
 e.g. `<<tabs "myid">>`
 
 ### `<<tab>>` ###
+Syntax: `<<tab name [icon] [selected]>><</tab>>`
 
 The `<<tab>>` macro has a mandatory first argument, which is the name displayed on the tab. The name is also used to generate the id of the content area corresponding to the tab (which is of the form `tabs-content-NAME` where `NAME` is the tab name, converted to lowercase, spaces turned into `-`, and non-alphanumeric characters removed.)
 
-The tab macro takes an optional second argument. If this evaluates to true, the tab will be selected when the tab-group is displayed. If no tab is pre-selected, then the first tab is displayed.
+The optional second argument is the path to an image to use instead of the name, e.g. `<<tab "Potions" "/images/potion.png">><</tab>>`.
+
+If the optional final argument evaluates to true, the tab will be selected when the tab-group is displayed. If no tab is pre-selected, then the first tab is displayed.
 
 Note: if the optional id argument is passed to `<<tabs>>` the same id will be prepended to the id of any tabs it contains: e.g. `id-tabs-content-NAME`.
 
