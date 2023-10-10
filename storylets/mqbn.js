@@ -116,6 +116,10 @@ window.MQBN = class MQBN {
     let x = this.getRandomInt(1,100);
     return (x <= r.chance);
   }
+  
+  static pullsRequirement(r,store) {
+    return this.operators[r.op ?? "eq"](r.pulls,variables()[store+"_used"].size);
+  }
 
   static operators = {
     eq:  function(a, b) { return a == b },
