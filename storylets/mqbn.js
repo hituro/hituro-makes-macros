@@ -299,13 +299,13 @@ Macro.add("storyletgoto",{
     const store   = args.store ?? 'storylets';
     const ifopen  = args.open  ?? false;
     let   storylet;
-
+    
     if (typeof this.args[0] === 'object') {
       // Argument was a storylet object
       storylet = this.args[0]; 
     } else {
       // Argument was a storylet name
-      const storylets = setup[store].find((s) => { return s.title == this.args[0] || s.id == this.args[0]});
+      const storylets = setup[store].filter((s) => { return s.title == this.args[0] || s.id == this.args[0]});
       if (ifopen) {
         // we wish to use the first open one
         const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s));
@@ -317,10 +317,10 @@ Macro.add("storyletgoto",{
 
     if (storylet) {
       const passage = storylet.passage ?? storylet.title;
-      variables()[store+'_used'].set(storylet.id ?? storylet_title);
+      variables()[store+'_used'].set(storylet.id ?? storylet.title);
       variables()[store+'_current'] = storylet;
       MQBN.trigger(storylet);
-      Engine.play(passage);
+      setTimeout(() => Engine.play(passage), Engine.minDomActionDelay);
     }
   }
 });
