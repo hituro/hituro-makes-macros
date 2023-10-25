@@ -308,8 +308,8 @@ Macro.add("storyletgoto",{
       const storylets = setup[store].filter((s) => { return s.title == this.args[0] || s.id == this.args[0]});
       if (ifopen) {
         // we wish to use the first open one
-        const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s));
-        storylet = filtered.length ? filtered[0] : storylets[0];
+        const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s,store));
+        storylet = filtered.length ? filtered[0] : false;
       } else {
         storylet = storylets[0];
       }
