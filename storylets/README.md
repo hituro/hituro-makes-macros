@@ -302,7 +302,7 @@ _Syntax_: `<<storyletsprune [store name]>>`
 
 The `<<storyletsprune>>` macro deletes all used storylets from the given store, so that they will no longer be checked when you call `MQBN.getStorylets()`. You do not need to do this, but if your storylet store is very large, you may wish to do so to reduce computation time.
 
-Note that since storylet stores are part of `setup`, reloading the game will undo the pruning. For this eason, you may want to add `<<storyletsprune>>` to the **StoryInit** special passage, after the store is defined.
+Note that since storylet stores are part of `setup`, reloading the game will undo the pruning. For this reason, you may want to add `<<storyletsprune>>` to the **StoryInit** special passage, after the store is defined.
 
 You can also use the name `<<prunestorylets>>` for this macro.
 
