@@ -2,7 +2,7 @@ window.MQBN = class MQBN {
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
-    let   priority  = 0;
+    let   priority  = -Infinity;
     let   count     = 0;
     for (let s of setup[store].sort(MQBN.prioritySort)) {
       if (this.meetsRequirements(s,store)) {
@@ -21,10 +21,10 @@ window.MQBN = class MQBN {
   }
 
   static prioritySort(a, b) {
-    if (a.priority && !b.priority) {
-      return -1;
-    } else if (a.priority != b.priority) {
-      return a.priority > b.priority ? -1 : 1;
+    const ap = a.priority ?? 0;
+    const bp = b.priority ?? 0;
+    if (ap != bp) {
+      return ap > bp ? -1 : 1;
     } else {
       return randomFloat(0,1) - 0.5;
     }
