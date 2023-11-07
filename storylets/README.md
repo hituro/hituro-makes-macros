@@ -441,7 +441,17 @@ To add new conditions, add a static function to the MQBN class whose name is the
 
 e.g.
 ```js
-static qualityRequirement(r) {
+static qualityRequirement(r,store) {
     return variables().qualities.includes(r.quality);
 }
 ```
+
+The method is passed two arguments, the requirement (`r` in the example above) and the name of the store (`store` in the exmaple above) that the storylet is drawn from.
+
+Many requirements use common terms. `r.op` is often the comparison operator, and `r.value` is the value you are checking for. For example, to create a requirement based on Chapel's `<<cycle>>` system, you could add:
+```js
+static phaseRequirement(r,store) {
+  return this.operators[r.op ?? "eq"](Cycle.get(r.cycle).current(),r.phase);
+}
+```
+Which you could call as: `{type: "phase", cycle: "day", value: "morning"}` to check whether the current value of the `day` cycle was "morning". The function `this.operators()` converts a basic operator (e.g. `eq` or `gt`) into a comparison.
