@@ -169,8 +169,12 @@ window.MQBN = class MQBN {
   }
   
   static storyletsinit(store = "storylets") {
-    State.setVar('$'+store+'_used',new Map());
-    State.setVar('$'+store+'_current',false);
+    if (!State.variables[store+'_used']) {
+    	State.setVar('$'+store+'_used',new Map());
+    }
+    if (!State.variables[store+'_current']) {
+    	State.setVar('$'+store+'_current',false);
+    }
   }
 
   static pruneStorylets(store = "storylets") {
