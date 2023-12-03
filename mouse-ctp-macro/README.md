@@ -18,6 +18,7 @@ MCTP has the following main differences from CTP V2
 * You can implement branching conversations (using `id`, `next` and `<<ctpGoto>>`)
 * You can add a back/continue button automatically (with `advance` and `back`)
 * You can disable click-to-proceed on a particular `<<ctpNext>>` (with `wait`)
+* You can force a `<<ctpNext>>` to re-wiki each time it's shown (with `redo`)
 
 ### Defaults
 
@@ -80,6 +81,10 @@ The following example should hopefully make this flow clear.
 
 In this case the normal click handler is disabled when the user-choice is requested in the second block. Clicking either choice jumps to the appropriately id'd block, and then continues in order as normal until a `next` redirects the flow. Note that you cannot `wait` on the first block (i.e. the content before the first `<<ctpNext>>`) since that section has no keywords of its own.
 
+## `<<ctpGoto>>` backwards
+
+You can use `<<ctpGoto>>` to go backwards in the sequence, but this does not change which blocks have been "seen" for purposes of which get hidden, or have their contents processed when first shown. If you use a sequence that goes backwards, and have a block that then does not process its contents, try tagging that block with `redo`.
+
 ## Automatic advance/back buttons
 
 _Syntax_: `<<ctp advance "button name">>`  
@@ -107,3 +112,7 @@ $(document).on('click','[data-macro-ctp-id]', ev => {
   }
 });
 ```
+
+## Marking a section to `redo`
+
+Navigating to a previously shown CTP block (with `<<ctpBack>>` or `<<ctpGoto>>`) will display the same text as before, without re-wiking it. If you wish the content to be processed again, tag the `<<ctpNext>>` with `redo`.
