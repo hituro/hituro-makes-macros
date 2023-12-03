@@ -22,7 +22,7 @@
 		}
 
 		static get Options() {
-			return ['clear','id','next','t8n','persist','transition','wait','advance','back'];
+			return ['clear','id','next','t8n','persist','transition','wait','advance','back','redo'];
 		}
 
 		static get Repository() {
@@ -46,7 +46,7 @@
 
 		static nextArgs(args) {
 			const parsed = {};
-			const single = ['clear','t8n','transition','wait'];
+			const single = ['clear','t8n','transition','wait','redo'];
 			for (let i = 0; i < args.length; i += 1) {
 				if (single.includes(args[i])) {
 					parsed[args[i]] = true;
@@ -89,7 +89,8 @@
 				.on("update-internal.macro-ctp", (event, firstTime) => {
 					if ($(event.target).is(element)) {
 						if (index === this.log.index) {
-							if (firstTime) {
+							if (firstTime || options.redo) {
+							    if (options.redo) element.empty();
 								if (typeof content === "string") element.wiki(content);
 								else element.append(content);
 								element.addClass(options.transition ? "--macro-ctp-t8n" : "");
@@ -147,6 +148,7 @@
             if (index) {
             	this.log.index = index;
 				const firstTime = this.log.index > this.log.seen;
+				this.log.seen = Math.max(this.log.seen, this.log.index);
 				this.log.lastClear = this.clears.slice().reverse().find(el => el <= this.log.index) ?? -1;
 				$(document).trigger("update.macro-ctp", ["goto", this.id, this.log.index]);
 				this.stack.forEach(({ element }) => element.trigger("update-internal.macro-ctp", [firstTime, "goto", this.id, this.log.index]));
