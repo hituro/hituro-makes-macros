@@ -36,7 +36,7 @@
 		}
 
 		get log() {
-			if (!CTP.Logs.get(this.id)) CTP.Logs.set(this.id, { lastClear: -1, index: -1, seen: -1 });
+			if (!CTP.Logs.get(this.id)) CTP.Logs.set(this.id, { lastClear: -1, index: -1, seen: [] });
 			return CTP.Logs.get(this.id);
 		}
 
@@ -111,7 +111,7 @@
 							}
 							element.removeClass("--macro-ctp-hidden");
 						} else {
-							if (index < this.log.seen) element.removeClass("--macro-ctp-t8n");
+							if (this.log.seen.includes(index)) element.removeClass("--macro-ctp-t8n");
 							element.toggleClass("--macro-ctp-hidden", index > this.log.index || index < this.log.lastClear);
 						}
 					}
@@ -134,8 +134,8 @@
             }
 			if (this.log.index < this.stack.length - 1) {
 				this.log.index++;
-				const firstTime = this.log.index > this.log.seen;
-				this.log.seen = Math.max(this.log.seen, this.log.index);
+				const firstTime =  !this.log.seen.includes(this.log.index);
+				this.log.seen.pushUnique(this.log.index); // = Math.max(this.log.seen, this.log.index);
 				this.log.lastClear = this.clears.slice().reverse().find(el => el <= this.log.index) ?? -1;
 				$(document).trigger("update.macro-ctp", ["advance", this.id, this.log.index]);
 				this.stack.forEach(({ element }) => element.trigger("update-internal.macro-ctp", [firstTime, "advance", this.id, this.log.index]));
@@ -147,8 +147,8 @@
         	const index = this.stack.findIndex((item) => item.options.id == id);
             if (index) {
             	this.log.index = index;
-				const firstTime = this.log.index > this.log.seen;
-				this.log.seen = Math.max(this.log.seen, this.log.index);
+				const firstTime =  !this.log.seen.includes(this.log.index);
+				this.log.seen.pushUnique(this.log.index); // = Math.max(this.log.seen, this.log.index);
 				this.log.lastClear = this.clears.slice().reverse().find(el => el <= this.log.index) ?? -1;
 				$(document).trigger("update.macro-ctp", ["goto", this.id, this.log.index]);
 				this.stack.forEach(({ element }) => element.trigger("update-internal.macro-ctp", [firstTime, "goto", this.id, this.log.index]));
@@ -160,8 +160,10 @@
 			if (this.log.index > 0) {
 				this.log.index--;
 				this.log.lastClear = this.clears.slice().reverse().find(el => el <= this.log.index) ?? -1;
+				const firstTime =  !this.log.seen.includes(this.log.index);
+				this.log.seen.pushUnique(this.log.index); // = Math.max(this.log.seen, this.log.index);
 				$(document).trigger("update.macro-ctp", ["back", this.id, this.log.index]);
-				this.stack.forEach(({ element }) => element.trigger("update-internal.macro-ctp", [false, "back", this.id, this.log.index]));
+				this.stack.forEach(({ element }) => element.trigger("update-internal.macro-ctp", [firstTime, "back", this.id, this.log.index]));
 			}
 			return this;
 		}
@@ -178,14 +180,14 @@
 			this.payload.forEach(({ args, name, contents }) => {
 				const options = CTP.nextArgs(args);
 				if (name === "ctp") ctp.options = { ...setup["@CTP/Options"], ...options };
-				ctp.add(contents, options);
+				if (contents.trim().length) ctp.add(contents, options);
 			});
 			$(this.output).append(ctp.output());
 			$(document).one(":passagedisplay", () => {
 				if (_passage === passage()) {
 					const i = Math.max(ctp.log.index, 0);
 					ctp.log.index = -1;
-					ctp.log.seen = -1;
+					ctp.log.seen = [];
 					while (ctp.log.index < i) ctp.advance();
 				}
 			});
