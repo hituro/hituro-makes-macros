@@ -23,7 +23,7 @@ Just some Twine Sugarcube Macros
 ---
 ## `<<include-part>>`
 
-[Include part of another passage](include-part-macro/)
+[Include part of another passage](include-part-macro/) — version 2.0
 
 ---
 ## `<<nospace>>`
@@ -33,7 +33,7 @@ Just some Twine Sugarcube Macros
 ---
 ## `<<tabs>>`
 
-[A macro for making tabbed content](tabs-macro-v2/)
+[A macro for making tabbed content](tabs-macro-v2/) — version 2.1
 
 (*If you are looking for V1, see [here](tabs-macro/)*)
 
