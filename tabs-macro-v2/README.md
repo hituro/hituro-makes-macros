@@ -4,6 +4,9 @@ The `<<tabs>>` macro creates a simple tabbed area, where content is shown and hi
 
 <img width="664" alt="Screenshot 2023-02-09 at 18 05 27" src="https://user-images.githubusercontent.com/4206142/217899873-601fe0a8-33e3-4c95-9c7d-d9feee4d86c4.png">
 
+> [!NOTE]
+> The `<<tabs>>` macro was upgraded to v2.1 on 1st Feb 2024. v2.1 will render non-tab content inside the macro.
+
 ### Installation ###
 
 Add the contents of [tabs.js](tabs.js) to your story Javascript, and the contents of [tabs.css](tabs.css) to your story Stylesheet.
@@ -27,9 +30,9 @@ Add the contents of [tabs.js](tabs.js) to your story Javascript, and the content
 ### `<<tabs>>` ###
 Syntax: `<<tabs [id] [top|left|right|stacked|responsive-left|responsive-right|responsive-stacked] [breakpoint]>>` 
 
-The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed, and the content of the tabs. The content has leading and trailing whitespace trimmed, but is otherwise treated as normal passage content.
+The `<<tabs>>` macro must contain one or more `<<tab>>` macros, defining both the tabs to be displayed and the content of the tabs. The content has leading and trailing whitespace trimmed but is otherwise treated as normal passage content.
 
-You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, `right`, `wrapped` or `stacked` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs. Wrapped will allow the top tabs to collapse and wrap, except for the selected tab, which is full width and below the rest. Stacked will stack the tabs at the top, which can fit very narrow spaces. (See [Layouts](#layouts) below)
+You can choose which side of the tabs block the tabs appear on by passing a *direction*, which must be one of `top`, `left`, `right`, `wrapped` or `stacked` (the default is `top`). Left and Right will put the tabs on that side, with vertical tabs. Wrapped will allow the top tabs to collapse and wrap, except for the selected tab, which is full-width and below the rest. Stacked will stack the tabs at the top, which can fit very narrow spaces. (See [Layouts](#layouts) below)
 
 e.g. `<<tabs "right">>`
 
