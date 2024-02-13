@@ -13,7 +13,7 @@ Add the contents of [include-part.js](include-part.js) to your story Javascript.
 
 <code><<include-part "passage" "#target" <i>[remove-container|boolean]</i>>></code>
 
-`<<include-part>>` is used to included part of the passage given in the first argument into the current passage. The second argument is treated as a selector to identify which element to include. If the optional third argument is `true` then only the children of the selected element are included, if it is `false` (the default) then the selected element is also included.
+Include part of the passage given in the first argument into the current passage. The second argument is treated as a selector to identify which element to include. If the optional third argument is `true` then only the children of the selected element are included, if it is `false` (the default) then the selected element is also included.
 
 ### Example ###
 **Passage1**
