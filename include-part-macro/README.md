@@ -31,4 +31,4 @@ Some other text.
 
 Yet more text.
 ```
-In this example, only the span with the id `target` gets included in Passage1. If the third argumenet was true (`<<include-part "passage2" "#target" true>>`) then only the text inside the span would be included in Passage1.
+In this example, only the span with the id `target` gets included in Passage1. If the third argument was true (`<<include-part "passage2" "#target" true>>`) then only the text inside the span would be included in Passage1.
