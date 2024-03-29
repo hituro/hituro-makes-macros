@@ -347,7 +347,7 @@ If you supply a name that matches multiple storylet titles, then the first story
 e.g.
 ```html
 <<link "Goto an object">>
-    <<set _story = MQBN.getStorylet(1)[0]>>
+    <<set _story = MQBN.getStorylets(1)[0]>>
     <<storyletgoto _story>>
 <</link>>
 <<link "Goto by name">>
@@ -365,7 +365,7 @@ If the first argument is a storylet object, the macro will always create a link 
 
 e.g.
 ```html
-<<set _story = MQBN.getStorylet(1)[0]>>
+<<set _story = MQBN.getStorylets(1)[0]>>
 <<storyletlink _story text "See what happens">><</storylet>>
 ```
 
