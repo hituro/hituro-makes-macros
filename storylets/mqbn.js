@@ -97,7 +97,7 @@ window.MQBN = class MQBN {
     } else if (_var instanceof Array) {
       val = _var.includes(r.has);
     } else if (Util.toStringTag(_var) == "Object") {
-      val = Object.hasOwn(r.has) && _var[r.has];
+      val = Object.hasOwn(_var,r.has) && _var[r.has];
     } else {
       throw(`The variable ${r.var} is not any kind of collection`);
     }
@@ -159,13 +159,13 @@ window.MQBN = class MQBN {
     const ps      = Story.lookupWith((p) => p.text.match(match));
     const storylets = [];
     for (let p of ps) {
-      const s = p.text.replace(replace,"$1");
+      const s = p.text.match(replace)[1];
       const storylet   = Scripting.evalJavaScript(`(${s.trim()})`);
       storylet.title   = storylet.title ?? p.title;
       storylet.passage = p.title;
       storylets.push(storylet);
     }
-    setup[store] = setup[store].concat(storylets);
+    setup[store] = setup[store] ? setup[store].concat(storylets) : storylets;
   }
   
   static storyletsinit(store = "storylets") {
