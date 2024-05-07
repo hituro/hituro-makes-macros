@@ -8,18 +8,18 @@ Add the contents of [splice.js](splice.js) to your story Javascript.
 
 ### Syntax ###
 
-<code>
+```html
 <<splice>>
     Default content.
-    <<passage "<i>passage name</i>">>
+    <<passage "passage name">>
     More content.
-    <<passage "<i>passage name</i>">>
+    <<passage "passage name">>
     More content.
     <<text>>
     More content.
-    <<var "<i>$variablename</i>">>
+    <<var "$variablename">>
 <</splice>>
-</code>
+```
 
 The `<<splice>>` macro combines blocks of text together and then processes them for macros and the like. Unlike `<<include>>` it can splice together a single macro from multiple passages or bits of text. It can even construct a macro call dynamically if you want to.
 
@@ -35,8 +35,9 @@ The `<<var>>` macro adds the value of the named macro to the spliced output at t
 The `<<passage>>` macro adds the contents of the named passage (if it exists) to the spliced output at the point where the `<<passage>>` appears. Note that this is done *before* the whole output is processed, so parts of a macro could be in multiple different passages, or split between passages and plain text, so long as the final output is legal macro code.
 
 #### `\`
-Whitespace in the `<<splice>>` is preserved, so if you have a line break between two parts of the contents you get a line break in the output. If you want to suppress this, put a `\` at the end of the line to trim it.
+Whitespace in the `<<splice>>` is preserved, so if you have a line break between two parts of the contents you get a line break in the output. If you want to suppress this, put a `\` at the end of the line to remove all white space between the `\` and the next non-whitespace .
 
+---
 ### Examples ###
 #### Combining Passages Example ####
 ```html
