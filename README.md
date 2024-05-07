@@ -31,6 +31,11 @@ Just some Twine Sugarcube Macros
 [A simple replacement for nobr](nospace-macro/)
 
 ---
+## `<<splice>>`
+
+[Splice text, passages, and macros together dynamically](splice-macro/)
+
+---
 ## `<<tabs>>`
 
 [A macro for making tabbed content](tabs-macro-v2/) — version 2.1

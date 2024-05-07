@@ -35,7 +35,10 @@ The `<<var>>` macro adds the value of the named macro to the spliced output at t
 The `<<passage>>` macro adds the contents of the named passage (if it exists) to the spliced output at the point where the `<<passage>>` appears. Note that this is done *before* the whole output is processed, so parts of a macro could be in multiple different passages, or split between passages and plain text, so long as the final output is legal macro code.
 
 #### `\`
-Whitespace in the `<<splice>>` is preserved, so if you have a line break between two parts of the contents you get a line break in the output. If you want to suppress this, put a `\` at the end of the line to remove all white space between the `\` and the next non-whitespace .
+Whitespace in the `<<splice>>` is preserved, so if you have a line break between two parts of the contents you get a line break in the output. If you want to suppress this, put a `\` at the end of the line to remove all white space between the `\` and the next non-whitespace character.
+
+> [!WARNING]
+> You can easily construct invalid macros using `<<splice>>`. If you do, you'll get an error when the spliced text is processed. Use with care.
 
 ---
 ### Examples ###
