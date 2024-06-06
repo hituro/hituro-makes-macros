@@ -22,7 +22,7 @@
 		}
 
 		static get Options() {
-			return ['clear','id','next','t8n','persist','transition','wait','advance','back','redo'];
+			return ['clear','id','next','t8n','persist','transition','wait','advance','back','redo','append'];
 		}
 
 		static get Repository() {
@@ -46,7 +46,7 @@
 
 		static nextArgs(args) {
 			const parsed = {};
-			const single = ['clear','t8n','transition','wait','redo'];
+			const single = ['clear','t8n','transition','wait','redo','append'];
 			for (let i = 0; i < args.length; i += 1) {
 				if (single.includes(args[i])) {
 					parsed[args[i]] = true;
@@ -56,6 +56,7 @@
 				}
 			}
 			if (parsed.t8n) { parsed.transition = true; }
+            if (parsed.append) { parsed.clear = false; }
 			return parsed;
 		}
 
@@ -105,14 +106,16 @@
 							if (options.advance && !options.wait && index !== (this.stack.length -1)) {
 								element.append($(`<button>${options.advance}</button>`)
 									.addClass("ctp-auto-button")
-									.ariaClick(() => {
+									.ariaClick((ev) => {
 										this.advance();
+                                        ev.stopPropagation();
 									}));
 							}
 							element.removeClass("--macro-ctp-hidden");
 						} else {
 							if (this.log.seen.includes(index)) element.removeClass("--macro-ctp-t8n");
 							element.toggleClass("--macro-ctp-hidden", index > this.log.index || index < this.log.lastClear);
+							element.toggleClass("--macro-ctp-older", index < this.log.index);
 						}
 					}
 				});
@@ -146,6 +149,7 @@
         goto(id) {
         	const index = this.stack.findIndex((item) => item.options.id == id);
             if (index) {
+				console.log("going to index",index);
             	this.log.index = index;
 				const firstTime =  !this.log.seen.includes(this.log.index);
 				this.log.seen.pushUnique(this.log.index); // = Math.max(this.log.seen, this.log.index);
@@ -182,6 +186,7 @@
 				if (name === "ctp") ctp.options = { ...setup["@CTP/Options"], ...options };
 				if (contents.trim().length) ctp.add(contents, options);
 			});
+            console.log(ctp);
 			$(this.output).append(ctp.output());
 			$(document).one(":passagedisplay", () => {
 				if (_passage === passage()) {
@@ -213,6 +218,27 @@
 				if (ctp) ctp.goto(this.args[0]);
 				else throw new Error(`No CTP with ID '${id}' found!`);
 			} else throw new Error(`No ID specified!`);
+		}
+	});
+
+	Macro.add("ctpLink", {
+		handler() {
+            const text    = this.args[0];
+            const target = this.args[1];
+			const id        = this.args.length == 3 ? this.args[2] : "main";
+            const $link   = $("<a class='ctp-internal-link'>");
+            $link.ariaClick({
+            	one  : false
+            }, this.createShadowWrapper(
+            	() => {
+                  if (id) {
+                      const ctp = CTP.getCTP(id);
+                      if (ctp) ctp.goto(target);
+                      else throw new Error(`No CTP with ID '${id}' found!`);
+                  } else throw new Error(`No ID specified!`);
+                }
+            )).html(text);
+            $link.appendTo(this.output);
 		}
 	});
 
