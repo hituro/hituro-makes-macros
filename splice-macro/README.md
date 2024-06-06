@@ -28,10 +28,10 @@ The `<<splice>>` macro combines blocks of text together and then processes them 
 #### `<<text>>`
 The `<<text>>` macro just adds whatever follows it to the spliced output. If that text contains macros they will run when the text has been spliced together.
 
-#### `<<var "<i>$varname</i>">>`
+#### `<<var "$varname">>`
 The `<<var>>` macro adds the value of the named macro to the spliced output at the point where the `<<var>>` appears. e.g. `<<var "$name">>` adds the value of the story variable `$name` to the spliced output. Note that this is done *before* the whole output is processed — for a possible use see the dynamic macro call example below.
 
-#### `<<passage "<i>passage name</i>">>`
+#### `<<passage "passage name">>`
 The `<<passage>>` macro adds the contents of the named passage (if it exists) to the spliced output at the point where the `<<passage>>` appears. Note that this is done *before* the whole output is processed, so parts of a macro could be in multiple different passages, or split between passages and plain text, so long as the final output is legal macro code.
 
 #### `\`

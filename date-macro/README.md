@@ -106,7 +106,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
 <<date "long">>            // outputs "Friday 12th February 1000"
 <<date "datetime">>        // outputs "Friday the 12th of February, 2000 15:05:00"
 <<date "time">>            // outputs "15:05:00"
-<<date "the [d][day_ordinal] of [mo] in the [season] season">> // outputs "the 12th of February in the winter season"
+<<date "the [d][day_ordinal] of [M] in the [season] season">> // outputs "the 12th of February in the winter season"
 ```
 
 If you want to format a date in a way more complex than `<<date>>` allows, you can use the `DATESYSTEM.getDate()` method ([see below](#getdate)).
