@@ -99,8 +99,9 @@
 							if (options.back && !options.wait && index > 0) {
 								element.append($(`<button>${options.back}</button>`)
 									.addClass("ctp-auto-button")
-									.ariaClick(() => {
+									.ariaClick((ev) => {
 										this.back();
+                                        ev.stopPropagation();
 									}));
 							}
 							if (options.advance && !options.wait && index !== (this.stack.length -1)) {
