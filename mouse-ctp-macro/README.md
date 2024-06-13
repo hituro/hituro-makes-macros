@@ -15,10 +15,12 @@ MCTP has the following main differences from CTP V2
 * You can set defaults for all your CTP instances (with `setup["@CTP/Options"]`)
 * You can skip setting an id for your CTP instances (it defaults to "main")
 * `<<ctpAdvance>>` `<<ctpBack>>` and `<<ctpGoto>>` will all default to an id of "main" if you don't specify one
+* If the first (default) block of a CTP is empty, display starts at the first `<<ctpNext>>` instead
 * You can implement branching conversations (using `id`, `next` and `<<ctpGoto>>`)
 * You can add a back/continue button automatically (with `advance` and `back`)
 * You can disable click-to-proceed on a particular `<<ctpNext>>` (with `wait`)
 * You can force a `<<ctpNext>>` to re-wiki each time it's shown (with `redo`)
+* New macros `<<ctpLink>>`, `<<ctpGoto>>` and `<<ctpSetNext>>`
 
 ### Defaults
 
@@ -31,7 +33,7 @@ setup["@CTP/Options"].clear = true;
 Options provided on the CTP instance itself will override these defaults.
 
 #### Default ID
-You can specify a default `id` for `<<ctp>>` instances in the same way, however if you use `<<ctp>>` with no id at all, the id will default to "main". This is only a good idea, naturally, if you only ever have one `<<ctp>>` per page.
+You can specify a default `id` for `<<ctp>>` instances in the same way, however, if you use `<<ctp>>` with no id at all, the id will default to "main". This is only a good idea, naturally, if you only ever have one `<<ctp>>` per page.
 
 In the same way, using `<<ctpAdvance>>` `<<ctpBack>>` and `<<ctpGoto>>` without specifying an id will again default to an id of "main". That means the following is perfectly legal:
 
@@ -47,7 +49,7 @@ In the same way, using `<<ctpAdvance>>` `<<ctpBack>>` and `<<ctpGoto>>` without 
 
 ### Branching Conversations
 
-CTP normally proceeds one section at a time, each click (or `<<ctpAdvance>>`) revealing the next `<<ctpNext>>` block. MCTP allows you to branch this flow by giving individual `<<ctpNext>>` blocks an id, and then using `<<ctpGoto>>` to jump to that branch, `wait` to wait for a user choice, and `next` to merge branches back together again.
+CTP normally proceeds one section at a time, each click (or `<<ctpAdvance>>`) revealing the next `<<ctpNext>>` block. MCTP allows you to branch this flow by giving individual `<<ctpNext>>` blocks an id, and then using `<<ctpGoto>>` or `<<ctpLink>>` to jump to that branch, `wait` to wait for a user choice, and `next` to merge branches back together again.
 
 #### New attributes
 
@@ -81,9 +83,40 @@ The following example should hopefully make this flow clear.
 
 In this case the normal click handler is disabled when the user-choice is requested in the second block. Clicking either choice jumps to the appropriately id'd block, and then continues in order as normal until a `next` redirects the flow. Note that you cannot `wait` on the first block (i.e. the content before the first `<<ctpNext>>`) since that section has no keywords of its own.
 
-## `<<ctpGoto>>` backwards
+## Macros
 
-You can use `<<ctpGoto>>` to go backwards in the sequence, but this does not change which blocks have been "seen" for purposes of which get hidden, or have their contents processed when first shown. If you use a sequence that goes backwards, and have a block that then does not process its contents, try tagging that block with `redo`.
+### `<<ctpGoto>>`
+
+_Syntax_: `<<ctpGoto "id" [CTP]>>`
+
+The `<<ctpGoto>>` macro jumps directly to the named `<<ctpNext>>` block with the matching `id`. i.e. `<<ctpGoto "dog">>` jumps to `<<ctpNext id "dog">>`. `<<ctpGoto>>` is immediate, just like a normal `<<goto>>`, and should generally be used inside a link or other interactive element.
+
+> [!NOTE]
+> You can use `<<ctpGoto>>` to go backwards in the sequence, but this does not change which blocks have been "seen" for purposes of which get hidden, or have their contents processed when first shown. If you use a sequence that goes backwards, and have a block that then does not process its contents, try tagging that block with `redo`.
+
+### `<<ctpLink>>`
+
+_Syntax_: `<<ctpLink "text" "id" [CTP]>>`
+
+The `<<ctpLink>>` macro is like a combination of `<<link>>` and `<<ctpGoto>>`. It creates a link that jumps to the `<<ctpNext>` block with the matching `id` when clicked. i.e. `<<ctpLink "Pet the dog" "dog">>` jumps to `<<ctpNext id "dog">>`. 
+
+### `<<ctpSetNext>>`
+
+_Syntax_: `<<ctpSetNext "id" [CTP]>>`
+
+Sometimes the next CTP block to be shown ought to be dependant on some logic, rather than being hard-coded, or based on user interaction. In this case you can use `<<ctpCetNext>>` to set the current block's `next` property. eg.
+
+```html
+<<set _meal = either('spam','eggs')>>
+<<ctp>>
+    <<ctpNext>>
+        You help yourself to the only thing on the menu, which is _meal.
+        <<ctpSetNext _meal>>
+    <<ctpNext id "spam">>
+        You wolf down a plate of spam
+    <<ctpNext id "eggs">>
+        You tuck into a plate of eggs
+<</ctp>>
 
 ## Automatic advance/back buttons
 

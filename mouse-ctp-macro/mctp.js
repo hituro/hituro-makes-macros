@@ -253,4 +253,16 @@
 			} else throw new Error(`No ID specified!`);
 		}
 	});
+	
+	Macro.add("ctpSetNext", {
+		handler() {
+			const id = this.args.length == 2 ? this.args[0] : "main";
+			if (id) {
+				const ctp = CTP.getCTP(id);
+				if (ctp) {
+				    ctp.stack[ctp.log.index].options.next = this.args[this.args.length - 1];
+				} else { throw new Error(`No CTP with ID '${id}' found!`); }
+			} else throw new Error(`No ID specified!`);
+		}
+	});
 })();
