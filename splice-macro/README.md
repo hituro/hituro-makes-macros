@@ -1,6 +1,6 @@
 ## The `<<splice>>` macro ##
 
-The `<<splice>>` macro is a variation on SugarCube's built-in `<<include>>` which allows you to splice multiple passages together, even if they contain martial or incomplete macros. e.g. half of an `<<if>>` in one passage and half in another. This is particularly useful for including one section of `<<ctp>>` content in multiple places.
+The `<<splice>>` macro is a variation on SugarCube's built-in `<<include>>` which allows you to splice multiple passages together, even if they contain partial or incomplete macros. e.g. half of an `<<if>>` in one passage and half in another. This is particularly useful for including one section of `<<ctp>>` content in multiple places.
 
 ### Installation ###
 
