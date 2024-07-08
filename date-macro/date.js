@@ -285,10 +285,10 @@
       r = r % (this.hl);
       
       // day part
-      let lastname = this.DAY_PARTS[0].name;
+      out.day_part = this.DAY_PARTS[0].name;
       for (let part of this.DAY_PARTS) {
-        if (out.h <= part.start) { out.day_part = lastname; break; }
-        lastname = part.name;
+        if (part.start > out.h) { break; }
+        out.day_part = part.name;
       }
       
       // minutes
