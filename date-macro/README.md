@@ -86,6 +86,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     day_ordinal    — st/nd/rd as appropriate for day
     day_of_year    — Day count from first day of year
     day_half       — am/pm
+    day_part       — morning, noon, afternoon, evening, or night
     h              — Hour, in digits
     0h             — Hour, prefixed with 0s if less than 10
     h12            — Hour, counting up to half way through the day length
