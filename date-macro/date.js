@@ -285,8 +285,10 @@
       r = r % (this.hl);
       
       // day part
+      out.day_part = this.DAY_PARTS[0].name;
       for (let part of this.DAY_PARTS) {
-        if (out.h <= part.start) { out.day_part = part.name; break; }
+        if (part.start > out.h) { break; }
+        out.day_part = part.name;
       }
       
       // minutes
