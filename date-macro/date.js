@@ -407,32 +407,43 @@
       return out.join(separator).trim();
     }
 
-    dateCompare(datestring,comp) {
-      // make both dates into date objects
-      let date = {};
-      if (typeof datestring == "string") {
-        date = this.getDate(this.dateToTime(datestring));
-      } else {
-        throw new Error("Argument one to dateCompare() must be a date string");
+    /**
+     * Compare a partial date spec with a date and return true if they match
+     * @param {*} elems — object or date string
+     * @param {*} date — optional, string, or timestamp
+     * @returns boolean
+     */
+    dateCompare(elems,date = undefined) {
+      function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
       }
-      if (typeof comp == "string") {
-        comp = this.getDate(this.dateToTime(comp));
-      } else if (typeof comp == "number") {
-        comp = this.getDate(comp);
+      
+      if (typeof elems == "string") {
+        const parts = elems.split(" ");
+              elems = {};
+        for (const part of parts) {
+          const res = part.match(/^((?<val>[0-9]+)(?<unit>s|m|h|d|mo|y)|(?<val>[A-Z-a-z]+)\[(?<unit>[A-Za-z_0-9]+)\])$/);
+          elems[res.groups.unit] = isNumeric(res.groups.val) ? parseInt(res.groups.val) : res.groups.val.toLowerCase();
+        }
       }
-
-      // work out which elements to compare
-      const parts  = datestring.toLowerCase().split(" ");
-      const elems  = [];
-      for (const part of parts) {
-        let [ , , unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
-        elems.push(unit);
+      
+      if (date == undefined) {
+        date = this.getDate();
+      } else if (typeof date == "string") {
+        date = this.getDate(this.dateToTime(date));
+      } else if (typeof date == "number") {
+        date = this.getDate(date);
       }
-
-      // compare
-      for (const dp of elems) {
-        if (comp[dp] != date[dp]) { 
-          return false;
+      
+      for (const dp in elems) {
+        if (isNumeric(date[dp])) {
+          if (date[dp] != elems[dp]) { 
+            return false;
+          }
+        } else {
+          if (date[dp].toLowerCase() != elems[dp]) {
+            return false;
+          }
         }
       }
       return true;

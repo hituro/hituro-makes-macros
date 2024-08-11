@@ -405,6 +405,23 @@ Given a format string and a date (the target date can be a format string, a time
 <</if>>
 ```
 
+You can use format string elements that aren't numbers by appending the format flag in square brackets. For example `Thursday[D]` is a legal element for `dateCompare()`
+
+**Example**
+```html
+<<if setup.datesystems.default.dateCompare("July[M]",$time)>>
+    It's July!
+<</if>>
+```
+
+Note that `dateCompare()` is a shorthand for something like:
+```html
+<<set _date = setup.datesystems.default.getDate()>>
+<<if _date.mo == 5 && _date.d == 12>>
+    It's your birthday!
+<</if>>
+```
+
 ---
 ## Utility Methods
 ### `getYearLength()`
