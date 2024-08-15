@@ -5,6 +5,7 @@
   
   window.DATESYSTEM = class DATESYSTEM {
     constructor(config = {}) {
+      this.version     = 1.1;
       this.systemname  = config.name ?? "default";
       this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
       this.cache       = { };
@@ -12,6 +13,7 @@
       this.HOUR_LENGTH = config.hour_length ?? 60;
       this.DAY_LENGTH  = config.day_length ?? 24;
       this.DAYS        = config.days ?? [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      this.HOURS       = config.hours ?? [ "midnight", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "noon", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven" ];
       this.DAY_PARTS   = config.day_parts ?? [
         { name: "night"    , start:  0 },
         { name: "morning"  , start:  7 },
@@ -98,14 +100,14 @@
         if (unit == 'mo') {
           if (options.direction == "forward") {
             for (let i = 0; i < num; i++) {
-              const year  = base.Y + Math.floor((base.mo + i) / this.MONTHS.length);
+              const year  = base.y + Math.floor((base.mo + i) / this.MONTHS.length);
               const month = this.MONTHS[(base.mo - 1 + i) % this.MONTHS.length];
               const days  = this.getMonthLength(month,year);
               time += days * (this.dl);
             }
           } else {
             for (let i = num; i > 0; i--) {
-              const year  = base.Y+ Math.floor((base.mo + i) / this.MONTHS.length);
+              const year  = base.y+ Math.floor((base.mo + i) / this.MONTHS.length);
               const month = this.MONTHS[(base.mo - 1 - i) % this.MONTHS.length];
               const days  = this.getMonthLength(month,year);
               time += days * (this.dl);
@@ -116,22 +118,22 @@
       return time;
     }
     
-    moveToTime(datestring) {
+    dateFromPartialDate(datestring) {
       const base  = this.getDate(variables()[this.varname]);
-      const parts = datestring.toLowerCase().split(" ");
       const full  = [["y","Y"], ["mo","mo"], ["d","d"], ["h","h"], ["m","m"], ["s","s"]];
-      const user  = {};
+      let   user  = {};
+      
       //make an object out of what the user has provided
-      for (const part of parts) {
-        let [ , num, unit ] = part.match(/^([0-9]+)(s|m|h|d|mo|y)$/) || [];
-        user[unit] = num;
-      }
-
+      if (typeof datestring == "string") {
+        user = DATESYSTEM.dateQueryFromString(datestring);
+      } else { user = datestring }
+      
       //make a new time string filling in missing elements from base
       const out   = [];
       for (const e of full) {
         out.push((user[e[0]] ?? base[e[1]]) + e[0]);
       }
+      console.log("new timestring: " + out.join(' '));
       return this.setToTime(out.join(' '));
     }
 
@@ -163,7 +165,7 @@
         r = (Math.floor(r / this.dl) * this.dl) ;
         r += ((days - base.d) + 1) * this.dl;
         for (let i = base.mo; i <= num; i++) {
-          const year  = base.Y + Math.floor((base.mo + i) / this.MONTHS.length);
+          const year  = base.y + Math.floor((base.mo + i) / this.MONTHS.length);
           const month = this.MONTHS[(base.mo - 1 + i) % this.MONTHS.length];
           const days  = this.getMonthLength(month,year);
           r += (this.dl * days)
@@ -182,8 +184,8 @@
       }
 
       const out   = {
-        Y: output == "date" ? 1 : 0,
-        y: 0,
+        y: output == "date" ? 1 : 0,
+        Y: 0,
         year_short: 0,
         year_sep: 0,
         year_mil: 0,
@@ -202,8 +204,11 @@
         weekday: "",
         h: 0,
         h12: 0,
+        h24: 0,
         "0h": "",
         "0h12": "",
+        "0h24": "",
+        H: "",
         day_half: "",
         day_part: "",
         m: 0,
@@ -221,19 +226,19 @@
       let total_days = 0;
 
       if (this.equal_years) {
-        out.Y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
-        out.year_short  = out.y = out.Y % 100;
-        out.year_sep    = out.Y.toLocaleString();
-        out.year_mil    = Math.floor(out.Y / 1000);
-        total_days      = out.Y * this.YEAR_LENGTH;
-        let year_secs   = (this.yl * (out.Y - (output == "date" ? 1 : 0)));
+        out.y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
+        out.year_short  = out.Y = out.y % 100;
+        out.year_sep    = out.y.toLocaleString();
+        out.year_mil    = Math.floor(out.y / 1000);
+        total_days      = out.y * this.YEAR_LENGTH;
+        let year_secs   = (this.yl * (out.y - (output == "date" ? 1 : 0)));
         r = year_secs ? r % year_secs : r;
       }
       
       let yl = 0;
       
       while (true) {
-        const year  = out.Y + Math.floor(months / this.MONTHS.length);
+        const year  = out.y + Math.floor(months / this.MONTHS.length);
         const moy   = months % this.MONTHS.length;
         const month = this.MONTHS[moy];
         const days  = this.getMonthLength(month,year);
@@ -244,10 +249,10 @@
           total_days += days;
         } else {
           if (!this.equal_years) {
-            out.Y           = year + this.YEAR_OFFSET;
-            out.year_short  = out.y = out.Y % 100;
-            out.year_sep    = out.Y.toLocaleString();
-            out.year_mil    = Math.floor(out.Y / 1000);
+            out.y           = year + this.YEAR_OFFSET;
+            out.year_short  = out.Y = out.y % 100;
+            out.year_sep    = out.y.toLocaleString();
+            out.year_mil    = Math.floor(out.y / 1000);
           }
           out.mo          = moy + 1;
           out.month_long  = out.M = month.name;
@@ -271,7 +276,7 @@
       r = r % (this.dl);
       
       // day of week
-      const year_start_day = this.getYearStartDay(out.Y);
+      const year_start_day = this.getYearStartDay(out.y);
       out.weekday   = (total_days + year_start_day + 1) % this.DAYS.length;
       out.day_long  = out.D = this.DAYS[out.weekday];
       out.day_short = out.day_long.substring(0,2);
@@ -279,9 +284,11 @@
       // hours
       out.h = Math.floor(r / (this.hl));
       out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
+      out.h24 = out.h;
       out.day_half = out.h > 12 ? "pm" : "am";
-      out["0h"] = out.h < 10 ? `0${out.h}` : out.h;
-      out["0h12"] = out.h < 10 ? `0${out.h}` : out.h;
+      out["0h"]   = out["0h24"] = out.h < 10 ? `0${out.h}` : out.h;
+      out["0h12"] = out.h12 < 10 ? `0${out.h12}` : out.h12;
+      out.H = this.HOURS[out.h];
       r = r % (this.hl);
       
       // day part
@@ -358,13 +365,13 @@
     dateFormat(format,date) {
       const d = this.getDate(date);
       if (!format || format == "short") {
-        return `${d.d}-${d.mo}-${d.Y}`;
+        return `${d.d}-${d.mo}-${d.y}`;
       }
       else if (format == "long") {
-        return `${d.day_long} ${d.d}${d.day_ordinal} ${d.month_long} ${d.Y}`;
+        return `${d.day_long} ${d.d}${d.day_ordinal} ${d.month_long} ${d.y}`;
       }
       else if (format == "datetime") {
-        return `${d.day_long} the ${d.d}${d.day_ordinal} of ${d.month_long}, ${d.Y} ${d['0h']}:${d['0m']}:${d['0s']}`;
+        return `${d.day_long} the ${d.d}${d.day_ordinal} of ${d.month_long}, ${d.y} ${d['0h']}:${d['0m']}:${d['0s']}`;
       }
       else if (format == "time") {
         return `${d['0h']}:${d['0m']}:${d['0s']}`;
@@ -408,25 +415,10 @@
       }
       return out.join(separator).trim();
     }
-
-    /**
-     * Compare a partial date spec with a date and return true if they match
-     * @param {*} elems — object or date string
-     * @param {*} date — optional, string, or timestamp
-     * @returns boolean
-     */
-    dateCompare(elems,date = undefined) {
-      function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-      }
-      
+    
+    dateCompare(elems,date) {
       if (typeof elems == "string") {
-        const parts = elems.split(" ");
-              elems = {};
-        for (const part of parts) {
-          const res = part.match(/^((?<val>[0-9]+)(?<unit>s|m|h|d|mo|y)|(?<val>[A-Z-a-z]+)\[(?<unit>[A-Za-z_0-9]+)\])$/);
-          elems[res.groups.unit] = isNumeric(res.groups.val) ? parseInt(res.groups.val) : res.groups.val.toLowerCase();
-        }
+        elems = DATESYSTEM.dateQueryFromString(elems);
       }
       
       if (date == undefined) {
@@ -438,7 +430,8 @@
       }
       
       for (const dp in elems) {
-        if (isNumeric(date[dp])) {
+        console.log(`Comparing ${dp} ${elems[dp]} -> ${date[dp]}`,date);
+        if (DATESYSTEM.isNumeric(date[dp])) {
           if (date[dp] != elems[dp]) { 
             return false;
           }
@@ -449,6 +442,25 @@
         }
       }
       return true;
+    }
+    
+    static dateQueryFromString(string) {
+      if (string) {
+        const parts = string.split(" ");
+        const elems = {};
+        for (const part of parts) {
+          const res = part.match(/^(?:(\d+)(s|m|h|d|mo|y)|([A-Za-z]+)\[(\w+)\])$/);
+          if (res) {
+            const [val, unit] = res.slice(1).filter(e => e);
+            elems[unit] = DATESYSTEM.isNumeric(val) ? parseInt(val) : val.toLowerCase();
+          }
+        }
+        return elems;
+      }
+    }
+    
+    static isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
     static dateargs = function(args) {
@@ -493,7 +505,7 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<dateto>>");
-      let new_time = dateargs.datesystem.moveToTime(dateargs.args[0]);
+      let new_time = dateargs.datesystem.dateFromPartialDate(dateargs.args[0]);
       dateargs.datesystem.datetrigger(variables()[dateargs.datesystem.varname], new_time);
       variables()[dateargs.datesystem.varname] = new_time;
     }

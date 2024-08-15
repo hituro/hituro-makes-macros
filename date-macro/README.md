@@ -1,6 +1,15 @@
 ## DATESYSTEM Macros
 
-The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar, or supporting an entirely custom date/time system. It offers a variety of macros, and corresponding JS functions.
+The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar or supporting an entirely custom date/time system. It offers a variety of macros and corresponding JS functions.
+
+> [!WARNING]
+> The current version of DATESYSTEM is 1.1 It has the following incompatible changes with v1.0
+> The `[Y]` date element is now the two digit year, and the `[y]` element is the four digit year, in v1.0 it was the reverse
+> The `moveToTime()` function has been renamed `dateFromPartialDate()`
+
+**See also:**
+* [Custom Datesystems](custom_datesystems.md)
+* [Schedules](schedules.md)
 
 **Basic Example**
 ```html
@@ -67,8 +76,8 @@ The `<<date>>` macro outputs the current date and time. If you do not specify a 
 You can pass a format to the macro to control the output. Formats can be "short" (the default), "long" (day-name 0th month-name yyyy), "datetime" (day-name the 0th of month-name, yyyy hh:mm:ss), or "time" (hh:mm:ss). Alternatively you can supply your own custom format, such as `[d][mo] [season]`. Text inside `[]` is treated as a token and replaced if it matches a valid token name, other text is left alone. The following tokens are available:
 
 ```
-    Y              — Year, all digits (e.g. 2001)
-    y              — Year, two digits (e.g. 01)
+    y              — Year, all digits (e.g. 2001)
+    Y              — Year, two digits (e.g. 01)
     year_short     — Same as 'y'
     year_sep       — Year, all digits, with separators (useful for 5-digit years)
     year_mil       — The millennium part of the year (e.g. 2)
@@ -276,6 +285,7 @@ As well as the methods described in the next section, the object exposes the fol
 
 ```js
 {
+    version:     (float),  // the current version number. (Introduced in v1.1)
     systemname:  (string), // the name of the datesystem, which is also the key in setup.datesystems
     varname:     (string), // the name of the variable holding the timestamp of the system, defaults to 'time'
     MIN_LENGTH:  (int),    // number of seconds in a minute
@@ -332,11 +342,11 @@ If you want to reproduce `<<datereset>>`, do:
       variables()[DATESYSTEM.varname] = DATESYSTEM.BASE_TIME = new_time;
 ```
 
-### `moveToTime()`
+### `dateFromPartialDate()`
 
-Syntax: `DATESYSTEM.moveToTime("format string")`
+Syntax: `DATESYSTEM.dateFromPartialDate("format string")`
 
-Given a format string, returns a timestamp representing the current time moved forward to the next instance of that time, in the same way as `<<dateto>>`. Internally, `moveToTime()` constructs a new format string in the form "Xy Xmo Xd Xh Xm Xs" by combining the current date/time with whatever part of that string you supply in the first argument, and then passes it to `setToTime()`.
+Given a partial format string, `dateFromPartialDate()` combines it with the current time and returns a new timestamp, in the same way as `<<dateto>>`. Internally, `dateFromPartialDate()` constructs a new format string in the form "Xy Xmo Xd Xh Xm Xs" by combining the current date/time with whatever part of that string you supply in the first argument, and then passes it to `setToTime()`.
 
 For example, given
 ```js
@@ -344,7 +354,7 @@ variables()[DATESYSTEM.varname] = DATESYSTEM.setToTime("2000y 2mo 5d 10h 9m 0s")
 ```
 The following call:
 ```js
-DATESYSTEM.moveToTime("5mo");
+DATESYSTEM.dateFromPartialDate("5mo");
 ```
 Will construct the string "2000y 5mo 5d 10h 9m 0s", pass it to `setToTime()` and return the new timestamp.
 
