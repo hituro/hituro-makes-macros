@@ -3,7 +3,8 @@ Just some Twine Sugarcube Macros
 
 ## `DATESYSTEM`
 
-[A macro set for custom date/time systems](date-macro/)
+[A macro set for custom date/time systems](date-macro/) — version 1.1
++ [Custom scheduler macros](date-macro/schedules.md)
 
 ---
 ## `MouseQBN`
