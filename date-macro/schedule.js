@@ -8,6 +8,7 @@ window.Schedule = class Schedule {
   }
 
   parseEvent(event,when) {
+      if (when.when) { return when; } // already parsed this event
       when = Array.isArray(when) ? when : [when];
       const opts = [];
       for (let opt of when) {
@@ -71,7 +72,6 @@ Macro.add("schedule",{
     const events     = {};
     
     for (let entry of this.payload) {
-      console.log(entry);
       if (entry.name == "event") {
         events[entry.args[0]] = entry.args[1];
       }
