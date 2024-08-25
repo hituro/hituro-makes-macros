@@ -5,7 +5,7 @@
   
   window.DATESYSTEM = class DATESYSTEM {
     constructor(config = {}) {
-      this.version     = 1.1;
+      this.version     = 1.1.1;
       this.systemname  = config.name ?? "default";
       this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
       this.cache       = { };
