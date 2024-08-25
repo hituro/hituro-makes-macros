@@ -120,7 +120,7 @@
     
     dateFromPartialDate(datestring) {
       const base  = this.getDate(variables()[this.varname]);
-      const full  = [["y","Y"], ["mo","mo"], ["d","d"], ["h","h"], ["m","m"], ["s","s"]];
+      const full  = [["y","y"], ["mo","mo"], ["d","d"], ["h","h"], ["m","m"], ["s","s"]];
       let   user  = {};
       
       //make an object out of what the user has provided
