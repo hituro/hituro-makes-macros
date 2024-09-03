@@ -131,6 +131,24 @@ All the passages end with a link back to the farm that advances the season, usin
 
 If you go back to playing the game now, you'll see the appropriate activites come up as links on the **Farm** passage. Clicking any of those links will take you to the appropriate passage, while clicking "Back to the Farm" in those passages will go back to the hub and move the year one season forward.
 
+#### Using the `<<storylet>>` macro
+
+Instead of defining your storylets directly in **StoryInit**, as we have described above, you could instead define each storylet in its own passage using the `<<storylet>>` macro. For example, your **Planting** passage could look like this:
+
+```html
+:: Planting
+<<storylet>>
+{
+    desc: "Spring Planting",
+    all: [ { type: "sequence", seq: "$season", name: "Spring" } ],
+    sticky: true
+}
+<</storylet>>
+... rest of the passage text
+```
+
+If you do this, you must add `<<storyletscan>>` too your **StoryInit**, after `<<storyletsinit>>`.
+
 ---
 ## Love
 
