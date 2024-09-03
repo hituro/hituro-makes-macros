@@ -12,6 +12,9 @@ Add the contents of [mqbn.js](mqbn.js) to your story Javascript.
 
 You must use the macro `<<storyletsinit>>` before using any MQBN functions. It is normal to put this in the **StoryInit** special passage.
 
+> [!WARNING]
+> There are breaking changes between v1.4 and v1.5 that might affect a saved game created under the earlier version, if you are using Sequences.
+
 ## Storylets ##
 
 Storylets are a concept first introduced in Fallen London, and made popular in the Story Nexus engine that drove it. Rather than controlling a narrative with a fixed series of linked passages, storylets break gameplay into distinct segments, each with their own conditions for when they can appear. A classic example (for some reason) might be visiting a farm. Depending on the season you visit, different products might be for sale, or incidents happen. Each of those incidents (or indeed products) could be contained in a storylet whose two requirements are:
@@ -26,7 +29,15 @@ If you prefer to start with a tutorial, take a trip to [MQBN Farm](TUTORIAL.md).
 ---
 ### Defining a Storylet
 
-A storylet is defined by an object with at minimum a title and a description:
+A storylet is defined by an object with at minimum a title:
+
+```js
+{
+    title: "Haymaking",
+}
+```
+
+You may also wish to add an optional description:
 
 ```js
 {
@@ -34,6 +45,9 @@ A storylet is defined by an object with at minimum a title and a description:
     desc: "It's haymaking time at the farm"
 }
 ```
+
+> [!NOTE] 
+> You can also define storylets using a `<<storylet>>` macro in the storylet's starting passage. See the documentation on `<<storylet>>` and `<<storyletscan>>` below.
 
 #### `passage` attribute
 
@@ -198,6 +212,11 @@ _Syntax_: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", valu
 
 Check the value, name, or cycle count (see [`<<sequencecreate>>`](#sequence)) of a sequence (created with `<<sequence>>`) to see if it equals "value". You can do the same check with a `var` condition: `{ type: "var", name: "$varname.name", value: "name" }`.
 
+#### `tws` (twinescript)
+_Syntax_: `{ type: "tws", cond: "any valid twinescript expression" }`
+
+True if the twinescript expression evaluates to true, in the same way that the `<<if>>` macro works. So an expression like `$area is "forest" and $metWitch is false` is valid.
+
 #### `all` and `any`
 _Syntax_: `{ type: "all", all: [ array of conditions ]}`  
 _Syntax_: `{ type: "any", any: [ array of conditions ]}`
@@ -308,9 +327,9 @@ You can also use the name `<<prunestorylets>>` for this macro.
 
 ### `<<storyletscan>>`
 
-_Syntax_: `<<storyletscan [store name]>>`
+_Syntax_: `<<storyletscan>>`
 
-The `<<storyletscan>>` macro scans the game's passages for `<<storylet>>` macros and turns their contents into storylets, which it then adds to the specified store. If you don't specify a store, they will be added to the default "storylets" store. You can use this macro to associate storylets with the passages they reference, which you may find easier to track than a separate list created elsewhere.
+The `<<storyletscan>>` macro scans the game's passages for `<<storylet>>` macros and turns their contents into storylets, which it then adds to the specified store. You can use this macro to associate storylets with the passages they reference, which you may find easier to track than a separate list created elsewhere.
 
 You should almost certainly only call this macro in the **StoryInit** special passage.
 
@@ -319,6 +338,10 @@ You should almost certainly only call this macro in the **StoryInit** special pa
 _Syntax_: `<<storylet [store name]>>`
 
 The `<<storylet>>` macro allows you to define a storylet in the passage it corresponds to, rather than in your story javascript, or StoryInit. Use the `<<storyletscan>>` macro to scan for such storylets.
+
+The body of the `<<storylet>>` macro should either be a valid storylet object definition, a single twinescript expression, or a `<<cond>>` macro followed by a single twinescript expression. If it's a twinescript expression, it will be come a single `tws` condition. If it's a `<<cond>>` followed by a storylet object, the `<<cond>>` becomes a single `tws` condition on the storylet. 
+
+e.g.
 
 ```html
 :: Harvest
@@ -330,9 +353,30 @@ The `<<storylet>>` macro allows you to define a storylet in the passage it corre
 Text of the harvest passage ...
 ```
 
-The `<<storylet>>` macro should only contain one storylet. If you don't specify the storylet title, it defaults to the passage title. If you do, the storylet's `passage` is set to the passage name instead.
+```html
+:: Harvest
+<<storylet>>
+$season is "autumn"
+<</storylet>>
+Text of the harvest passage ...
+```
 
-If you call `<<storyletscan>>` with the optional store name, only `<<storylet>>` macros with the matching store name will be picked up. e.g. `<<storyletscan "quips">>` will only process storylets tagged with `<<storylet "quips">>`
+*Becomes `{ all: [ { type: "tws", cond: '$season is "autumn"' }]}`*
+
+```html
+:: Harvest
+<<storylet>>
+    <<cond>>$season is "autumn"<</cond>>
+    {
+        sticky: true
+    }
+<</storylet>>
+Text of the harvest passage ...
+```
+
+*Becomes `{ sticky: true, all: [ { type: "tws", cond: '$season is "autumn"' }]}`*
+
+The `<<storylet>>` macro should only contain one storylet. If you don't specify the storylet title, it defaults to the passage title. If you do, the storylet's `passage` is set to the passage name instead. If you don't specity the optional store name, the storylet will be added to the "storylets" store.
 
 ### `<<storyletgoto>>`
 
@@ -353,6 +397,22 @@ e.g.
 <<link "Goto by name">>
     <<storyletgoto "farm-event" open true>>
 <</link>>
+```
+
+### `<<storyletinclude>>`
+
+_Syntax_: `<<storyletinclude storyletname-or-object [store "store name"] [open true|false]>>`
+
+The storylet version of `<<include>>`. Given a storylet object or name, includes that storylet's passage's contents into the current passage. This marks the storylet used, just as if you had gone to it with `<<storyletgoto>>` or `<<storyletlink>>`.
+
+You can specify the storylet by passing a valid storylet object (e.g. one returned from `MQBN.getStorylets()`), in which case the storylet is not checked for validity (i.e. it can be already played, not meeting the requirments etc.). Alternatively you can specify the storylet by name or id. In this case the storylet is checked for availability if you specify `open true` in the arguments.
+
+If you supply a name that matches multiple storylet titles, then the first storylet matching that title (or the first open one, if you specify `open true`) is used.
+
+e.g.
+```html
+<<set _story = MQBN.getStorylets(1)[0]>>
+<<storyletinclude _story>>
 ```
 
 ### `<<storyletlink>`
@@ -427,8 +487,6 @@ _Syntax_: `<<sequenceadvance|sequencerewind "$sequence" [steps]>>`
 The `<<sequenceadvance>>` and `<<sequencerewind>>` macros advance or rewind a given sequence, usually by one step, but you can specify a different number of steps with the optional argument. e.g. `<<sequenceadvance "$season" 2>>`.
 
 Each time a cycling sequence resets to the start with `<<sequenceadvance>>`, a counter is incremented to track how many times through the sequence you have progressed. You can access this with `$sequencename.count` (e.g. `$season.count`). The same happens in reverse with `<<sequencerewind>>`.
-
-You can access the same function from javascript by calling `MQBN.sequenceChange("$varname",value)` where value is a positive (advance) or negative (rewind) number.
 
 You can also update the value of a sequence directly with `$sequence.value += 1` or other similar arithmetic.
 
