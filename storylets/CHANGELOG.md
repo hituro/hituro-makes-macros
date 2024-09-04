@@ -6,3 +6,10 @@
 * ''v1.5 - 2024-08-29'' Added the `twinescript (tws)` condition type. Added the `<<storyletinclude>>` macro. 
                         Changed syntax for `<<storyletscan>>`. Refactor of the `Sequence` class.
                         Added new syntax for `<<storylet>>` macro.
+
+## With thanks to
+
+* zb123
+* Byron the Wildcat
+* SjordHekking
+* Josh Grams
