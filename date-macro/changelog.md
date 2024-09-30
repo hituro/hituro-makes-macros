@@ -6,7 +6,7 @@
 
 * v1.1.1 
 * v1.1.0 (2024-08-15)
-  * The `[Y]` date element is now the two digit year, and the `[y]` element is the four digit year, in v1.0 it was the reverse\
+  * The `[Y]` date element is now the two digit year, and the `[y]` element is the four digit year, in v1.0 it was the reverse
   * The `moveToTime()` function has been renamed `dateFromPartialDate()`
   * Added `<<schedule>>`
 
