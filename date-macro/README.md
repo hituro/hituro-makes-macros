@@ -3,13 +3,17 @@
 The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar or supporting an entirely custom date/time system. It offers a variety of macros and corresponding JS functions.
 
 > [!WARNING]
-> The current version of DATESYSTEM is 1.1 It has the following incompatible changes with v1.0\
+> The current version of DATESYSTEM is 1.2 
+> It has the following incompatile changes with v1.1 and earlier\
+> The `[h12]` and `[0h12]` elements now show midnight as 12 (or whatever half your day length is), rather than 0
+> It has the following incompatible changes with v1.0\
 > The `[Y]` date element is now the two digit year, and the `[y]` element is the four digit year, in v1.0 it was the reverse\
 > The `moveToTime()` function has been renamed `dateFromPartialDate()`
 
 **See also:**
 * [Custom Datesystems](custom_datesystems.md)
 * [Schedules](schedules.md)
+* [Changelog](changelog.md)
 
 **Basic Example**
 ```html

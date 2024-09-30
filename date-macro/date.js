@@ -5,7 +5,7 @@
   
   window.DATESYSTEM = class DATESYSTEM {
     constructor(config = {}) {
-      this.version     = "1.1.1";
+      this.version     = "1.2.0";
       this.systemname  = config.name ?? "default";
       this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
       this.cache       = { };
@@ -284,8 +284,9 @@
       // hours
       out.h = Math.floor(r / (this.hl));
       out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
+      out.h12 = out.h12 ? Math.ceil(this.DAY_LENGTH / 2) : out.h12;
       out.h24 = out.h;
-      out.day_half = out.h > 12 ? "pm" : "am";
+      out.day_half = out.h > Math.floor(this.DAY_LENGTH / 2) ? "pm" : "am";
       out["0h"]   = out["0h24"] = out.h < 10 ? `0${out.h}` : out.h;
       out["0h12"] = out.h12 < 10 ? `0${out.h12}` : out.h12;
       out.H = this.HOURS[out.h];

@@ -19,7 +19,7 @@ Add the contents of schedule.js to your story Javascript.
 
 ## Basic Concepts
 
-A Schedule contains a list of events, along with the date/times they happen at. An event can have a single date (like "Thursday" or "June 5th"), or a start and end time (like "1st-10th of December"). Each event in a schedule has a unique ID (it's name). Event names can be duplicates across different Schedules if you like.
+A Schedule contains a list of events, along with the date/times they happen at. An event can have a single date (like "Thursday" or "June 5th"), or a start and end time (like "1st-10th of December"). Each event in a schedule has a unique ID (its name). Event names can be duplicates across different Schedules if you like.
 
 Each Schedule is attached to a specific datesystem. If you have more than one, you can have schedules attached to each.
 
