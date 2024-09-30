@@ -284,7 +284,7 @@
       // hours
       out.h = Math.floor(r / (this.hl));
       out.h12 = out.h % Math.floor(this.DAY_LENGTH / 2);
-      out.h12 = out.h12 ? Math.ceil(this.DAY_LENGTH / 2) : out.h12;
+      out.h12 = out.h12 ? out.h12 : Math.ceil(this.DAY_LENGTH / 2);
       out.h24 = out.h;
       out.day_half = out.h > Math.floor(this.DAY_LENGTH / 2) ? "pm" : "am";
       out["0h"]   = out["0h24"] = out.h < 10 ? `0${out.h}` : out.h;
