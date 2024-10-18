@@ -117,6 +117,7 @@ Sometimes the next CTP block to be shown ought to be dependant on some logic, ra
     <<ctpNext id "eggs">>
         You tuck into a plate of eggs
 <</ctp>>
+```
 
 ## Automatic advance/back buttons
 
