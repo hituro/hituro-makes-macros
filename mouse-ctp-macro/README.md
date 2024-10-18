@@ -16,7 +16,7 @@ MCTP has the following main differences from CTP V2
 * You can skip setting an id for your CTP instances (it defaults to "main")
 * `<<ctpAdvance>>` `<<ctpBack>>` and `<<ctpGoto>>` will all default to an id of "main" if you don't specify one
 * If the first (default) block of a CTP is empty, display starts at the first `<<ctpNext>>` instead
-* You can implement branching conversations (using `id`, `next` and `<<ctpGoto>>`)
+* You can implement branching conversations (using `id`, `next`, `<<ctpGoto>>` and `<<ctpLink>>`)
 * You can add a back/continue button automatically (with `advance` and `back`)
 * You can disable click-to-proceed on a particular `<<ctpNext>>` (with `wait`)
 * You can force a `<<ctpNext>>` to re-wiki each time it's shown (with `redo`)
@@ -104,7 +104,7 @@ The `<<ctpLink>>` macro is like a combination of `<<link>>` and `<<ctpGoto>>`. I
 
 _Syntax_: `<<ctpSetNext "id" [CTP]>>`
 
-Sometimes the next CTP block to be shown ought to be dependant on some logic, rather than being hard-coded, or based on user interaction. In this case you can use `<<ctpCetNext>>` to set the current block's `next` property. eg.
+Sometimes the next CTP block to be shown ought to be dependant on some logic, rather than being hard-coded, or based on user interaction. In this case you can use `<<ctpSetNext>>` to set the current block's `next` property. eg.
 
 ```html
 <<set _meal = either('spam','eggs')>>
