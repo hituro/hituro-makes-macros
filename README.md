@@ -13,6 +13,13 @@ Just some Twine Sugarcube Macros
 [A system for running stoylet-based games in SugarCube](storylets/)
 
 ---
+## `MouseCTP`
+
+[A system for making branching conversations in SugarCube](mouse-ctp-macro/)
+
+(*A fork of CyrusFirheir's excellent [Click to Proceed v2](https://github.com/cyrusfirheir/cycy-wrote-custom-macros/tree/master/click-to-proceed)*)
+
+---
 ## `<<class>> / <<id>> / <<style>> / <<attr>>`
 
 [Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
