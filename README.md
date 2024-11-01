@@ -25,6 +25,11 @@ Just some Twine Sugarcube Macros
 [Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
 
 ---
+## `<<hide>> / <<show>>`
+
+[DOM Macros to hide and show elements](show-macro/)
+
+---
 ## `<<function>>`
 
 [Write Javascript functions in normal twine macros, just like `<<widget>>`](function-macro/)

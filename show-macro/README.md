@@ -23,7 +23,8 @@ In both cases you can add a class to an element when it is shown, and remove it 
 
 You may want some elements to start hidden. If so, give them the class `hidden`, e.g. `<div id="surprise" class="hidden">`.
 
-> [!NOTE] If you want to hide an element when the passage loads, without using the `hidden` class, you will need to use `<<done>>`, e.g. `<<done>><<hide "#whatever">><</done>>`
+> [!NOTE]
+> If you want to hide an element when the passage loads, without using the `hidden` class, you will need to use `<<done>>`, e.g. `<<done>><<hide "#whatever">><</done>>`
 
 ---
 ### Examples ###
