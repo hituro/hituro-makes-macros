@@ -1,5 +1,8 @@
 # DATESYSTEM Changelog
 
+* v1.2.1 (2024-11-01)
+  * Added support for `skip_day_sequence` and `special_days` in custom datesystems
+
 * v1.2.0 (2024-09-30)
   * `[h12]` and `[0h12]` formats now show midnight as the maximum number of hours in the half day (e.g. 12am rather than 00am)
   * `[day_half]` now breaks the day in half at whatever half of `DAY_LENGTH` is, rather than at 12

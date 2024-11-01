@@ -224,6 +224,7 @@
       // months & years
       let months = 0;
       let total_days = 0;
+      let non_sequential_days = 0;
 
       if (this.equal_years) {
         out.y += Math.floor(r / (this.yl)) + this.YEAR_OFFSET;
@@ -242,6 +243,7 @@
         const moy   = months % this.MONTHS.length;
         const month = this.MONTHS[moy];
         const days  = this.getMonthLength(month,year);
+        non_sequential_days += this.MONTHS[moy].skip_day_sequence ? days : 0;
         
         if (r >= (days * this.dl)) {
           r -= (days * this.dl);
@@ -277,8 +279,15 @@
       
       // day of week
       const year_start_day = this.getYearStartDay(out.y);
-      out.weekday   = (total_days + year_start_day + 1) % this.DAYS.length;
-      out.day_long  = out.D = this.DAYS[out.weekday];
+      if (this.MONTHS[out.mo -1].special_days) {
+        // override the normal day calculation method
+        out.weekday   = this.MONTHS[out.mo -1].special_days[out.d -1];
+        out.day_long  = out.D = out.weekday;
+      } else {
+        // normal day calculation
+        out.weekday   = ((total_days - non_sequential_days) + year_start_day + 1) % this.DAYS.length;
+        out.day_long  = out.D = this.DAYS[out.weekday];
+      }
       out.day_short = out.day_long.substring(0,2);
       
       // hours

@@ -69,6 +69,35 @@ For `year_offset` the value is a fixed number of years to add to the value retur
 
 `year_starts` is a magic value to cope with the fact that at different periods, different calendars were in use to determine the day of the week. It's only needed for the Gregorian calendar, for a custom datesystem, set it to `{}`
 
+## Intercalary Months
+
+Intercalary months, for year-length adjustments, or for special festivals, can be defined in a number of ways.
+
+### Special Days of the Week
+
+Some months may interrupt the normal days of the week for some specially named days, or can override the days of the month without interrupting the sequence. You can use the following rules to specify this:
+
+* `skip_day_sequence` mandates that the days in this month don't count towards the normal cycle of days
+* `special_days` defines an array of day names that override the normal day names
+
+If a month has only `special_days` set, then alternate names are used for its days, but the day sequence continues as normal. e.g.
+
+```js
+        { name: "Firstmonth"  , length: 10, season: "winter" }, 
+        { name: "Secondmonth" , length: 2, season: "winter", special_days: [ "Oneday", "Twoday" ] }, 
+        { name: "Thirdmonth"  , length: 10, season: "winter" }, 
+```
+
+If the last day of Firstmonth is a Monday, the next day is Oneday, the day affter Twoday, and the day after (the first of Thirdmonth) a Thursday.
+
+```js
+        { name: "Firstmonth"  , length: 10, season: "winter" }, 
+        { name: "Secondmonth" , length: 2, season: "winter", skip_day_sequence: true, special_days: [ "Oneday", "Twoday" ] }, 
+        { name: "Thirdmonth"  , length: 10, season: "winter" }, 
+```
+
+If the last day of Firstmonth is a Monday, the next day is Oneday, the day affter Twoday, and the day after (the first of Thirdmonth) a Tuesday — i.e. the special days of Secondmonth are skipped for deciding the day of the week.
+
 ### Leap Years
 
 The Datesystem will run significantly faster if your calendar has no leap-days. However, if this is not possible (as it is not possible in the default Gregorian calendar) then you can specify the leap day rules as follows:
