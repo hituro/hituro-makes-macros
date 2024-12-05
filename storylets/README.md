@@ -339,7 +339,7 @@ _Syntax_: `<<storylet [store name]>>`
 
 The `<<storylet>>` macro allows you to define a storylet in the passage it corresponds to, rather than in your story javascript, or StoryInit. Use the `<<storyletscan>>` macro to scan for such storylets.
 
-The body of the `<<storylet>>` macro should either be a valid storylet object definition, a single twinescript expression, or a `<<cond>>` macro followed by a single twinescript expression. If it's a twinescript expression, it will be come a single `tws` condition. If it's a `<<cond>>` followed by a storylet object, the `<<cond>>` becomes a single `tws` condition on the storylet. 
+The body of the `<<storylet>>` macro should either be a valid storylet object definition, a single twinescript expression, or a `<<cond>>` macro followed by a valid storylet object definition. If it's a twinescript expression, it will become a single `tws` condition. If it's a `<<cond>>` followed by a storylet object, the `<<cond>>` becomes a single `tws` condition on the storylet. 
 
 e.g.
 
