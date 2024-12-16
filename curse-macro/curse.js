@@ -30,6 +30,6 @@ Macro.add('curse',{
                 out += latin.randomMany(l_latin).join('');
             }
         }
-        $(this.output).html(out);
+        $(this.output).wiki(out);
     }
 });
