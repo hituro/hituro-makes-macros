@@ -10,27 +10,44 @@ Macro.add('curse',{
         const latin = ['&#867;','&#868;','&#869;','&#870;','&#871;','&#872;','&#873;','&#874;','&#875;','&#876;','&#877;','&#878;','&#879;'];
         
         let c        = this.args[0] ?? 3;
-        let input  = this.payload[0].contents;
-        let out     = '';
-        for (let i = 0; i < input.length; i++) {
-            const l_above = Math.floor(Math.pow(Math.random(),2) * c);
-            const l_below = Math.floor(Math.pow(Math.random(),2) * c);
-            const l_over  = random(1,10);
-            const l_latin = random(1,10);
-            out += input[i];
-            if (l_above) {
-                out += above.randomMany(l_above).join('');
+        let $input   = $("<span>").wiki(this.payload[0].contents);
+        
+        function curse(nodes) {
+          if (nodes && nodes.length) {
+          	/* copy the node array because we will modify the original */
+            const nodeArr = Array.from(nodes);
+            for (const node of nodeArr) {
+                if (node && node.nodeType === Node.TEXT_NODE) {
+                    const letters = node.data.split('');
+                    let tout = '';
+                    for (let i = 0; i < letters.length; i++) {
+                        const l_above = Math.floor(Math.pow(Math.random(),2) * c);
+                        const l_below = Math.floor(Math.pow(Math.random(),2) * c);
+                        const l_over  = random(1,10);
+                        const l_latin = random(1,10);
+                        tout += letters[i];
+                        if (l_above) {
+                            tout += above.randomMany(l_above).join('');
+                        }
+                        if (l_below) {
+                            tout += below.randomMany(l_below).join('');
+                        }
+                        if (l_over <= c) {
+                            tout += over.randomMany(Math.ceil(c/3)).join('');
+                        }
+                        if (l_latin <= c) {
+                            tout += latin.randomMany(Math.ceil(c/3)).join('');
+                        }
+                    }
+                    $(node).replaceWith(tout);
+                } else if (node) {
+                    curse(node.childNodes,$(node));
+                }
             }
-            if (l_below) {
-                out += below.randomMany(l_below).join('');
-            }
-            if (l_over <= c) {
-                out += over.randomMany(Math.ceil(c/3)).join('');
-            }
-            if (l_latin <= c) {
-                out += latin.randomMany(Math.ceil(c/3)).join('');
-            }
+          }
         }
-        $(this.output).wiki(out);
+        
+        curse($input[0].childNodes);
+        $(this.output).append($input.html());
     }
 });
