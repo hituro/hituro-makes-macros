@@ -295,11 +295,11 @@ window.Sequence = class Sequence {
 
 window.macroPairedArgsParser = function(args,start=0,singletons=[]) {
   const parsed = {};
-  for (let i = start; i &lt; args.length; i += 1) {
+  for (let i = start; i < args.length; i += 1) {
   	if (singletons.includes(args[i])) {
     	parsed[args[i]] = true;
     } else {
-    	parsed[args[i].replace(/[^a-zA-Z0-9_]/g,&#39;&#39;)] = args[i+1];
+    	parsed[args[i].replace(/[^a-zA-Z0-9_]/g,'')] = args[i+1];
         i++;
     }
   }
