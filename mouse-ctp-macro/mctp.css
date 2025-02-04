@@ -2,6 +2,10 @@
 	display: none;
 }
 
+.--macro-ctp-older .ctp-auto-button {
+    display: none;
+}
+
 .--macro-ctp-t8n {
 	animation: macro-ctp-t8n 400ms ease-in;
 }
