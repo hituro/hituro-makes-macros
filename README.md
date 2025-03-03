@@ -1,5 +1,5 @@
 # hituro-makes-macros
-Just some Twine Macros
+Just some Twine Macros for [SugarCube](#sugarcube-macros), and [Chapbook](#chapbook-inserts)
 
 # SugarCube Macros
 
@@ -76,3 +76,13 @@ Just some Twine Macros
 <td><b>wrapped</b>
 <img width="303" alt="wrapped" src="https://user-images.githubusercontent.com/4206142/224789027-987027c0-9b65-48b8-a43e-20c7227b320a.png">
 </td></tr></table>
+
+# Chapbook Inserts
+
+## `{reveal at link:}`
+
+[A link that reveals text elsewhere on the page](cb-reveal-at-insert/)
+
+## `{set link:}`
+
+[A link that also sets variables when clicked](cb-set-link-insert/)
