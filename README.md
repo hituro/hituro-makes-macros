@@ -1,5 +1,7 @@
 # hituro-makes-macros
-Just some Twine Sugarcube Macros
+Just some Twine Macros
+
+# SugarCube Macros
 
 ## `DATESYSTEM`
 
