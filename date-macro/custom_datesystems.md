@@ -42,7 +42,7 @@ The following block shows the default values for the Gregorian calendar.
     ],
     periods: { 
         y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
-    }
+    },
     year_starts: { 1: 3, 325: 6, 1752: 5 }
 }
 ```
