@@ -1,6 +1,6 @@
 window.MQBN = class MQBN {
   
-  version = "1.5.1";
+  version = "1.5.2";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -216,7 +216,7 @@ window.MQBN = class MQBN {
       }
       values = va;
     }
-    const seq = new Sequence(values,initial);
+    const seq = new Sequence(values,initial,mode);
     State.setVar(name,seq);
   }
   
