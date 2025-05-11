@@ -276,8 +276,8 @@ window.Sequence = class Sequence {
       }
       newidx = Math.abs(newidx % len);
     }
-    this.name  = this.getSequenceName(newidx);
     this.val   = newidx;
+    this.name  = this.getSequenceName();
   }
   
   toJSON() { // the custom revive wrapper for SugarCube's state tracking
