@@ -1,6 +1,8 @@
 # MQBN Changelog
 
 
+* **v1.5.2 - 2025-05-11**
+  Fix a bug in `<<sequence>>` that prevents cycling sequences from cycling.
 * **v1.5.1 - 2024-12-29**  
   Updated `macroPairedArgsParser` to support singleton arguments
 * **v1.5 - 2024-08-29**  
@@ -21,3 +23,4 @@
 * Byron the Wildcat
 * SjordHekking
 * Josh Grams
+* Felix Nolan
