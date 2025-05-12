@@ -2,7 +2,7 @@
 
 
 * **v1.5.2 - 2025-05-11**  
-  Fix a bug in `<<sequence>>` that prevents cycling sequences from cycling.
+  Fix a bug in `<<sequence>>` that prevents cycling sequences from cycling.  
   Fix a bug in `<<sequenceadvance>>` that can result in the wrong name when incrementing more than 1 step.
 * **v1.5.1 - 2024-12-29**  
   Updated `macroPairedArgsParser` to support singleton arguments
