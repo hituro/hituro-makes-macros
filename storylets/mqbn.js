@@ -522,7 +522,7 @@ Macro.add("sequence",{
     if (this.args.length < 3) {
       return this.error("no sequence values specified");
     }
-    if (Array.isArray(this.args[1]) || Util.toStringTag(this.args[1]) == "Object") {
+    if (Array.isArray(this.args[2]) || Util.toStringTag(this.args[2]) == "Object") {
       MQBN.createSequence(this.args[0],this.args[2],this.args[1]);
     } else {
       MQBN.createSequence(this.args[0],this.args.slice(2),this.args[1]);
