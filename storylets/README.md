@@ -465,13 +465,13 @@ By default a sequence is "linear", which means that advancing it when it has rea
 The values supplied to the `<<sequence>>` macro can be supplied as an array: 
 ```html
 <<set _seasons = ["Spring", "Summer", "Autumn", "Winter"]>>
-<<sequence "$season" _seasons>>
+<<sequence "$season" cycling _seasons>>
 ```
 
 You can supply an explcit numerical value for each name by passing an object instead of an array:
 ```html
 <<set _levels = { 1: "level 1", 100: "level 2", 300: "level 3", 1000: "level 4" }>>
-<<sequence "$level" _levels>>
+<<sequence "$level" linear _levels>>
 ```
 
 In this way you could track XP (`$level.value`) and the corresponding level (`$level`).
