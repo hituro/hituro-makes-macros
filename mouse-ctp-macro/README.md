@@ -64,8 +64,8 @@ The following example should hopefully make this flow clear.
     You sit down in the cafe
 <<ctpNext wait>>
     "What would you like?" the waitress asks, "spam, or eggs?"
-    <<link "Spam">><<ctpGoto "spam">><</link>>
-    <<link "Eggs, please">><<ctpGoto "eggs">><</link>>
+    <<ctpLink "Spam" "spam">>
+    <<ctpLink "Eggs, please" "eggs">>
 <<ctpNext id "spam">>
     "Sorry, spam's off"
 <<ctpNext next "give_up">>
