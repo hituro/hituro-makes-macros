@@ -96,7 +96,7 @@ You can pass a format to the macro to control the output. Formats can be "short"
     D              — Weekday, full name
     weekday        — Weekday, in digits
     day_long       - Same as 'D'
-    day_short      — First two letters of Day
+    day_short      — First SHORT_DAY (default 2) letters of Day
     day_ordinal    — st/nd/rd as appropriate for day
     day_of_year    — Day count from first day of year
     day_half       — am/pm
