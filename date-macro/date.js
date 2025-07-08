@@ -51,7 +51,7 @@
       this.equal_years = this.MONTHS.reduce((total,m) => { return total + (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
       this.YEAR_OFFSET = config.year_offset ?? 0;
-      this.SHORT_DAY = 2;
+      this.SHORT_DAY = config.short_day ?? 2;
     }
 
     get elapsed() {
