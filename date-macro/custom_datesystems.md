@@ -43,7 +43,8 @@ The following block shows the default values for the Gregorian calendar.
     periods: { 
         y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
     },
-    year_starts: { 1: 3, 325: 6, 1752: 5 }
+    year_starts: { 1: 3, 325: 6, 1752: 5 },
+    short_day: 2
 }
 ```
 The `name` argument defines the name of the Datesystem. This is the `system-id` argument to use in all of the date system macros, the key in `setup.datesystems` that contains the DATESYSTEM object, and the prefix of the story variable containing the system's time variable. 
