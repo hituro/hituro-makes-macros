@@ -1,7 +1,7 @@
 # MQBN Changelog
 
 
-* **v1.5.3 - 2025-11-01**
+* **v1.5.3 - 2025-11-01**  
   Updated `<<storyletscan>>` to recognise store names with numbers in them
 * **v1.5.2 - 2025-05-11**  
   Fix a bug in `<<sequence>>` that prevents cycling sequences from cycling.  
