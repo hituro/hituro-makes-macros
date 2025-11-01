@@ -159,8 +159,8 @@ window.MQBN = class MQBN {
   /* SCAN */
   
   static storyletscan() {
-    const match   = /<<storylet(?:| ([A-z_-]*))>>/;
-    const replace = /<<storylet([A-z_ -]*)>>([\S\s]*)<<\/storylet>>/;
+    const match   = /<<storylet(?:| ([A-z_0-9-]*))>>/;
+    const replace = /<<storylet([A-z_0-9 -]*)>>([\S\s]*)<<\/storylet>>/;
     const cond    = /<<cond>>([\S\s]*)<<\/cond>>/;
     Story.filter((p) => p.text.match(match)).forEach(p => {
       const store = p.text.match(match)[1] ?? "storylets";
