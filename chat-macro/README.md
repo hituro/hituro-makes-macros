@@ -14,9 +14,9 @@ The Chatsystem macros are intended to provide an emulation of chat message inter
 
 ### Installation
 
-Add the contents of chat.js to your story Javascript.
+Add the contents of [chat.js](chat.js) to your story Javascript.
 
-Add the contents of chat.css to your story Stylesheet.
+Add the contents of [chat.css](chat.css) to your story Stylesheet.
 
 ## Settings
 
@@ -110,7 +110,7 @@ You can display a **typing indicator** to show that the other person is replying
 
 ### Dates and Times
 
-If the first message in a conversation has a date (specified with `at`), and the `<<chat>>` or `<<history>>` macro *also* has a date, then the date of the message will be displayed at the top of the conversation (e.g. "Today 10am", "Yesterday 2pm", "Tues, 10th, 5:30pm"), and subsequently when messages are separated by at least an hour. Times are displayed relative to the date attached to the chat itself.
+If the first message in a conversation has a date (specified with `date`), and the `<<chat>>` or `<<history>>` macro *also* has a date (specified with `at`), then the date of the message will be displayed at the top of the conversation (e.g. "Today 10am", "Yesterday 2pm", "Tues, 10th, 5:30pm"), and subsequently when messages are separated by at least an hour. Times are displayed relative to the date attached to the chat itself.
 
 **For example:**
 ```html
@@ -131,7 +131,7 @@ In the following macro definitions, items in `[square brackets]` are optional.
 
 ### `<<msg>>`
 
-Syntax: `<<msg from "Person" to "Person" [and "Person" ...] [at "date"] [id "id"] [delay "delay"] [title "title"]>>`
+Syntax: `<<msg from "Person" to "Person" [and "Person" ...] [at "date"] [id "id"] [delay "delay"] [title "title"]>>`  
 Syntax: `<<msg {options object}>>`
 
 The `<<msg>>` macro adds a message to a conversation. If the conversation doesn't already exist, it will create it first. You must supply at least the `from` and `to` arguments, to indicate the sender and recipient of the message. If you wish to make a group message, either supply an array as the `to` value, or separate multiple recipients with `and`. e.g. `<<msg from "A" to "B" and "C">>`.
@@ -158,7 +158,7 @@ The `<<msg-delete>>` macro deletes a message from a conversation. Specify the co
 
 ### `<<history>>`
 
-Syntax: `<<history "Person" with "Person" [and "Person" ...] [at "date"]>>`
+Syntax: `<<history "Person" with "Person" [and "Person" ...] [at "date"]>>`  
 Syntax: `<<history {options object}>>`
 
 The `<<history>>` macro displays a conversation. If the conversation doesn't already exist, or is empty, then it will not display anything. You must supply at least two people to identify a valid conversation.
@@ -169,7 +169,7 @@ If the converastion has more than two participants, it will show names above eac
 
 ### `<<chat>>`
 
-Syntax: `<<chat "Person" with "Person" [and "Person" ...] [at "date"]>><</chat>>`
+Syntax: `<<chat "Person" with "Person" [and "Person" ...] [at "date"]>><</chat>>`  
 Syntax: `<<chat {options object}>><</chat>>`
 
 The `<<chat>>` macro displays a conversation along with a "live" prompt for the player to pick options that add more messages to the conversation. Options can be presented using standard macros like `<<link>>` and `<<button>>`. Adding new messages automatically refreshes both the chat and options pane.
