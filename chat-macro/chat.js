@@ -1,6 +1,6 @@
 (function() {
 
-    State.variables.phone = {};
+    State.variables.chatsystem = {};
     setup["@CHATSYSTEM/Options"] = { tails: true };
 
     window.CHATSYSTEM = class CHATSYSTEM {
@@ -8,26 +8,18 @@
         static version  = "1.0.0";
         static interval = 86400000;
         
-        static chat(id) { 
-            const p   = State.variables.phone;
-            if (Array.isArray(p[id]) && p[id].length) {
-            return p[id][p[id].length - 1].id;
+        static initChat(name) {
+            if (!Object.hasOwn(State.variables.chatsystem, name)) {
+                State.variables.chatsystem[name] = [];
             }
-            return 0;
         }
         
         static conversationId(a,b) {
             return [a,b].flat().sort().join('_').toLowerCase();
         }
         
-        static initChat(name) {
-            if (!Object.hasOwn(State.variables.phone, name)) {
-                State.variables.phone[name] = [];
-            }
-        }
-        
         static addMsg(name,msg) {
-            const p   = State.variables.phone;
+            const p   = State.variables.chatsystem;
             p[name].push(msg);
             if (msg.date) {
                 p[name].sort((a,b) => a.date - b.date);
@@ -35,6 +27,14 @@
 
             const tags = [ name ];
             triggerEvent(':redo', document, { detail : { tags } });
+        }
+        
+        static currentId(id) { 
+            const p   = State.variables.chatsystem;
+            if (Array.isArray(p[id]) && p[id].length) {
+                return p[id][p[id].length - 1].id;
+            }
+            return 0;
         }
         
         static addTyping(name) {
@@ -56,12 +56,12 @@
         }
         
         static deleteMsg(name,id) {
-            const p   = State.variables.phone;
+            const p   = State.variables.chatsystem;
             p[name].deleteWith((msg) => msg.id === id);
         }
         
         static deleteChat(name) {
-            const p   = State.variables.phone;
+            const p   = State.variables.chatsystem;
             delete p[name];
         }
     }
@@ -96,7 +96,7 @@
     Macro.add("msg",{
         tags: null,
         handler: function() {
-            const p   = State.variables.phone;
+            const p   = State.variables.chatsystem;
             const msg = (typeof this.args[0] === "object") 
                 ? this.args[0]
                 : macroPairedArgsParser(this.args);
@@ -116,7 +116,7 @@
             // wikify the text
             msg.text = $("<span>").wiki(msg.text).html();
             
-            if (msg.delay) {
+            if (msg.delay && this.contextFind((ctx) => ctx.name == "chat")) {
                 CHATSYSTEM.addTyping(name);
                 setTimeout(() => CHATSYSTEM.addMsg(name,msg),Util.fromCssTime(msg.delay));
             } else {
@@ -128,7 +128,7 @@
 
     Macro.add("msg-delete",{
         handler: function() {
-            const p   = State.variables.phone;
+            const p   = State.variables.chatsystem;
             const msg = (typeof this.args[0] === "object") 
                 ? this.args[0]
                 : macroPairedArgsParser(this.args);
@@ -145,12 +145,14 @@
 
     Macro.add("history",{
         handler: function() {
-            const p    = State.variables.phone;
+            const p    = State.variables.chatsystem;
             const chat = this.contextFind((ctx) => ctx.name == "chat");
-            const conf = chat.self.conf ?? ((typeof this.args[0] === "object") 
+            const conf = chat?.self?.conf ?? ((typeof this.args[0] === "object") 
                 ? this.args[0]
-                : macroPairedArgsParser(this.args));
+                : macroPairedArgsParser(this.args,1));
             
+            if (!conf.from) { conf.from = this.args[0]; }
+            if (!Array.isArray(conf.with)) { conf.with = [conf.with]; }
             if (conf.at && !(conf.at instanceof Date)) { conf.at = new Date(conf.at); }
             
             const name = CHATSYSTEM.conversationId(conf.from,conf.with);
@@ -171,22 +173,22 @@
             if (msg.title) {
                 app.append(`<div class='date'>${msg.title}</div>`);
             }
-            if (msg.from != last.from) {
+            if (conf.with.length > 1 && msg.from != last.from) {
                 if (msg.from != conf.from) {
-                app.append(`<div class='chat_from chat_msg_${from_to} chat_name_${msg.from.toLowerCase()}'>${msg.from}</div>`);
+                    app.append(`<div class='chat_from chat_msg_${from_to} chat_name_${msg.from.replace(' ','_').toLowerCase()}'>${msg.from}</div>`);
                 }
                 last.from = msg.from;
             }
             app.append($(`
                 <div class="chat_msg ${tails}
-                            chat_msg_${msg.from.toLowerCase()} 
+                            chat_msg_${msg.from.replace(' ','_').toLowerCase()} 
                             chat_msg_${from_to}">
                     <p>${msg.text}</p>
                 </div>
             `));
             }
             
-            State.temporary.curr = CHATSYSTEM.chat(name);
+            State.temporary.curr = CHATSYSTEM.currentId(name);
             $(this.output).append(app);
         }
     });
@@ -208,7 +210,7 @@
             
             $(this.output).wiki(`<<nobr>>
                 <div class='chat_container'>
-                    <<do tag "${name}">>
+                    <<do tag "${name}" element "div">>
                         <<history>>
                         <div class='chat_response'>
                             ${this.payload[0].contents}
