@@ -5,7 +5,7 @@
   
   window.DATESYSTEM = class DATESYSTEM {
     constructor(config = {}) {
-      this.version     = "1.2.0";
+      this.version     = "1.2.2";
       this.systemname  = config.name ?? "default";
       this.varname     = this.systemname == "default" ? "time" : this.systemname + '-time';
       this.cache       = { };
@@ -51,6 +51,7 @@
       this.equal_years = this.MONTHS.reduce((total,m) => { return total + (m.leap_century || m.leap) ? 1 : 0; }) == 0;
       this.BASE_TIME   = variables()[this.varname] = (config.base_time ? this.dateToTime(config.base_time) : 0);
       this.YEAR_OFFSET = config.year_offset ?? 0;
+      this.SHORT_DAY = config.short_day ?? 2;
     }
 
     get elapsed() {
@@ -288,7 +289,7 @@
         out.weekday   = ((total_days - non_sequential_days) + year_start_day + 1) % this.DAYS.length;
         out.day_long  = out.D = this.DAYS[out.weekday];
       }
-      out.day_short = out.day_long.substring(0,2);
+      out.day_short = out.day_long.substring(0,this.SHORT_DAY);
       
       // hours
       out.h = Math.floor(r / (this.hl));

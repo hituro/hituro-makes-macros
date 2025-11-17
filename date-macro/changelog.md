@@ -1,5 +1,8 @@
 # DATESYSTEM Changelog
 
+* v1.2.2 (2025-07-08)
+  * Added support for `short_day` in custom datesystems to change the `[day_short]` token length
+  
 * v1.2.1 (2024-11-01)
   * Added support for `skip_day_sequence` and `special_days` in custom datesystems
 

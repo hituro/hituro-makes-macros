@@ -27,6 +27,11 @@ Just some Twine Macros for [SugarCube](#sugarcube-macros), and [Chapbook](#chapb
 [Add classes, ids, style, or other attributes to generated elements like `<<button>>`](attr-macro/)
 
 ---
+## `<<curse>>`
+
+[Cursed text](curse-macro/)
+
+---
 ## `<<hide>> / <<show>>`
 
 [DOM Macros to hide and show elements](show-macro/)

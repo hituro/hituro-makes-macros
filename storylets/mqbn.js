@@ -1,6 +1,6 @@
 window.MQBN = class MQBN {
   
-  version = "1.5.1";
+  version = "1.5.3";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -159,8 +159,8 @@ window.MQBN = class MQBN {
   /* SCAN */
   
   static storyletscan() {
-    const match   = /<<storylet(?:| ([A-z_-]*))>>/;
-    const replace = /<<storylet([A-z_ -]*)>>([\S\s]*)<<\/storylet>>/;
+    const match   = /<<storylet(?:| ([A-z_0-9-]*))>>/;
+    const replace = /<<storylet([A-z_0-9 -]*)>>([\S\s]*)<<\/storylet>>/;
     const cond    = /<<cond>>([\S\s]*)<<\/cond>>/;
     Story.filter((p) => p.text.match(match)).forEach(p => {
       const store = p.text.match(match)[1] ?? "storylets";
@@ -216,7 +216,7 @@ window.MQBN = class MQBN {
       }
       values = va;
     }
-    const seq = new Sequence(values,initial);
+    const seq = new Sequence(values,initial,mode);
     State.setVar(name,seq);
   }
   
@@ -276,8 +276,8 @@ window.Sequence = class Sequence {
       }
       newidx = Math.abs(newidx % len);
     }
-    this.name  = this.getSequenceName(newidx);
     this.val   = newidx;
+    this.name  = this.getSequenceName();
   }
   
   toJSON() { // the custom revive wrapper for SugarCube's state tracking
@@ -522,7 +522,7 @@ Macro.add("sequence",{
     if (this.args.length < 3) {
       return this.error("no sequence values specified");
     }
-    if (Array.isArray(this.args[1]) || Util.toStringTag(this.args[1]) == "Object") {
+    if (Array.isArray(this.args[2]) || Util.toStringTag(this.args[2]) == "Object") {
       MQBN.createSequence(this.args[0],this.args[2],this.args[1]);
     } else {
       MQBN.createSequence(this.args[0],this.args.slice(2),this.args[1]);

@@ -42,8 +42,9 @@ The following block shows the default values for the Gregorian calendar.
     ],
     periods: { 
         y: ["year","years"], mo: ["month","months"], d: ["day","days"], h: ["hour","hours"], m: ["minute","minutes"], s: ["second","seconds"]
-    }
-    year_starts: { 1: 3, 325: 6, 1752: 5 }
+    },
+    year_starts: { 1: 3, 325: 6, 1752: 5 },
+    short_day: 2
 }
 ```
 The `name` argument defines the name of the Datesystem. This is the `system-id` argument to use in all of the date system macros, the key in `setup.datesystems` that contains the DATESYSTEM object, and the prefix of the story variable containing the system's time variable. 
@@ -121,21 +122,21 @@ Although each Datesystem keeps its own time variable by default, you can easily 
 
 **Example**
 ```html
-<<datesetup `{
+<<set _solar = {
     systemname: "solar",
     ...
-}`>>
-<<datesetup `{
+}>><<datesetup _solar>>
+<<set _lunar `{
     systemname: "lunar",
     ...
-}`>>
+}`>><<datesetup _lunar>>
 <<set setup.datesystems.lunar.varname = "solar-time">>
 ```
 
 ## Example Calendars
 ### French Republican Calendar (with leap years)
 ```html
-<<nobr>><<datesetup `{
+<<nobr>><<set _rep = {
     name: "RepCalendar",
     day_length : 10,
     hour_length : 100,
@@ -157,11 +158,11 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: 'Sansculottides', length: 5, season: 'none', leap_century: [[400,6]], leap: [[4,6]]}
     ],
     year_starts: {}
-}`>><</nobr>>
+}>><<datesetup _rep>><</nobr>>
 ```
 ### Approximate Lunar Calendar
 ```html
-<<nobr>><<datesetup `{
+<<nobr>><<set _lunar = {
     name: "lunar",
     days : [
         'new',
@@ -189,11 +190,11 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: "Hollow", length: 29, },
     ],
     year_starts: {}
-}`>><</nobr>>
+}>><<datesetup _lunar>><</nobr>>
 ```
 ### Discworld
 ```html
-<<nobr>><<datesetup `{
+<<nobr>><<set _discworld = {
     name: "discworld",
     days : [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Octday" ],
     months : [
@@ -212,16 +213,16 @@ Although each Datesystem keeps its own time variable by default, you can easily 
         { name: "December", length: 32, },
     ],
     year_starts: {}
-}`>><</nobr>>
+}>><<datesetup _discworld>><</nobr>>
 ```
 
 ### Warhammer 40k
 
 Warhammer doesn't actually *have* a custom calendar, it uses the Gregorian system, counting from 1AD, but it does have a way of expressing dates that's a bit different.
 ```html
-<<nobr>><<datesetup `{
+<<nobr>><<set _40k = {
     year_offset: 40000
-}`>><</nobr>>
+}>><<datesetup _40k>><</nobr>>
 ```
 To output a 40k style date/time:
 ```html
