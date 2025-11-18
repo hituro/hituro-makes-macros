@@ -1,7 +1,10 @@
 (function() {
 
     State.variables.chatsystem = {};
-    setup["@CHATSYSTEM/Options"] = { tails: true };
+    setup["@CHATSYSTEM/Options"] = { 
+        tails: true,
+        styled: false
+    };
 
     window.CHATSYSTEM = class CHATSYSTEM {
     
@@ -205,14 +208,15 @@
             if (!conf.from) { conf.from = this.args[0]; }
             if (!Array.isArray(conf.with)) { conf.with = [conf.with]; }
             
-            const name = CHATSYSTEM.conversationId(conf.from,conf.with);
+            const name   = CHATSYSTEM.conversationId(conf.from,conf.with);
+            const styled = setup["@CHATSYSTEM/Options"].styled ? 'styled' : '';
             CHATSYSTEM.initChat(name);
             
             $(this.output).wiki(`<<nobr>>
                 <div class='chat_container'>
                     <<do tag "${name}" element "div">>
                         <<history>>
-                        <div class='chat_response'>
+                        <div class='chat_response ${styled}'>
                             ${this.payload[0].contents}
                         </div>
                     <</do>>

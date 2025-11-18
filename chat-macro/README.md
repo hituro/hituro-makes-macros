@@ -131,8 +131,8 @@ In the following macro definitions, items in `[square brackets]` are optional.
 
 ### `<<msg>>`
 
-Syntax: `<<msg from "Person" to "Person" [and "Person" ...] [at "date"] [id "id"] [delay "delay"] [title "title"]>>`  
-Syntax: `<<msg {options object}>>`
+*Syntax*: `<<msg from "Person" to "Person" [and "Person" ...] [at "date"] [id "id"] [delay "delay"] [title "title"]>>`  
+*Syntax*: `<<msg {options object}>>`
 
 The `<<msg>>` macro adds a message to a conversation. If the conversation doesn't already exist, it will create it first. You must supply at least the `from` and `to` arguments, to indicate the sender and recipient of the message. If you wish to make a group message, either supply an array as the `to` value, or separate multiple recipients with `and`. e.g. `<<msg from "A" to "B" and "C">>`.
 
@@ -152,14 +152,14 @@ You can replace all the arguments with a message object, with at least the keys:
 
 ### `<<msg-delete>>`
 
-Syntax: `<<msg-delete from "Person" to "Person" [and "Person" ...] id "id">>`
+*Syntax*: `<<msg-delete from "Person" to "Person" [and "Person" ...] id "id">>`
 
 The `<<msg-delete>>` macro deletes a message from a conversation. Specify the conversation in the same way as you would when creating the message.
 
 ### `<<history>>`
 
-Syntax: `<<history "Person" with "Person" [and "Person" ...] [at "date"]>>`  
-Syntax: `<<history {options object}>>`
+*Syntax*: `<<history "Person" with "Person" [and "Person" ...] [at "date"]>>`  
+*Syntax*: `<<history {options object}>>`
 
 The `<<history>>` macro displays a conversation. If the conversation doesn't already exist, or is empty, then it will not display anything. You must supply at least two people to identify a valid conversation.
 
@@ -169,8 +169,8 @@ If the converastion has more than two participants, it will show names above eac
 
 ### `<<chat>>`
 
-Syntax: `<<chat "Person" with "Person" [and "Person" ...] [at "date"]>><</chat>>`  
-Syntax: `<<chat {options object}>><</chat>>`
+*Syntax*: `<<chat "Person" with "Person" [and "Person" ...] [at "date"]>><</chat>>`  
+*Syntax*: `<<chat {options object}>><</chat>>`
 
 The `<<chat>>` macro displays a conversation along with a "live" prompt for the player to pick options that add more messages to the conversation. Options can be presented using standard macros like `<<link>>` and `<<button>>`. Adding new messages automatically refreshes both the chat and options pane.
 
@@ -178,7 +178,7 @@ The contents of the macro has access to the `_curr` temporary variable, which tr
 
 ### `<<chat-delete>>`
 
-Syntax: `<<chat-delete "Person" with "Person" [and "Person" ...]>>`
+*Syntax*: `<<chat-delete "Person" with "Person" [and "Person" ...]>>`
 
 The `<<chat-delete>>` macro deletes an entire conversation.
 

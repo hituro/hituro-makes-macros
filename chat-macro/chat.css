@@ -94,3 +94,20 @@
   50%  { --dim: #888; --bright: #666; }
   100% { --dim: #666; --bright: #888; }
 }
+
+.chat_response.styled {
+  padding: 0.8em;
+  margin: 1em;
+  border-radius: 1em;
+  border: 1px solid var(--dim);
+}
+.chat_response.styled > a {
+  display: block;
+  margin-left: 1em;
+  position: relative;
+}
+.chat_response.styled > a::before {
+  content: "\00BB";
+  position: absolute;
+  left: -1em;
+}
