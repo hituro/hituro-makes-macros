@@ -24,8 +24,10 @@ You can change settings for the Chatsystem by setting values on `setup["@CHATSYS
 
 Available settings:
 
-* `setup["@CHATSYSTEM/Options"].tails`  
+* `setup["@CHATSYSTEM/Options"].tails (default: true)`  
    Boolean, should message bubbles show the little tails or not.
+* `setup["@CHATSYSTEM/Options"].styled (default: false)`  
+   Boolean, should the chat response area be styled.
 
 ## Core Concepts
 
@@ -123,6 +125,16 @@ If the first message in a conversation has a date (specified with `date`), and t
 <<history "Alice" with "Tom" at "2025-11-19 11:00:00">>
 ```
 <img src="images/example_6.jpg" width="600px">
+
+### Styled User Prompts
+
+Although the `<<chat>>` macro deliberately doesn't style the user response area, leaving it up to the game author to make it match the other links in their game. However an optional styled version exists for authors who don't want to do it themselves. You can opt into that by changing the `styled` config option:
+```js
+setup["@CHATSYSTEM/Options"].styled = true;
+```
+With this setting on, the `<<chat>>` macro will style the response area as a basic text box with any links inside turned into suggested chat messages, as illustrated below:
+
+<img src="images/example_7.jpg" width="600px">
 
 ---
 ## Macros
