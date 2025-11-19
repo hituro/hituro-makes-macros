@@ -161,7 +161,8 @@
             const name = CHATSYSTEM.conversationId(conf.from,conf.with);
             if (!name) { this.error("You must specify who the chat is between"); }
             
-            const app   = $(`<div class="chat_sequence" id="${name}">`);
+            const seq   = $(`<div class="chat_sequence" id="${name}">`);
+            const app   = $('<div class="wrapper">').appendTo(seq);
             const tails = setup["@CHATSYSTEM/Options"]?.tails ? "tails" : "";
             let   last  = { date: 0, from: '' };
             
@@ -192,7 +193,7 @@
             }
             
             State.temporary.curr = CHATSYSTEM.currentId(name);
-            $(this.output).append(app);
+            $(this.output).append(seq);
         }
     });
 

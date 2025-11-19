@@ -1,3 +1,7 @@
+:root {
+  --chat-max-height: 500px;
+}
+
 .chat_sequence {
   --from-color  : var(--chat-from-color,     #7B7);
   --to-color    : var(--chat-to-color,       #999);
@@ -5,7 +9,14 @@
   --title-color : var(--chat-title-color,    white);
   --dim         : var(--chat-type-dim,       #666);
   --bright      : var(--chat-type-bright,    #888);
+  --max-height  : var(--chat-max-height,     auto);
   padding: 1em;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: scroll;
+  max-height: var(--max-height);
+}
+.chat_sequence .wrapper {
   display: flex;
   flex-direction: column;
 }

@@ -136,6 +136,10 @@ With this setting on, the `<<chat>>` macro will style the response area as a bas
 
 <img src="images/example_7.jpg" width="600px">
 
+### Scrolling
+
+By default the chat display has no max height, and will just expand with the number of messages. If you set the `--chat-max-height` CSS variable, the chat will scroll to the bottom on load and when new messages are added.
+
 ---
 ## Macros
 
@@ -266,6 +270,7 @@ You can theme the chat display using CSS variables. The following variables are 
   --chat-title-color:    white;
   --chat-type-dim:       #666;
   --chat-type-bright:    #888;
+  --chat-max-height:     auto;
 ```
 
 ---
@@ -281,14 +286,16 @@ Date/Title elements have the class `.date`. Person names have the class `.chat_f
 <div class="chat_container">
     <div class="macro-do redo-target" data-do-tags="CONVERSATION_ID">
         <div class="chat_sequence" id="CONVERSATION_ID">
-            <div class="date">MESSAGE_DATE_OR_TITLE</div>
-            <div class="chat_msg chat_msg_to chat_name_NAME">MESSAGE_DATE_OR_TITLE</div>
-            <div class="chat_msg chat_msg_to chat_msg_NAME tails">
-                    <p>Hi! Are you still coming to dinner?</p>
-            </div>
-            <div class="date">MESSAGE_DATE_OR_TITLE</div>
-            <div class="chat_msg chat_msg_to chat_msg_NAME tails">
-                    <p>Sorry! I missed this. I'll be there.</p>
+            <div class="wrapper">
+                <div class="date">MESSAGE_DATE_OR_TITLE</div>
+                <div class="chat_msg chat_msg_to chat_name_NAME">MESSAGE_DATE_OR_TITLE</div>
+                <div class="chat_msg chat_msg_to chat_msg_NAME tails">
+                        <p>Hi! Are you still coming to dinner?</p>
+                </div>
+                <div class="date">MESSAGE_DATE_OR_TITLE</div>
+                <div class="chat_msg chat_msg_to chat_msg_NAME tails">
+                        <p>Sorry! I missed this. I'll be there.</p>
+                </div>
             </div>
         </div>
         <div class="chat_response">
