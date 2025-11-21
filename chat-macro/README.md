@@ -136,6 +136,8 @@ With this setting on, the `<<chat>>` macro will style the response area as a bas
 
 <img src="images/example_7.jpg" width="600px">
 
+Buttons will be styled in colours matching the chat UI and automatically centred.
+
 ### Scrolling
 
 By default the chat display has no max height, and will just expand with the number of messages. If you set the `--chat-max-height` CSS variable, the chat will scroll to the bottom on load and when new messages are added.
@@ -271,6 +273,7 @@ You can theme the chat display using CSS variables. The following variables are 
   --chat-type-dim:       #666;
   --chat-type-bright:    #888;
   --chat-max-height:     auto;
+  --chat-max-width:      auto;
 ```
 
 ---
