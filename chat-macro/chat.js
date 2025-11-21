@@ -41,7 +41,7 @@
         }
         
         static addTyping(name) {
-            $(`#${name}`).append("<div class='chat_msg chat_msg_to typing'></div>");
+            $(`#${name} .wrapper`).append("<div class='chat_msg chat_msg_to typing'></div>");
         }
         
         static date(now,date) {

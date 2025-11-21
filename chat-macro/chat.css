@@ -1,5 +1,6 @@
-:root {
-  --chat-max-height: 500px;
+.chat_container {
+  --max-width   : var(--chat-max-width,      auto);
+  max-width: var(--max-width);
 }
 
 .chat_sequence {
