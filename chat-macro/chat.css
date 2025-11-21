@@ -123,3 +123,11 @@
   position: absolute;
   left: -1em;
 }
+.chat_response:not(:has(a)) {
+  text-align: center;
+}
+.chat_response > button {
+  background: var(--dim);
+  border-radius: 0.7em;
+  border-color: var(--bright);
+}
