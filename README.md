@@ -3,6 +3,13 @@ Just some Twine Macros for [SugarCube](#sugarcube-macros), and [Chapbook](#chapb
 
 # SugarCube Macros
 
+## `CHATSYSTEM`
+
+[A macro for simulating a chat interface](chat-macro/)
+
+<img width="498" height="307" alt="image" src="https://github.com/user-attachments/assets/94bd0ce4-34ec-4da4-8fc1-9b9ab07ce0da" />
+
+---
 ## `DATESYSTEM`
 
 [A macro set for custom date/time systems](date-macro/) — version 1.2
