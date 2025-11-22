@@ -93,8 +93,8 @@ Just some Twine Macros for [SugarCube](#sugarcube-macros), and [Chapbook](#chapb
 
 ## `{reveal at link:}`
 
-[A link that reveals text elsewhere on the page](cb-reveal-at-insert/)
+[A link that reveals text elsewhere on the page](cb-reveal-at-link/)
 
 ## `{set link:}`
 
-[A link that also sets variables when clicked](cb-set-link-insert/)
+[A link that also sets variables when clicked](cb-set-link-link/)
