@@ -1,6 +1,8 @@
 (function () {
 	"use strict";
 
+	setup["@CTP/Options"] ??= {};
+
 	$(document).on(":passageinit", () => {
 		CTP.Logs.forEach((_, id) => {
 			if (!CTP.Repository.get(id)?.persist) CTP.Logs.delete(id);
