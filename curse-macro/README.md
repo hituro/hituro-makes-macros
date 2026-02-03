@@ -15,7 +15,7 @@ You can pass a numerical value to change *how* cursed the text is, e.g. `<<curse
 
 ### Example ###
 ```html
-<<curse>>A bunch of Cursed text>>
+<<curse>>A bunch of Cursed text<</curse>>
 ```
 
 The following shows the macro above at different levels of cursing.
