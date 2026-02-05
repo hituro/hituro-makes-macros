@@ -3,7 +3,7 @@
 The Datesystem macros are intended to provide an entire date/time system, capable of imitating a Gregorian calendar or supporting an entirely custom date/time system. It offers a variety of macros and corresponding JS functions.
 
 > [!WARNING]
-> The current version of DATESYSTEM is 1.2  
+> The current version of DATESYSTEM is 1.2.3
 > It has the following incompatile changes with v1.1 and earlier  
 > * The `[h12]` and `[0h12]` elements now show midnight as 12 (or whatever half your day length is), rather than 0  
 > 
@@ -74,7 +74,7 @@ For all of the following macros, you may pass an additional argument specifying 
 
 ### `<<date>>`
 
-Syntax: `<<date ["format"] [system-id]>>`
+Syntax: `<<date ["format"] [time] [system-id]>>`
 
 The `<<date>>` macro outputs the current date and time. If you do not specify a format, it will output the current short date as a "d-m-yyyy".
 
@@ -122,6 +122,16 @@ You can pass a format to the macro to control the output. Formats can be "short"
 <<date "datetime">>        // outputs "Friday the 12th of February, 2000 15:05:00"
 <<date "time">>            // outputs "15:05:00"
 <<date "the [d][day_ordinal] of [M] in the [season] season">> // outputs "the 12th of February in the winter season"
+```
+
+You can pass a second argument to control which time the formatting is applied to. By default this is your Datesystem's current time. Times can be passed as timestamps in seconds, or as time offsets as a string. For example all of these are valid:
+
+```html
+<<date $time>>
+<<date `$time + (60*60)`>>
+<<date "1h">>
+<<date `$time - (60*60)`>>
+<<date "-1h">>
 ```
 
 If you want to format a date in a way more complex than `<<date>>` allows, you can use the `DATESYSTEM.getDate()` method ([see below](#getdate)).

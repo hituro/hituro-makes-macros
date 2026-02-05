@@ -1,5 +1,8 @@
 # DATESYSTEM Changelog
 
+* v1.2.3
+  * Added documentation for the second argument to `<<date>>`
+  
 * v1.2.2 (2025-07-08)
   * Added support for `short_day` in custom datesystems to change the `[day_short]` token length
   
