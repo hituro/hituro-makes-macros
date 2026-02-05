@@ -498,6 +498,16 @@
     handler: function handler() {
       let dateargs = DATESYSTEM.dateargs(this.args);
       if (!dateargs.datesystem) throw new Error("Please set up the datesystem with <<datesetup>> before using <<date>>");
+      if (dateargs.args[1] && !Number.isInteger(dateargs.args[1])) {
+        if (dateargs.args[1][0] == "-") {
+          dateargs.args[1] = dateargs.args[1].slice(1);
+          let t = dateargs.datesystem.dateToTime(dateargs.args[1],{type: "add", direction: "backwards"});
+        	dateargs.args[1] = variables()[dateargs.datesystem.varname] - t;
+        } else {
+          let t = dateargs.datesystem.dateToTime(dateargs.args[1],{type: "add", direction: "forwards"});
+        	dateargs.args[1] = variables()[dateargs.datesystem.varname] + t;
+        }
+      }
       this.output.append(dateargs.datesystem.dateFormat(dateargs.args[0],dateargs.args[1]));
     }
   });
