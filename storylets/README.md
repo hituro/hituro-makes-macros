@@ -191,14 +191,14 @@ _Syntax_: `{ type: "visited", op: "|not", passage: "passageName" }`
 True if a given passage has been visited (or with `op` "not", not visited) in the current play history.
 
 #### `played` 
-_Syntax_: `{ type: "played", op: "|not", story: "storyid" }`
+_Syntax_: `{ type: "played", op: "|not", story: "storyid", store: "store" }`
 
-True if a given storylet has already been played. Set `op` to "not" to negate the check. Note that the "storyid" will be the title of the given storylet unless you supplied a separate id value.
+True if a given storylet has already been played. Set `op` to "not" to negate the check. Note that the "storyid" will be the title of the given storylet unless you supplied a separate id value. If no store is indicated then the same store as the storylet is used.
 
 #### `pulls` 
 _Syntax_: `{ type: "pulls", op: "|eq|neq|gt|lt|gte|lge", pulls: "number", store: "store" }`
 
-True if some number of storylets (by default the operator is `gte`) have already been used from the indicated store. If no store is indicated then the same story as the storylet is used.
+True if some number of storylets (by default the operator is `gte`) have already been used from the indicated store. If no store is indicated then the same store as the storylet is used.
 
 #### `rand`
 _Syntax_: `{ type: "rand", chance: int }`

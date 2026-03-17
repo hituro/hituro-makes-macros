@@ -88,10 +88,11 @@ window.MQBN = class MQBN {
   }
   
   static playedRequirement(r,store) {
+    let checkedstore = r.store ?? store;
     if (r.op == "not") {
-      return !variables()[store+"_used"].has(r.story);
+      return !variables()[checkedstore+"_used"].has(r.story);
     } else {
-      return variables()[store+"_used"].has(r.story);
+      return variables()[checkedstore+"_used"].has(r.story);
     }
   }
 
@@ -124,7 +125,8 @@ window.MQBN = class MQBN {
   }
   
   static pullsRequirement(r,store) {
-    return this.operators[r.op ?? "eq"](r.pulls,variables()[store+"_used"].size);
+    let checkedstore = r.store ?? store;
+    return this.operators[r.op ?? "eq"](r.pulls,variables()[checkedstore+"_used"].size);
   }
 
   static operators = {

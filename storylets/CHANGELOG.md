@@ -1,6 +1,7 @@
 # MQBN Changelog
 
-
+* **v1.5.4 - 2026-03-17**
+  Updated `played` conditions to have an optional store name
 * **v1.5.3 - 2025-11-01**  
   Updated `<<storyletscan>>` to recognise store names with numbers in them
 * **v1.5.2 - 2025-05-11**  
