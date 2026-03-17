@@ -1,6 +1,6 @@
 window.MQBN = class MQBN {
   
-  version = "1.5.3";
+  version = "1.5.4";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
