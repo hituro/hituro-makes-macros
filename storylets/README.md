@@ -198,7 +198,7 @@ True if a given storylet has already been played. Set `op` to "not" to negate th
 #### `pulls` 
 _Syntax_: `{ type: "pulls", op: "|eq|neq|gt|lt|gte|lge", pulls: "number", store: "store" }`
 
-True if some number of storylets (by default the operator is `gte`) have already been used from the indicated store. If no store is indicated then the same store as the storylet is used.
+True if some number of storylets (by default the operator is `eq`) have already been used from the indicated store. If no store is indicated then the same store as the storylet is used.
 
 #### `rand`
 _Syntax_: `{ type: "rand", chance: int }`
