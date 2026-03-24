@@ -241,9 +241,9 @@ The `<<storyletlink>>` macro automatically makes a link to a storylet, either by
 e.g.
 ```html
 <<set _stories = MQBN.getStorylets(3)>>
-* <<storyletlink _stories[0]>>
-* <<storyletlink _stories[1]>>
-* <<storyletlink _stories[2]>>
+* <<storyletlink _stories[0]>><</storyletlink>>
+* <<storyletlink _stories[1]>><</storyletlink>>
+* <<storyletlink _stories[2]>><</storyletlink>>
 ```
 
 When you request a set of storylets, the temporary variable `_STORENAME_available` (by default, `_storylets_available`) is set with the list of all the storylets that were available. You can check `_storylets_available.length` to see if there were more available storylets than shown.
@@ -426,7 +426,7 @@ If the first argument is a storylet object, the macro will always create a link 
 e.g.
 ```html
 <<set _story = MQBN.getStorylets(1)[0]>>
-<<storyletlink _story text "See what happens">><</storylet>>
+<<storyletlink _story text "See what happens">><</storyletlink>>
 ```
 
 If the first argument is a storylet name, the macro makes a link to that storylet. If the storylet is available, the link functions like the object version, however if the storylet is not available, the behaviour depends on the `behaviour` argument. If behaviour is "hidden" (the default), the link does not show. If behaviour is "disabled" it will show a disabled link instead. You can specify different text for the disabled link with the `disabed-text` argument.
