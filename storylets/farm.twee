@@ -144,11 +144,21 @@ The spring thaw has softened the dark loam of the fields, so its time to plant t
 State.prng.init();
 
 window.MQBN = class MQBN {
+  
+  version = "1.5.5";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
-    let   priority  = 0;
+    let   priority  = -Infinity;
     let   count     = 0;
+    if (typeof limit == "string" && !parseInt(limit)) {
+      if (limit == "all") {
+        limit = Infinity;
+      } else {
+        store = limit;
+        limit = Infinity;
+      }
+    }
     for (let s of setup[store].sort(MQBN.prioritySort)) {
       if (this.meetsRequirements(s,store)) {
         count ++;
@@ -166,10 +176,10 @@ window.MQBN = class MQBN {
   }
 
   static prioritySort(a, b) {
-    if (a.priority && !b.priority) {
-      return -1;
-    } else if (a.priority != b.priority) {
-      return a.priority > b.priority ? -1 : 1;
+    const ap = a.priority ?? 0;
+    const bp = b.priority ?? 0;
+    if (ap != bp) {
+      return ap > bp ? -1 : 1;
     } else {
       return randomFloat(0,1) - 0.5;
     }
@@ -204,6 +214,10 @@ window.MQBN = class MQBN {
   static anyRequirement(r,store) { return this.meetsRequirements(r,store); }
   static allRequirement(r,store) { return this.meetsRequirements(r,store); }
   
+  static twsRequirement(r) {
+    return !!Scripting.evalTwineScript(r.cond);
+  }
+  
   static visitedRequirement(r) {
     if (r.op == "not") {
       return !visited(r.passage);
@@ -227,10 +241,11 @@ window.MQBN = class MQBN {
   }
   
   static playedRequirement(r,store) {
+    let checkedstore = r.store ?? store;
     if (r.op == "not") {
-      return !variables()[store+"_used"].has(r.story);
+      return !variables()[checkedstore+"_used"].has(r.story);
     } else {
-      return variables()[store+"_used"].has(r.story);
+      return variables()[checkedstore+"_used"].has(r.story);
     }
   }
 
@@ -242,7 +257,7 @@ window.MQBN = class MQBN {
     } else if (_var instanceof Array) {
       val = _var.includes(r.has);
     } else if (Util.toStringTag(_var) == "Object") {
-      val = Object.hasOwn(r.has) && _var[r.has];
+      val = Object.hasOwn(_var,r.has) && _var[r.has];
     } else {
       throw(`The variable ${r.var} is not any kind of collection`);
     }
@@ -258,8 +273,13 @@ window.MQBN = class MQBN {
   }
   
   static randRequirement(r) {
-    let x = this.getRandomInt(1,100);
+    let x = r.noPRNG ? this.getRandomInt(1,100) : random(1,100);
     return (x <= r.chance);
+  }
+  
+  static pullsRequirement(r,store) {
+    let checkedstore = r.store ?? store;
+    return this.operators[r.op ?? "eq"](r.pulls,variables()[checkedstore+"_used"].size);
   }
 
   static operators = {
@@ -293,25 +313,45 @@ window.MQBN = class MQBN {
 
   /* SCAN */
   
-  static storyletscan(store = "storylets") {
-    const st      = (store == "storylets") ? "" : ` ['"]{0,1}*${store}['"]{0,1}`;
-    const match   = new RegExp(`<<storylet${st}>>`);
-    const replace = new RegExp(`<<storylet${st}>>(.*)<<\/storylet>>`,"s");
-    const ps      = Story.lookupWith((p) => p.text.match(match));
-    const storylets = [];
-    for (let p of ps) {
-      const s = p.text.replace(replace,"$1");
-      const storylet   = Scripting.evalJavaScript(`(${s.trim()})`);
-      storylet.title   = storylet.title ?? p.title;
-      storylet.passage = p.title;
-      storylets.push(storylet);
-    }
-    setup[store] = setup[store].concat(storylets);
+  static storyletscan() {
+    const match   = /<<storylet(?:| ([A-z_0-9-]*))>>/;
+    const replace = /<<storylet([A-z_0-9 -]*)>>([\S\s]*)<<\/storylet>>/;
+    const cond    = /<<cond>>([\S\s]*)<<\/cond>>/;
+    Story.filter((p) => p.text.match(match)).forEach(p => {
+      const store = p.text.match(match)[1] ?? "storylets";
+      if (!(store in setup)) {
+        this.storyletsinit(store);
+        setup[store] = [];
+      }
+      const content  = p.text.match(replace)[2].trim();
+      let   storylet;
+      if (content.match(cond)) {
+        let matches   = content.match(cond);
+        let condition = matches[1];
+            storylet  = content.replace(matches[0],'').trim();
+            storylet  = storylet ? Scripting.evalJavaScript(`(${storylet})`) : {};
+        	storylet.any = [ { type: "tws", cond: condition } ];
+      } else if (content[0] == '{') {
+      	storylet = Scripting.evalJavaScript(`(${content})`);
+      } else if (content.length == 0) {
+        storylet = {};
+      } else {
+        storylet = { any: [ { type: "tws", cond: content } ] };
+      }
+      storylet.id = storylet.id ?? p.name
+      storylet.title = storylet.title ?? p.title
+      storylet.passage = p.title
+      setup[store].push(storylet)
+    });
   }
   
   static storyletsinit(store = "storylets") {
-    State.setVar('$'+store+'_used',new Map());
-    State.setVar('$'+store+'_current',false);
+    if (!State.variables[store+'_used']) {
+    	State.setVar('$'+store+'_used',new Map());
+    }
+    if (!State.variables[store+'_current']) {
+    	State.setVar('$'+store+'_current',false);
+    }
   }
 
   static pruneStorylets(store = "storylets") {
@@ -321,7 +361,6 @@ window.MQBN = class MQBN {
   /* SEQUENCES */
 
   static createSequence(name, values, mode = "linear") {
-    setup.MQBNsequences = setup.MQBNsequences || {};
     let initial = 0;
     if (Util.toStringTag(values) == "Object") {
       let va = [];
@@ -332,52 +371,25 @@ window.MQBN = class MQBN {
       }
       values = va;
     }
-    setup.MQBNsequences[name] = { values: values, mode: mode };
-    const seq = new Sequence(name,values[initial],initial);
+    const seq = new Sequence(values,initial,mode);
     State.setVar(name,seq);
-  }
-
-  static sequenceChange(name, inc) {
-    const seq   = State.getVar(name);
-    const idx   = seq.value;
-    const len   = setup.MQBNsequences[name].values.length;
-    let   newidx;
-
-    if (setup.MQBNsequences[name].mode == "linear") {
-      newidx = Math.max(Math.min(idx + inc,len -1),0);
-    } else if (setup.MQBNsequences[name].mode == "cycling") {
-      newidx = idx + inc;
-      if (inc > 0 && newidx > len -1) {
-        seq.count += Math.floor(newidx / len);
-      } else if (inc < 0 && newidx < 0) {
-        seq.count -= Math.abs(Math.floor(newidx / len));
-      }
-      newidx = Math.abs(newidx % len);
-    }
-    seq.name  = this.sequenceName(name,newidx);
-    seq.val   = newidx;
-    State.setVar(name,seq);
-  }
-
-  static sequenceName(name,value) {
-    let previous = "";
-    for (let val in setup.MQBNsequences[name].values) {
-      if (val > value) {
-        return previous;
-      }
-      previous = setup.MQBNsequences[name].values[val];
-    }
-    return previous;
   }
   
 };
 
 window.Sequence = class Sequence {
-  constructor(type, name, value, count = 1) {
-    this.type  = type;
-    this.name  = name;
-    this.val   = value;
-    this.count = count;
+  constructor(values, curr, mode = "linear", count = 1) {
+    this.values = values;
+    this.val    = curr;
+    this.mode   = mode;
+    this.name   = this.getSequenceName();
+    this.count  = count;
+  }
+  
+  get value() { return this.val }
+  
+  set value(newval) {
+    this.sequenceChange(newval - this.val);
   }
 
   toString() {
@@ -392,28 +404,59 @@ window.Sequence = class Sequence {
     }
   }
   
-  set value(newval) {
-    MQBN.sequenceChange(this.type, newval - this.value);
+  getSequenceName() {
+    let previous = "";
+    for (let val in this.values) {
+      if (val > this.val) {
+        return previous;
+      }
+      previous = this.values[val];
+    }
+    return previous;
   }
-  get value() { return this.val }
+  
+  sequenceChange(inc) {
+    const idx   = this.val;
+    const len   = this.values.length;
+    let   newidx;
+
+    if (this.mode == "linear") {
+      newidx = Math.max(Math.min(idx + inc,len -1),0);
+    } else if (this.mode == "cycling") {
+      newidx = idx + inc;
+      if (inc > 0 && newidx > len -1) {
+        this.count += Math.floor(newidx / len);
+      } else if (inc < 0 && newidx < 0) {
+        this.count -= Math.abs(Math.floor(newidx / len));
+      }
+      newidx = Math.abs(newidx % len);
+    }
+    this.val   = newidx;
+    this.name  = this.getSequenceName();
+  }
   
   toJSON() { // the custom revive wrapper for SugarCube's state tracking
       // use `setup` version in case the global version is unavailable
       return JSON.reviveWrapper(String.format("new Sequence({0},{1},{2},{3})",
-        JSON.stringify(this.type),
-        JSON.stringify(this.name),
+        JSON.stringify(this.values),
         JSON.stringify(this.val),
+        JSON.stringify(this.mode),
         JSON.stringify(this.count)
       ));
   }
   
-  clone() { return new Sequence(this.type,this.name,this.val,this.count); }
+  clone() { return new Sequence(this.values,this.val,this.mode,this.count); }
 };
 
-window.macroPairedArgsParser = function(args,start=0) {
+window.macroPairedArgsParser = function(args,start=0,singletons=[]) {
   const parsed = {};
-  for (let i = start; i < args.length; i += 2) {
-    parsed[args[i].replace(/[^a-zA-Z0-9_]/g,'')] = args[i+1];
+  for (let i = start; i < args.length; i += 1) {
+  	if (singletons.includes(args[i])) {
+    	parsed[args[i]] = true;
+    } else {
+    	parsed[args[i].replace(/[^a-zA-Z0-9_]/g,'')] = args[i+1];
+        i++;
+    }
   }
   return parsed;
 }
@@ -440,17 +483,17 @@ Macro.add("storyletgoto",{
     const store   = args.store ?? 'storylets';
     const ifopen  = args.open  ?? false;
     let   storylet;
-
+    
     if (typeof this.args[0] === 'object') {
       // Argument was a storylet object
       storylet = this.args[0]; 
     } else {
       // Argument was a storylet name
-      const storylets = setup[store].find((s) => { return s.title == this.args[0] || s.id == this.args[0]});
+      const storylets = setup[store].filter((s) => { return s.title == this.args[0] || s.id == this.args[0]});
       if (ifopen) {
         // we wish to use the first open one
-        const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s));
-        storylet = filtered.length ? filtered[0] : storylets[0];
+        const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s,store));
+        storylet = filtered.length ? filtered[0] : false;
       } else {
         storylet = storylets[0];
       }
@@ -458,10 +501,46 @@ Macro.add("storyletgoto",{
 
     if (storylet) {
       const passage = storylet.passage ?? storylet.title;
-      variables()[store+'_used'].set(storylet.id ?? storylet_title);
+      variables()[store+'_used'].set(storylet.id ?? storylet.title);
       variables()[store+'_current'] = storylet;
       MQBN.trigger(storylet);
-      Engine.play(passage);
+      setTimeout(() => Engine.play(passage), Engine.minDomActionDelay);
+    }
+  }
+});
+
+Macro.add("storyletinclude",{
+  handler: function() {
+    if (this.args.length === 0) {
+        return this.error(`no storylet specified`);
+    }
+
+    const args    = macroPairedArgsParser(this.args,1);
+    const store   = args.store ?? 'storylets';
+    const ifopen  = args.open  ?? false;
+    let   storylet;
+    
+    if (typeof this.args[0] === 'object') {
+      // Argument was a storylet object
+      storylet = this.args[0]; 
+    } else {
+      // Argument was a storylet name
+      const storylets = setup[store].filter((s) => { return s.title == this.args[0] || s.id == this.args[0]});
+      if (ifopen) {
+        // we wish to use the first open one
+        const filtered = storylets.toSorted(MQBN.prioritySort).filter((s) => MQBN.meetsRequirements(s,store));
+        storylet = filtered.length ? filtered[0] : false;
+      } else {
+        storylet = storylets[0];
+      }
+    }
+
+    if (storylet) {
+      const passage = storylet.passage ?? storylet.title;
+      variables()[store+'_used'].set(storylet.id ?? storylet.title);
+      variables()[store+'_current'] = storylet;
+      MQBN.trigger(storylet);
+      jQuery(this.output).wiki(Story.get(passage).processText());
     }
   }
 });
@@ -564,7 +643,7 @@ Macro.add("storyletuse",{
     }
 
     if (storylet) {
-      variables()[store+'_used'].set(storylet.id ?? storylet_title);
+      variables()[store+'_used'].set(storylet.id ?? storylet.title);
       variables()[store+'_current'] = storylet;
     }
   }
@@ -574,11 +653,12 @@ Macro.add("storyletuse",{
 
 Macro.add("storyletscan",{
   handler: function() {
-    MQBN.storyletscan(this.args[0]);
+    MQBN.storyletscan();
   }
 });
 
 Macro.add("storylet",{
+  tags: [],
   handler: function() {
     // null placeholder to allow the <<storylet>> syntax
   }
@@ -597,7 +677,7 @@ Macro.add("sequence",{
     if (this.args.length < 3) {
       return this.error("no sequence values specified");
     }
-    if (Array.isArray(this.args[1]) || Util.toStringTag(this.args[1]) == "Object") {
+    if (Array.isArray(this.args[2]) || Util.toStringTag(this.args[2]) == "Object") {
       MQBN.createSequence(this.args[0],this.args[2],this.args[1]);
     } else {
       MQBN.createSequence(this.args[0],this.args.slice(2),this.args[1]);
@@ -610,14 +690,10 @@ Macro.add(["sequenceadvance","sequencerewind"],{
     if (this.args.length === 0) {
       return this.error("no sequence name specified");
     }
-    if (!setup.MQBNsequences) {
-      return this.error("you must create a sequence using <<sequence>> before ${this.name == 'sequenceadvance' ? 'advancing' : 'rewinding'} it");
-    }
-    if (!setup.MQBNsequences[this.args[0]]) {
-      return this.error(`sequence ${this.args[0]} has not been defined`);
-    }
     let   inc   = this.args[1] ?? 1;
     if (this.name == "sequencerewind") { inc = -1 * inc; }
-    MQBN.sequenceChange(this.args[0],inc);
+    const seq   = State.getVar(this.args[0]);
+          seq.sequenceChange(inc);
+    State.setVar(this.args[0],seq);
   }
 });
