@@ -1,4 +1,3 @@
-State.prng.init(1);
 window.MQBN = class MQBN {
   
   version = "1.5.5";
