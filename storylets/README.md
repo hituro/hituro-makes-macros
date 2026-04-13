@@ -15,6 +15,8 @@ You must use the macro `<<storyletsinit>>` before using any MQBN functions. It i
 > [!WARNING]
 > There are breaking changes between v1.4 and v1.5 that might affect a saved game created under the earlier version, if you are using Sequences.
 
+If you are using [T3LT](https://marketplace.visualstudio.com/items?itemName=cyrusfirheir.twee3-language-tools) with Visual Studio Code, Da Miech created a [YML macro description file you can use](mqbn.twee-config.yml).
+
 ## Storylets ##
 
 Storylets are a concept first introduced in Fallen London, and made popular in the Story Nexus engine that drove it. Rather than controlling a narrative with a fixed series of linked passages, storylets break gameplay into distinct segments, each with their own conditions for when they can appear. A classic example (for some reason) might be visiting a farm. Depending on the season you visit, different products might be for sale, or incidents happen. Each of those incidents (or indeed products) could be contained in a storylet whose two requirements are:
