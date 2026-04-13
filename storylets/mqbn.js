@@ -1,11 +1,20 @@
+State.prng.init(1);
 window.MQBN = class MQBN {
   
-  version = "1.5.4";
+  version = "1.5.5";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
     let   priority  = -Infinity;
     let   count     = 0;
+    if (typeof limit == "string" && !parseInt(limit)) {
+      if (limit == "all") {
+        limit = Infinity;
+      } else {
+        store = limit;
+        limit = Infinity;
+      }
+    }
     for (let s of setup[store].sort(MQBN.prioritySort)) {
       if (this.meetsRequirements(s,store)) {
         count ++;
@@ -120,7 +129,7 @@ window.MQBN = class MQBN {
   }
   
   static randRequirement(r) {
-    let x = this.getRandomInt(1,100);
+    let x = r.noPRNG ? this.getRandomInt(1,100) : random(1,100);
     return (x <= r.chance);
   }
   
