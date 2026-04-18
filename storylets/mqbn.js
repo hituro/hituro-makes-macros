@@ -159,7 +159,7 @@ window.MQBN = class MQBN {
 
   // helper to avoid a seeded prng
   static getRandomInt(min, max) {
-    return Math.floot(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   static played(story,store="storylets") {
