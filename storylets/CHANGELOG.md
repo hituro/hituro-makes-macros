@@ -1,6 +1,6 @@
 # MQBN Changelog
 
-* **v1.5.6 — 2025-04-18**
+* **v1.5.6 — 2025-04-18**  
   BUG FIX: getRandomInt() now returns an Int and not a Float 
 * **v1.5.5 — 2025-04-13**  
   Added `noPRNG` option to `rand` requirements  
