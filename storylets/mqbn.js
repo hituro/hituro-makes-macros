@@ -1,6 +1,6 @@
 window.MQBN = class MQBN {
   
-  version = "1.5.6";
+  version = "1.5.7";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -14,20 +14,25 @@ window.MQBN = class MQBN {
         limit = Infinity;
       }
     }
-    for (let s of setup[store].sort(MQBN.prioritySort)) {
-      if (this.meetsRequirements(s,store)) {
-        count ++;
-        if ((s.priority ?? 0) >= priority) {
-          available.push(s);
+    if (Array.isArray(setup[store])) {
+      for (let s of setup[store].sort(MQBN.prioritySort)) {
+        if (this.meetsRequirements(s,store)) {
+          count ++;
+          if ((s.priority ?? 0) >= priority) {
+            available.push(s);
+          }
+          if (count == limit) { 
+            priority = s.priority ?? 0; 
+            if (!needAvailable) { break; }
+          } 
         }
-        if (count == limit) { 
-          priority = s.priority ?? 0; 
-          if (!needAvailable) { break; }
-        } 
-      }
-    };
-    temporary()[store+'_available'] = available;
-    return available.slice(0,limit).sort(MQBN.weightSort);
+      };
+      temporary()[store+'_available'] = available;
+      return available.slice(0,limit).sort(MQBN.weightSort);
+    } else {
+      temporary()[store+'_available'] = [];
+      return [];
+    }
   }
 
   static prioritySort(a, b) {
