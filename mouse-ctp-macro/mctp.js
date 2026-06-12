@@ -99,16 +99,18 @@
 								element.addClass(options.transition ? "--macro-ctp-t8n" : "");
 							}
 							if (options.back && !options.wait && index > 0) {
+                              	element.children(".ctp-auto-button-back").remove();
 								element.append($(`<button>${options.back}</button>`)
-									.addClass("ctp-auto-button")
+									.addClass("ctp-auto-button ctp-auto-button-back")
 									.ariaClick((ev) => {
 										this.back();
                                         ev.stopPropagation();
 									}));
 							}
 							if (options.advance && !options.wait && index !== (this.stack.length -1)) {
+                              	element.children(".ctp-auto-button-advance").remove();
 								element.append($(`<button>${options.advance}</button>`)
-									.addClass("ctp-auto-button")
+									.addClass("ctp-auto-button ctp-auto-button-advance")
 									.ariaClick((ev) => {
 										this.advance();
                                         ev.stopPropagation();
