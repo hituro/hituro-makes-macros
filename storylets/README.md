@@ -203,9 +203,11 @@ _Syntax_: `{ type: "pulls", op: "|eq|neq|gt|lt|gte|lge", pulls: "number", store:
 True if some number of storylets (by default the operator is `eq`) have already been used from the indicated store. If no store is indicated then the same store as the storylet is used.
 
 #### `rand`
-_Syntax_: `{ type: "rand", chance: int }`
+_Syntax_: `{ type: "rand", chance: int, noPRNG: false }`
 
 True if a random number from 1-100 is less than or equal to the supplied chance. You can use this to make a given storylet less likely than other eligible storylets of the same priority. For example given two storylets, one of which has a chance of 50, that storylet will be picked only half as often as the other.
+
+The rand requirement will use Sugarcube's seedable random number generator (PRNG) if you have it enabled. If you have it enabled but still want to use a truly random value for a given check, then add `noPRNG: true` as an additional argument.
 
 #### `sequence`
 _Syntax_: `{ type: "sequence", seq: "$varname", op: "|not", name: "value" }`  
