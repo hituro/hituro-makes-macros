@@ -2,7 +2,9 @@
 	display: none;
 }
 
-.--macro-ctp-older .ctp-auto-button {
+.--macro-ctp-older .ctp-auto-button, 
+.--macro-ctp-older.ctp-remove-links .ctp-internal-link:not(.ctp-link-chosen),
+.--macro-ctp-older.ctp-remove-links .ctp-internal-link:not(.ctp-link-chosen) + br {
     display: none;
 }
 

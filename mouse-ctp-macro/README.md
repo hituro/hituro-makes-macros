@@ -56,6 +56,7 @@ CTP normally proceeds one section at a time, each click (or `<<ctpAdvance>>`) re
 * `id "id"` Gives the current `<<ctpNext>>` an internal id
 * `next "id"` Proceeding from theis `<<ctpNext>>` goes to the id given instead of the next block
 * `wait` This keyword disables the click-to-proceed handler (see below), and hides the navigation buttons (from `advance` and `back`) if they exist
+* `remove-links` Any clicked `<<ctpLink>>` in the secion is disabled, any unclicked `<<ctpLink>>` in the section is removed
 
 The following example should hopefully make this flow clear.
 
@@ -82,6 +83,8 @@ The following example should hopefully make this flow clear.
 ```
 
 In this case the normal click handler is disabled when the user-choice is requested in the second block. Clicking either choice jumps to the appropriately id'd block, and then continues in order as normal until a `next` redirects the flow. Note that you cannot `wait` on the first block (i.e. the content before the first `<<ctpNext>>`) since that section has no keywords of its own.
+
+If you want to have the clicked link be disabled, and the unclicked links be hidden, add `remove-links` to the `<<ctp>>` instance or section.
 
 ## Macros
 

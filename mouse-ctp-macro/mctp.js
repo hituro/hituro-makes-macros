@@ -24,7 +24,7 @@
 		}
 
 		static get Options() {
-			return ['clear','id','next','t8n','persist','transition','wait','advance','back','redo','append'];
+			return ['clear','id','next','t8n','persist','transition','wait','advance','back','redo','append','remove-links'];
 		}
 
 		static get Repository() {
@@ -48,7 +48,7 @@
 
 		static nextArgs(args) {
 			const parsed = {};
-			const single = ['clear','t8n','transition','wait','redo','append'];
+			const single = ['clear','t8n','transition','wait','redo','append','remove-links'];
 			for (let i = 0; i < args.length; i += 1) {
 				if (single.includes(args[i])) {
 					parsed[args[i]] = true;
@@ -124,6 +124,9 @@
 						}
 					}
 				});
+            if (options['remove-links']) {
+              element.addClass('ctp-remove-links');
+            }
 			this.stack[index].element = element;
 			return element;
 		}
@@ -236,10 +239,14 @@
             	one  : false
             }, this.createShadowWrapper(
             	() => {
+                  $link.addClass('ctp-link-chosen');
                   if (id) {
                       const ctp = CTP.getCTP(id);
                       if (ctp) ctp.goto(target);
                       else throw new Error(`No CTP with ID '${id}' found!`);
+                      if (ctp.options['remove-links']) {
+                        $link.ariaDisabled(true);
+                      }
                   } else throw new Error(`No ID specified!`);
                 }
             )).html(text);
