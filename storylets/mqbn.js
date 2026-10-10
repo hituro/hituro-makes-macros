@@ -1,6 +1,6 @@
 window.MQBN = class MQBN {
   
-  version = "1.5.7";
+  version = "1.5.8";
 
   static getStorylets(limit,store="storylets",needAvailable=true) {
     const available = [];
@@ -140,6 +140,11 @@ window.MQBN = class MQBN {
   static pullsRequirement(r,store) {
     let checkedstore = r.store ?? store;
     return this.operators[r.op ?? "eq"](r.pulls,variables()[checkedstore+"_used"].size);
+  }
+
+  static tagRequirements(r) {
+    let hasTag = tags().includes(r.tag);
+    return this.operatprs[r.op ?? "eq"](hasTag);
   }
 
   static operators = {

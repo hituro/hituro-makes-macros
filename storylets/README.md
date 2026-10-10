@@ -216,6 +216,11 @@ _Syntax_: `{ type: "sequence", seq: "$varname", op: "eq|neq|gt|lt|gte|lge", valu
 
 Check the value, name, or cycle count (see [`<<sequencecreate>>`](#sequence)) of a sequence (created with `<<sequence>>`) to see if it equals "value". You can do the same check with a `var` condition: `{ type: "var", name: "$varname.name", value: "name" }`.
 
+#### `tag`
+_Syntax_: `{ type: "tag", op: "eq|neq", tag: "tag name" }`
+
+Check that the current passage's tags do (or do not) include the tag specified.
+
 #### `tws` (twinescript)
 _Syntax_: `{ type: "tws", cond: "any valid twinescript expression" }`
 

@@ -1,5 +1,9 @@
 # MQBN Changelog
 
+* **v1.5.8 — 2026-10-10**
+  Added `tag` condition type
+* **v1.5.7 — 2026-06-01**
+  BUG FIX: avoid error when attempting to check the state of a store that has not yet been used
 * **v1.5.6 — 2025-04-18**  
   BUG FIX: getRandomInt() now returns an Int and not a Float 
 * **v1.5.5 — 2025-04-13**  
