@@ -194,11 +194,10 @@
 				if (name === "ctp") ctp.options = { ...setup["@CTP/Options"], ...options };
 				if (contents.trim().length) ctp.add(contents, options);
 			});
-            console.log(ctp);
 			$(this.output).append(ctp.output());
 			$(document).one(":passagedisplay", () => {
 				if (_passage === passage()) {
-					const i = Math.max(ctp.log.index, 0);
+					const i = Math.min(ctp.stack.length -1,Math.max(ctp.log.index, 0));
 					ctp.log.index = -1;
 					ctp.log.seen = [];
 					while (ctp.log.index < i) ctp.advance();
